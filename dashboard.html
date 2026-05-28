@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — RestoreDocAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: #f9fafb; color: #111827; -webkit-font-smoothing: antialiased; height: 100vh; overflow: hidden; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Shell ── */
+    .shell { display: flex; height: 100vh; }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 240px; flex-shrink: 0;
+      background: #1a2332;
+      display: flex; flex-direction: column;
+      height: 100vh; position: fixed; left: 0; top: 0;
+      overflow-y: auto;
+    }
+    .sb-logo {
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .sb-logo-text { font-size: 15px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+    .sb-logo-badge {
+      display: inline-block; font-size: 9px; font-weight: 600;
+      background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5);
+      padding: 2px 6px; text-transform: uppercase; letter-spacing: 0.06em; margin-left: 6px; vertical-align: middle;
+    }
+
+    .sb-section-label {
+      font-size: 10px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.08em; color: rgba(255,255,255,0.3);
+      padding: 16px 20px 6px;
+    }
+    .sb-nav { flex: 1; padding: 8px 0; }
+    .sb-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 20px;
+      font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.55);
+      cursor: pointer; transition: background 120ms, color 120ms;
+      border: none; background: none; width: 100%; text-align: left; font-family: inherit;
+    }
+    .sb-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.85); }
+    .sb-item.active { background: rgba(255,255,255,0.1); color: #fff; }
+    .sb-item svg { flex-shrink: 0; opacity: 0.7; }
+    .sb-item.active svg { opacity: 1; }
+
+    .sb-bottom {
+      padding: 16px 20px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .sb-plan-badge {
+      font-size: 10px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.06em; color: rgba(255,255,255,0.4);
+      margin-bottom: 8px;
+    }
+    .sb-plan-name { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 10px; }
+    .sb-upgrade {
+      display: block; text-align: center; padding: 7px;
+      font-size: 12px; font-weight: 600; color: #2563eb;
+      background: rgba(37,99,235,0.15); border: 1px solid rgba(37,99,235,0.3);
+      cursor: pointer; transition: background 120ms; text-decoration: none;
+    }
+    .sb-upgrade:hover { background: rgba(37,99,235,0.25); }
+    .sb-logout {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12px; color: rgba(255,255,255,0.35);
+      cursor: pointer; margin-top: 12px;
+      background: none; border: none; font-family: inherit; padding: 0;
+    }
+    .sb-logout:hover { color: rgba(255,255,255,0.6); }
+
+    /* ── Main ── */
+    .main {
+      margin-left: 240px; flex: 1;
+      height: 100vh; overflow-y: auto;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      background: #fff; border-bottom: 1px solid #e5e7eb;
+      padding: 0 32px; height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 50;
+    }
+    .topbar-title { font-size: 15px; font-weight: 600; color: #111827; letter-spacing: -0.2px; }
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .topbar-company { font-size: 13px; color: #6b7280; }
+    .topbar-avatar {
+      width: 30px; height: 30px;
+      background: #eff6ff; border: 1px solid #bfdbfe;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: #2563eb;
+    }
+
+    /* ── Content ── */
+    .content { padding: 28px 32px 48px; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Stat cards ── */
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+    .stat-card { background: #fff; border: 1px solid #e5e7eb; padding: 20px 20px 18px; }
+    .stat-label { font-size: 12px; color: #6b7280; margin-bottom: 10px; font-weight: 500; }
+    .stat-value { font-size: 28px; font-weight: 700; color: #111827; letter-spacing: -0.8px; line-height: 1; margin-bottom: 6px; }
+    .stat-trend { font-size: 12px; }
+    .stat-trend.up { color: #16a34a; }
+    .stat-trend.down { color: #dc2626; }
+    .stat-trend.neutral { color: #6b7280; }
+
+    /* ── Section headers ── */
+    .section-hdr {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .section-title { font-size: 14px; font-weight: 600; color: #111827; }
+    .section-action { font-size: 12px; color: #2563eb; cursor: pointer; background: none; border: none; font-family: inherit; padding: 0; }
+    .section-action:hover { text-decoration: underline; }
+
+    /* ── Tables ── */
+    .table-wrap { background: #fff; border: 1px solid #e5e7eb; overflow: hidden; }
+    .table-scroll { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 600px; }
+    thead th {
+      padding: 10px 16px; text-align: left;
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.06em; color: #6b7280;
+      background: #f9fafb; border-bottom: 1px solid #e5e7eb;
+    }
+    tbody td {
+      padding: 12px 16px; font-size: 13px; color: #374151;
+      border-bottom: 1px solid #f3f4f6; vertical-align: middle;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: #fafafa; }
+    .td-name { font-weight: 500; color: #111827; }
+    .badge {
+      display: inline-block; padding: 2px 8px;
+      font-size: 11px; font-weight: 600; text-transform: capitalize;
+    }
+    .badge-blue { background: #eff6ff; color: #2563eb; }
+    .badge-green { background: #f0fdf4; color: #16a34a; }
+    .badge-yellow { background: #fffbeb; color: #b45309; }
+    .badge-red { background: #fef2f2; color: #dc2626; }
+    .badge-gray { background: #f3f4f6; color: #6b7280; }
+
+    .action-btn {
+      font-size: 12px; color: #374151; background: none; border: 1px solid #e5e7eb;
+      padding: 4px 10px; cursor: pointer; font-family: inherit; transition: border-color 120ms;
+    }
+    .action-btn:hover { border-color: #2563eb; color: #2563eb; }
+    .action-btn.danger:hover { border-color: #ef4444; color: #ef4444; }
+
+    /* ── Quick actions ── */
+    .quick-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+    .qa-btn {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; font-weight: 500; color: #374151;
+      border: 1px solid #e5e7eb; background: #fff;
+      padding: 9px 16px; cursor: pointer; font-family: inherit; transition: border-color 120ms, color 120ms;
+    }
+    .qa-btn:hover { border-color: #2563eb; color: #2563eb; }
+    .qa-btn svg { flex-shrink: 0; }
+
+    /* ── Copy box ── */
+    .copy-box {
+      display: flex; gap: 10px; align-items: center;
+      background: #fff; border: 1px solid #e5e7eb; padding: 12px 16px;
+      margin-bottom: 20px;
+    }
+    .copy-url { flex: 1; font-size: 13px; color: #6b7280; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .copy-btn {
+      font-size: 12px; font-weight: 500; color: #2563eb;
+      background: none; border: 1px solid #2563eb;
+      padding: 5px 12px; cursor: pointer; font-family: inherit; white-space: nowrap; transition: background 120ms;
+    }
+    .copy-btn:hover { background: #eff6ff; }
+    .copy-btn.copied { color: #16a34a; border-color: #16a34a; }
+
+    /* PIN section */
+    .pin-display {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+    }
+    .pin-val {
+      font-size: 22px; font-weight: 700; color: #111827;
+      letter-spacing: 0.15em; font-variant-numeric: tabular-nums;
+      background: #fff; border: 1px solid #e5e7eb; padding: 10px 18px;
+    }
+    .pin-val.hidden { letter-spacing: 0.15em; filter: blur(4px); user-select: none; }
+    .pin-actions { display: flex; gap: 8px; }
+    .pin-change-form { display: flex; gap: 10px; align-items: center; }
+    .pin-input {
+      font-family: inherit; font-size: 16px; font-weight: 600;
+      letter-spacing: 0.15em; text-align: center;
+      border: 1px solid #e5e7eb; padding: 8px 14px; outline: none; width: 120px;
+    }
+    .pin-input:focus { border-color: #2563eb; }
+
+    /* Analytics */
+    .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 28px; }
+    .chart-card { background: #fff; border: 1px solid #e5e7eb; padding: 20px; }
+    .chart-card-title { font-size: 13px; font-weight: 600; color: #111827; margin-bottom: 16px; }
+    .chart-wrap { position: relative; height: 200px; }
+    .chart-full { grid-column: 1 / -1; }
+
+    .locked-overlay {
+      background: #fff; border: 1px solid #e5e7eb;
+      padding: 56px 32px; text-align: center;
+    }
+    .lock-icon {
+      width: 40px; height: 40px; background: #f3f4f6; border: 1px solid #e5e7eb;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .locked-title { font-size: 16px; font-weight: 600; color: #111827; margin-bottom: 8px; }
+    .locked-sub { font-size: 14px; color: #6b7280; margin-bottom: 20px; }
+    .locked-btn {
+      display: inline-block; background: #2563eb; color: #fff;
+      font-size: 13px; font-weight: 600; padding: 9px 20px;
+      cursor: pointer; font-family: inherit; border: none; text-decoration: none;
+    }
+
+    /* Checklist search */
+    .filter-bar {
+      display: flex; gap: 10px; flex-wrap: wrap;
+      background: #fff; border: 1px solid #e5e7eb;
+      padding: 12px 16px; margin-bottom: 16px; align-items: center;
+    }
+    .filter-input, .filter-select {
+      font-family: inherit; font-size: 13px; color: #111827;
+      border: 1px solid #e5e7eb; padding: 7px 10px; outline: none; background: #fff; -webkit-appearance: none;
+    }
+    .filter-input:focus, .filter-select:focus { border-color: #2563eb; }
+    .filter-input { flex: 1; min-width: 160px; }
+    .filter-input::placeholder { color: #9ca3af; }
+
+    /* Pagination */
+    .pagination { display: flex; align-items: center; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+    .page-btn {
+      font-size: 12px; font-weight: 500; color: #374151;
+      border: 1px solid #e5e7eb; background: #fff;
+      padding: 5px 10px; cursor: pointer; font-family: inherit;
+    }
+    .page-btn.active { background: #2563eb; color: #fff; border-color: #2563eb; }
+    .page-btn:hover:not(.active) { border-color: #9ca3af; }
+    .page-info { font-size: 12px; color: #6b7280; }
+
+    /* Expandable row */
+    .row-expanded-content {
+      display: none; background: #f9fafb;
+      padding: 16px; border-top: 1px solid #e5e7eb;
+      font-size: 13px; color: #374151; line-height: 1.7;
+    }
+    .row-expanded-content.open { display: block; }
+
+    /* Settings */
+    .settings-section { background: #fff; border: 1px solid #e5e7eb; padding: 24px; margin-bottom: 20px; }
+    .settings-title { font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 4px; }
+    .settings-sub { font-size: 13px; color: #6b7280; margin-bottom: 20px; }
+    .settings-form { display: flex; flex-direction: column; gap: 14px; max-width: 440px; }
+    .s-label { font-size: 12px; font-weight: 500; color: #374151; margin-bottom: 5px; display: block; }
+    .s-input {
+      font-family: inherit; font-size: 14px; color: #111827; background: #fff;
+      border: 1px solid #e5e7eb; padding: 8px 12px; outline: none; width: 100%; transition: border-color 120ms;
+    }
+    .s-input:focus { border-color: #2563eb; }
+    .s-input::placeholder { color: #9ca3af; }
+    .settings-save {
+      display: inline-block; font-family: inherit; font-size: 13px; font-weight: 600;
+      color: #fff; background: #2563eb; border: 1px solid #2563eb;
+      padding: 8px 18px; cursor: pointer; transition: background 120ms;
+    }
+    .settings-save:hover { background: #1d4ed8; }
+
+    /* Toggle switches */
+    .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f3f4f6; }
+    .toggle-row:last-child { border-bottom: none; }
+    .toggle-info { flex: 1; }
+    .toggle-name { font-size: 13px; font-weight: 500; color: #111827; }
+    .toggle-desc { font-size: 12px; color: #6b7280; margin-top: 1px; }
+    .toggle-switch { position: relative; width: 36px; height: 20px; flex-shrink: 0; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-track {
+      position: absolute; inset: 0; background: #d1d5db; cursor: pointer; transition: background 0.2s;
+    }
+    .toggle-track::before {
+      content: ''; position: absolute; width: 14px; height: 14px;
+      left: 3px; top: 3px; background: #fff; transition: transform 0.2s;
+    }
+    input:checked + .toggle-track { background: #2563eb; }
+    input:checked + .toggle-track::before { transform: translateX(16px); }
+
+    /* Logo upload */
+    .logo-upload-area {
+      border: 1px dashed #e5e7eb; padding: 24px; text-align: center;
+      cursor: pointer; transition: border-color 120ms;
+    }
+    .logo-upload-area:hover { border-color: #2563eb; }
+    .logo-upload-text { font-size: 13px; color: #6b7280; }
+    .logo-upload-sub { font-size: 11px; color: #9ca3af; margin-top: 4px; }
+    #logoFile { display: none; }
+
+    /* Danger zone */
+    .danger-zone { border: 1px solid #fee2e2; }
+    .danger-title { font-size: 14px; font-weight: 600; color: #991b1b; }
+    .danger-sub { font-size: 13px; color: #6b7280; margin-bottom: 16px; }
+    .btn-danger {
+      font-family: inherit; font-size: 13px; font-weight: 600;
+      color: #dc2626; background: transparent; border: 1px solid #fecaca;
+      padding: 8px 16px; cursor: pointer; transition: background 120ms;
+    }
+    .btn-danger:hover { background: #fef2f2; }
+
+    .revoke-all {
+      font-family: inherit; font-size: 13px; font-weight: 600;
+      color: #dc2626; background: transparent; border: 1px solid #fecaca;
+      padding: 8px 16px; cursor: pointer; margin-top: 16px;
+    }
+
+    /* Empty state */
+    .empty-state { padding: 48px 0; text-align: center; color: #9ca3af; font-size: 13px; }
+
+    /* Alert */
+    .inline-alert { padding: 10px 14px; border: 1px solid; font-size: 13px; margin-bottom: 16px; }
+    .inline-alert.success { background: #f0fdf4; border-color: #bbf7d0; color: #15803d; }
+    .inline-alert.error { background: #fef2f2; border-color: #fecaca; color: #b91c1c; }
+
+    /* Grid helper */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+
+    @media (max-width: 1024px) {
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+      .charts-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); transition: transform 0.2s; z-index: 200; }
+      .sidebar.open { transform: translateX(0); }
+      .main { margin-left: 0; }
+      .content { padding: 20px 16px 40px; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .two-col { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .stats-row { grid-template-columns: 1fr; }
+      .topbar { padding: 0 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="shell">
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-logo">
+      <a href="index.html" style="text-decoration:none;">
+        <span class="sb-logo-text">RestoreDocAI</span>
+      </a>
+    </div>
+
+    <nav class="sb-nav">
+      <div class="sb-section-label">Main</div>
+      <button class="sb-item active" id="nav-overview" onclick="showTab('overview')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Overview
+      </button>
+      <button class="sb-item" id="nav-checklists" onclick="showTab('checklists')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="m9 14 2 2 4-4"/></svg>
+        Checklists
+      </button>
+      <button class="sb-item" id="nav-team" onclick="showTab('team')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Team Access
+      </button>
+      <button class="sb-item" id="nav-analytics" onclick="showTab('analytics')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Analytics
+      </button>
+      <button class="sb-item" id="nav-settings" onclick="showTab('settings')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </button>
+    </nav>
+
+    <div class="sb-bottom">
+      <div class="sb-plan-badge">Current plan</div>
+      <div class="sb-plan-name" id="sbPlanName">Growth</div>
+      <a href="pricing.html" class="sb-upgrade">Upgrade Plan</a>
+      <button class="sb-logout" onclick="logout()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign out
+      </button>
+    </div>
+  </aside>
+
+  <!-- ═══ MAIN ═══ -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topbarTitle">Overview</div>
+      <div class="topbar-right">
+        <span class="topbar-company" id="topbarCompany">Loading...</span>
+        <div class="topbar-avatar" id="topbarAvatar">A</div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ════ OVERVIEW ════ -->
+      <div class="tab-panel active" id="tab-overview">
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-label">Checklists this month</div>
+            <div class="stat-value" id="stat-checklists">—</div>
+            <div class="stat-trend neutral" id="stat-checklists-trend">Loading...</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Active techs</div>
+            <div class="stat-value" id="stat-techs">—</div>
+            <div class="stat-trend neutral" id="stat-techs-sub">Team members</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Plan status</div>
+            <div class="stat-value" id="stat-plan" style="font-size:18px;margin-top:4px;">—</div>
+            <div class="stat-trend neutral" id="stat-plan-sub">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Est. claims protected</div>
+            <div class="stat-value" id="stat-claims">—</div>
+            <div class="stat-trend neutral">Based on avg claim value</div>
+          </div>
+        </div>
+
+        <div class="section-hdr">
+          <div class="section-title">Recent activity</div>
+          <button class="section-action" onclick="showTab('checklists')">View all</button>
+        </div>
+        <div class="table-wrap" style="margin-bottom:28px;">
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Tech name</th>
+                  <th>Job type</th>
+                  <th>Time</th>
+                  <th>Items completed</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="activityTableBody">
+                <tr><td colspan="5" class="empty-state">Loading activity...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="section-hdr"><div class="section-title">Quick actions</div></div>
+        <div class="quick-actions">
+          <button class="qa-btn" onclick="copyTeamLink()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            Copy team link
+          </button>
+          <button class="qa-btn" onclick="showTab('team')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Reset PIN
+          </button>
+          <button class="qa-btn" onclick="downloadReport()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download report
+          </button>
+        </div>
+      </div>
+
+      <!-- ════ CHECKLISTS ════ -->
+      <div class="tab-panel" id="tab-checklists">
+        <div class="section-hdr" style="margin-bottom:16px;">
+          <div class="section-title">All checklists</div>
+        </div>
+        <div class="filter-bar">
+          <input class="filter-input" type="text" id="clSearch" placeholder="Search by tech name or job type..." oninput="filterChecklists()" />
+          <select class="filter-select" id="clJobType" onchange="filterChecklists()">
+            <option value="">All job types</option>
+            <option value="water">Water damage</option>
+            <option value="fire">Fire and smoke</option>
+            <option value="mold">Mold remediation</option>
+            <option value="storm">Storm damage</option>
+            <option value="biohazard">Biohazard</option>
+          </select>
+          <input class="filter-input" type="date" id="clDateFrom" onchange="filterChecklists()" style="flex:0;min-width:130px;" />
+          <input class="filter-input" type="date" id="clDateTo" onchange="filterChecklists()" style="flex:0;min-width:130px;" />
+        </div>
+
+        <div class="table-wrap">
+          <div class="table-scroll">
+            <table id="checklistsTable">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Tech</th>
+                  <th>Job type</th>
+                  <th>Category</th>
+                  <th>Photo AI</th>
+                  <th>Completion</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="checklistsBody">
+                <tr><td colspan="7" class="empty-state">Loading checklists...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="pagination" id="clPagination"></div>
+      </div>
+
+      <!-- ════ TEAM ACCESS ════ -->
+      <div class="tab-panel" id="tab-team">
+        <div class="section-hdr" style="margin-bottom:16px;">
+          <div class="section-title">Team access</div>
+        </div>
+
+        <div class="settings-section" style="margin-bottom:20px;">
+          <div class="settings-title">Field tech link</div>
+          <div class="settings-sub">Share this link with your techs. They enter their name and PIN to access the tool.</div>
+          <div class="copy-box">
+            <span class="copy-url" id="teamLinkDisplay">Loading...</span>
+            <button class="copy-btn" id="copyLinkBtn" onclick="copyTeamLink()">Copy link</button>
+          </div>
+        </div>
+
+        <div class="settings-section" style="margin-bottom:20px;">
+          <div class="settings-title">Access PIN</div>
+          <div class="settings-sub">Your team's current 6-digit PIN. Change it to revoke access for any tech not given the new PIN.</div>
+          <div class="pin-display">
+            <div class="pin-val" id="pinDisplay">------</div>
+            <div class="pin-actions">
+              <button class="action-btn" id="pinToggleBtn" onclick="togglePin()">Show</button>
+            </div>
+          </div>
+          <div class="pin-change-form">
+            <input class="pin-input" type="text" id="newPinInput" maxlength="6" placeholder="New PIN" />
+            <button class="action-btn" onclick="updatePin()">Update PIN</button>
+          </div>
+          <div id="pinMsg" style="font-size:12px;margin-top:8px;"></div>
+        </div>
+
+        <div class="section-hdr" style="margin-bottom:14px;">
+          <div class="section-title">Active sessions</div>
+          <button class="revoke-all" onclick="revokeAll()">Revoke all access</button>
+        </div>
+        <div class="table-wrap" style="margin-bottom:28px;">
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Tech name</th>
+                  <th>Device</th>
+                  <th>IP address</th>
+                  <th>Last active</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="sessionsBody">
+                <tr><td colspan="6" class="empty-state">No active sessions.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="section-hdr" style="margin-bottom:14px;">
+          <div class="section-title">IP alert history</div>
+        </div>
+        <div class="table-wrap">
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr><th>IP address</th><th>Reason</th><th>Date</th><th>Status</th></tr>
+              </thead>
+              <tbody id="ipAlertsBody">
+                <tr><td colspan="4" class="empty-state">No alerts on record.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ ANALYTICS ════ -->
+      <div class="tab-panel" id="tab-analytics">
+        <div class="section-hdr" style="margin-bottom:20px;">
+          <div class="section-title">Analytics</div>
+        </div>
+        <div id="analyticsLocked" class="locked-overlay" style="display:none;">
+          <div class="lock-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div class="locked-title">Analytics require Growth plan or above</div>
+          <div class="locked-sub">Upgrade to unlock claim analytics, weekly reports, and per-tech performance tracking.</div>
+          <a href="pricing.html" class="locked-btn">View plans</a>
+        </div>
+        <div id="analyticsContent">
+          <div class="charts-grid">
+            <div class="chart-card">
+              <div class="chart-card-title">Checklists per week</div>
+              <div class="chart-wrap"><canvas id="chartWeekly"></canvas></div>
+            </div>
+            <div class="chart-card">
+              <div class="chart-card-title">Checklists by job type</div>
+              <div class="chart-wrap"><canvas id="chartJobType"></canvas></div>
+            </div>
+            <div class="chart-card chart-full">
+              <div class="chart-card-title">Checklists by tech</div>
+              <div class="chart-wrap" style="height:160px;"><canvas id="chartTech"></canvas></div>
+            </div>
+          </div>
+
+          <div class="section-hdr" style="margin-bottom:14px;">
+            <div class="section-title">Claim outcome tracking</div>
+          </div>
+          <div class="table-wrap">
+            <div class="table-scroll">
+              <table id="claimTable">
+                <thead>
+                  <tr><th>Date</th><th>Tech</th><th>Job type</th><th>Outcome</th><th>Notes</th><th>Mark</th></tr>
+                </thead>
+                <tbody id="claimBody">
+                  <tr><td colspan="6" class="empty-state">No checklists to track yet.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ SETTINGS ════ -->
+      <div class="tab-panel" id="tab-settings">
+        <div class="section-hdr" style="margin-bottom:20px;">
+          <div class="section-title">Settings</div>
+        </div>
+
+        <!-- Company details -->
+        <div class="settings-section">
+          <div class="settings-title">Company details</div>
+          <div class="settings-sub">Used on PDF reports and team pages.</div>
+          <div id="settingsAlert"></div>
+          <div class="settings-form">
+            <div>
+              <label class="s-label" for="settingCompany">Company name</label>
+              <input class="s-input" type="text" id="settingCompany" placeholder="Acme Restoration" />
+            </div>
+            <div>
+              <label class="s-label" for="settingEmail">Account email</label>
+              <input class="s-input" type="email" id="settingEmail" placeholder="owner@company.com" />
+            </div>
+            <div>
+              <button class="settings-save" onclick="saveSettings()">Save changes</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Logo upload -->
+        <div class="settings-section">
+          <div class="settings-title">Company logo</div>
+          <div class="settings-sub">PNG or SVG, max 2MB. Shown on exported PDF reports.</div>
+          <div class="logo-upload-area" onclick="document.getElementById('logoFile').click()">
+            <div class="logo-upload-text">Click to upload logo</div>
+            <div class="logo-upload-sub">PNG, SVG — max 2MB</div>
+            <input type="file" id="logoFile" accept="image/png,image/svg+xml" onchange="handleLogoUpload(this)" />
+          </div>
+          <div id="logoPreview" style="margin-top:12px;display:none;">
+            <img id="logoImg" style="max-height:48px;border:1px solid #e5e7eb;padding:8px;" />
+          </div>
+        </div>
+
+        <!-- Notifications -->
+        <div class="settings-section">
+          <div class="settings-title">Email notifications</div>
+          <div class="settings-sub">Choose which emails you receive from RestoreDocAI.</div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-name">Trial ending reminder</div>
+              <div class="toggle-desc">Get notified 3 days before your trial expires</div>
+            </div>
+            <label class="toggle-switch"><input type="checkbox" id="notifTrial" checked /><span class="toggle-track"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-name">Monday weekly report</div>
+              <div class="toggle-desc">Summary of checklists, active techs, and activity from the past week</div>
+            </div>
+            <label class="toggle-switch"><input type="checkbox" id="notifWeekly" checked /><span class="toggle-track"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-name">IP access alerts</div>
+              <div class="toggle-desc">Email when your team link is accessed from an unusual location</div>
+            </div>
+            <label class="toggle-switch"><input type="checkbox" id="notifIP" /><span class="toggle-track"></span></label>
+          </div>
+        </div>
+
+        <!-- Change password -->
+        <div class="settings-section">
+          <div class="settings-title">Change password</div>
+          <div class="settings-sub">Leave blank if you don't want to change your password.</div>
+          <div class="settings-form">
+            <div>
+              <label class="s-label" for="pwCurrent">Current password</label>
+              <input class="s-input" type="password" id="pwCurrent" placeholder="Current password" />
+            </div>
+            <div>
+              <label class="s-label" for="pwNew">New password</label>
+              <input class="s-input" type="password" id="pwNew" placeholder="At least 8 characters" />
+            </div>
+            <div>
+              <button class="settings-save" onclick="changePassword()">Update password</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Billing -->
+        <div class="settings-section">
+          <div class="settings-title">Billing</div>
+          <div class="settings-sub">Manage your plan and billing information.</div>
+          <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+            <div>
+              <div style="font-size:12px;color:#6b7280;margin-bottom:2px;">Current plan</div>
+              <div style="font-size:14px;font-weight:600;color:#111827;" id="billingPlan">Growth — $297/mo</div>
+            </div>
+            <div>
+              <div style="font-size:12px;color:#6b7280;margin-bottom:2px;">Next billing</div>
+              <div style="font-size:14px;font-weight:600;color:#111827;" id="billingNext">—</div>
+            </div>
+            <a href="pricing.html" style="display:inline-block;font-size:13px;font-weight:600;color:#2563eb;border:1px solid #bfdbfe;padding:7px 14px;text-decoration:none;transition:background 120ms;" onmouseover="this.style.background='#eff6ff'" onmouseout="this.style.background=''">Upgrade plan</a>
+          </div>
+        </div>
+
+        <!-- Danger zone -->
+        <div class="settings-section danger-zone">
+          <div class="settings-title danger-title">Danger zone</div>
+          <div class="danger-sub">Deleting your account is permanent and cannot be undone. All checklists and team data will be erased.</div>
+          <button class="btn-danger" onclick="confirmDelete()">Delete account</button>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<script>
+  const API = 'https://restoredoc-backend-production.up.railway.app';
+  const token = sessionStorage.getItem('rdai_token');
+  let currentPin = '';
+  let pinVisible = false;
+  let dashData = {};
+  let allChecklists = [];
+  let currentPage = 1;
+  const PER_PAGE = 20;
+  let chartsInit = false;
+
+  // Auth guard
+  if (!token) window.location.href = 'login.html';
+
+  function authHeaders() {
+    return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` };
+  }
+
+  // Tab switching
+  function showTab(name) {
+    const titles = { overview: 'Overview', checklists: 'Checklists', team: 'Team Access', analytics: 'Analytics', settings: 'Settings' };
+    document.querySelectorAll('.tab-panel').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.sb-item').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    document.getElementById('nav-' + name).classList.add('active');
+    document.getElementById('topbarTitle').textContent = titles[name] || name;
+    if (name === 'analytics' && !chartsInit) initCharts();
+  }
+
+  // Fetch dashboard stats
+  async function loadStats() {
+    try {
+      const res = await fetch(`${API}/dashboard/stats`, { headers: authHeaders() });
+      if (res.status === 401) { logout(); return; }
+      const data = await res.json();
+      dashData = data;
+
+      const company = data.company_name || 'Your Company';
+      document.getElementById('topbarCompany').textContent = company;
+      document.getElementById('topbarAvatar').textContent = company.charAt(0).toUpperCase();
+      document.getElementById('sbPlanName').textContent = (data.plan || 'Starter').charAt(0).toUpperCase() + (data.plan || 'Starter').slice(1);
+      document.getElementById('settingCompany').value = company;
+      document.getElementById('settingEmail').value = data.email || '';
+      document.getElementById('billingPlan').textContent = data.plan_label || (data.plan || 'Starter') + ' plan';
+      document.getElementById('billingNext').textContent = data.next_billing || '—';
+
+      // Stats
+      document.getElementById('stat-checklists').textContent = data.checklists_this_month ?? '0';
+      const trend = data.checklist_trend;
+      if (trend !== undefined) {
+        const el = document.getElementById('stat-checklists-trend');
+        el.textContent = trend >= 0 ? `+${trend} vs last month` : `${trend} vs last month`;
+        el.className = 'stat-trend ' + (trend > 0 ? 'up' : trend < 0 ? 'down' : 'neutral');
+      }
+      document.getElementById('stat-techs').textContent = data.active_techs ?? '—';
+      document.getElementById('stat-plan').textContent = data.trial_days_remaining != null ? `${data.trial_days_remaining}d left` : (data.plan || 'Active');
+      document.getElementById('stat-plan-sub').textContent = data.trial_days_remaining != null ? 'Trial days remaining' : 'Plan active';
+      document.getElementById('stat-claims').textContent = data.est_claims_protected ? `$${Number(data.est_claims_protected).toLocaleString()}` : '—';
+
+      // Team link / PIN
+      const slug = data.team_slug || '';
+      const teamLink = data.team_link || (slug ? `${window.location.origin}/app.html?team=${slug}` : '—');
+      document.getElementById('teamLinkDisplay').textContent = teamLink;
+      currentPin = data.pin || '——————';
+
+      // Analytics lock
+      const plan = (data.plan || '').toLowerCase();
+      const hasAnalytics = ['growth', 'pro', 'enterprise'].includes(plan);
+      document.getElementById('analyticsLocked').style.display = hasAnalytics ? 'none' : 'block';
+      document.getElementById('analyticsContent').style.display = hasAnalytics ? 'block' : 'none';
+
+      // Activity table
+      renderActivity(data.recent_activity || []);
+    } catch (_) {
+      document.getElementById('topbarCompany').textContent = 'Your Company';
+    }
+  }
+
+  // Activity table
+  function renderActivity(rows) {
+    const body = document.getElementById('activityTableBody');
+    if (!rows.length) { body.innerHTML = '<tr><td colspan="5" class="empty-state">No activity yet.</td></tr>'; return; }
+    body.innerHTML = rows.slice(0, 10).map(r => `
+      <tr>
+        <td class="td-name">${esc(r.tech_name || r.name || '—')}</td>
+        <td><span class="badge badge-blue">${esc(r.job_type || '—')}</span></td>
+        <td>${r.created_at ? relativeTime(r.created_at) : '—'}</td>
+        <td>${r.completed != null && r.total != null ? `${r.completed}/${r.total}` : '—'}</td>
+        <td><button class="action-btn" onclick="viewChecklist('${esc(r.id || '')}')">View</button></td>
+      </tr>`).join('');
+  }
+
+  // Load checklists
+  async function loadChecklists() {
+    try {
+      const res = await fetch(`${API}/dashboard/checklists`, { headers: authHeaders() });
+      const data = await res.json();
+      allChecklists = data.checklists || data || [];
+      renderChecklists();
+    } catch (_) {
+      document.getElementById('checklistsBody').innerHTML = '<tr><td colspan="7" class="empty-state">Could not load checklists.</td></tr>';
+    }
+  }
+
+  function filterChecklists() {
+    currentPage = 1;
+    renderChecklists();
+  }
+
+  function renderChecklists() {
+    const search = document.getElementById('clSearch').value.toLowerCase();
+    const jobType = document.getElementById('clJobType').value;
+    const dateFrom = document.getElementById('clDateFrom').value;
+    const dateTo = document.getElementById('clDateTo').value;
+
+    const filtered = allChecklists.filter(cl => {
+      const matchSearch = !search || (cl.tech_name || '').toLowerCase().includes(search) || (cl.job_type || '').toLowerCase().includes(search);
+      const matchJob = !jobType || (cl.job_type || '').toLowerCase().includes(jobType);
+      const d = cl.created_at ? cl.created_at.slice(0, 10) : '';
+      const matchFrom = !dateFrom || d >= dateFrom;
+      const matchTo = !dateTo || d <= dateTo;
+      return matchSearch && matchJob && matchFrom && matchTo;
+    });
+
+    const total = filtered.length;
+    const pages = Math.ceil(total / PER_PAGE) || 1;
+    const slice = filtered.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
+
+    const body = document.getElementById('checklistsBody');
+    if (!slice.length) { body.innerHTML = '<tr><td colspan="7" class="empty-state">No checklists found.</td></tr>'; }
+    else body.innerHTML = slice.map(cl => `
+      <tr onclick="toggleClRow('${esc(cl.id || '')}', this)" style="cursor:pointer;">
+        <td>${cl.created_at ? cl.created_at.slice(0,10) : '—'}</td>
+        <td class="td-name">${esc(cl.tech_name || '—')}</td>
+        <td><span class="badge badge-blue">${esc(cl.job_type || '—')}</span></td>
+        <td>${esc(cl.water_category ? `Cat ${cl.water_category}` : cl.category || '—')}</td>
+        <td>${cl.photo_used ? '<span class="badge badge-green">Yes</span>' : '<span class="badge badge-gray">No</span>'}</td>
+        <td>${cl.completed != null && cl.total != null ? `${Math.round(cl.completed/cl.total*100)}%` : '—'}</td>
+        <td onclick="event.stopPropagation()">
+          <button class="action-btn" onclick="viewChecklist('${esc(cl.id||'')}')">View</button>
+          <button class="action-btn" onclick="downloadPDF('${esc(cl.id||'')}','standard')" style="margin-left:4px;">PDF</button>
+          <button class="action-btn" onclick="downloadPDF('${esc(cl.id||'')}','xactimate')" style="margin-left:4px;">Xactimate</button>
+        </td>
+      </tr>
+      <tr><td colspan="7" style="padding:0;"><div class="row-expanded-content" id="exp-${esc(cl.id||'')}">
+        <strong>Checklist items:</strong><br>${(cl.items||[]).join('<br>') || 'Click View to load full checklist.'}
+      </div></td></tr>`).join('');
+
+    // Pagination
+    const pag = document.getElementById('clPagination');
+    if (pages <= 1) { pag.innerHTML = ''; return; }
+    pag.innerHTML = `<span class="page-info">Page ${currentPage} of ${pages}</span>` +
+      (currentPage > 1 ? `<button class="page-btn" onclick="goPage(${currentPage-1})">Prev</button>` : '') +
+      Array.from({length: Math.min(pages, 7)}, (_,i) => i+1).map(p =>
+        `<button class="page-btn${p===currentPage?' active':''}" onclick="goPage(${p})">${p}</button>`).join('') +
+      (currentPage < pages ? `<button class="page-btn" onclick="goPage(${currentPage+1})">Next</button>` : '');
+  }
+
+  function goPage(p) { currentPage = p; renderChecklists(); }
+  function toggleClRow(id, tr) {
+    const exp = document.getElementById('exp-' + id);
+    if (exp) exp.classList.toggle('open');
+  }
+
+  // Charts
+  function initCharts() {
+    chartsInit = true;
+    const weeklyData = dashData.weekly_checklists || [4,7,5,9,6,11,8,3];
+    const labels = weeklyData.map ? Array.from({length: weeklyData.length}, (_,i) => `W${i+1}`) : ['W1','W2','W3','W4','W5','W6','W7','W8'];
+    const gridColor = '#f3f4f6';
+    const defaults = { font: { family: 'Inter', size: 11 } };
+
+    new Chart(document.getElementById('chartWeekly'), {
+      type: 'line',
+      data: { labels, datasets: [{ data: weeklyData, borderColor: '#2563eb', backgroundColor: 'transparent', borderWidth: 2, pointRadius: 3, pointBackgroundColor: '#2563eb', tension: 0.3 }] },
+      options: { plugins: { legend: { display: false } }, scales: { x: { grid: { color: gridColor }, ticks: defaults }, y: { grid: { color: gridColor }, ticks: { ...defaults, stepSize: 2 }, beginAtZero: true } }, maintainAspectRatio: false }
+    });
+
+    const jobData = dashData.by_job_type || { water: 14, fire: 5, mold: 8, storm: 3, biohazard: 1 };
+    new Chart(document.getElementById('chartJobType'), {
+      type: 'bar',
+      data: { labels: Object.keys(jobData), datasets: [{ data: Object.values(jobData), backgroundColor: '#2563eb', borderRadius: 0 }] },
+      options: { plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: defaults }, y: { grid: { color: gridColor }, ticks: defaults, beginAtZero: true } }, maintainAspectRatio: false }
+    });
+
+    const techData = dashData.by_tech || { 'Marcus T.': 12, 'Jordan R.': 8, 'Sam L.': 5, 'Alex P.': 4 };
+    new Chart(document.getElementById('chartTech'), {
+      type: 'bar',
+      data: { labels: Object.keys(techData), datasets: [{ data: Object.values(techData), backgroundColor: '#2563eb', borderRadius: 0 }] },
+      options: { indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { grid: { color: gridColor }, ticks: defaults, beginAtZero: true }, y: { grid: { display: false }, ticks: defaults } }, maintainAspectRatio: false }
+    });
+
+    // Claim table
+    renderClaimTable(allChecklists.slice(0, 10));
+  }
+
+  function renderClaimTable(rows) {
+    const body = document.getElementById('claimBody');
+    if (!rows.length) { body.innerHTML = '<tr><td colspan="6" class="empty-state">No checklists to track yet.</td></tr>'; return; }
+    body.innerHTML = rows.map(cl => `
+      <tr>
+        <td>${cl.created_at ? cl.created_at.slice(0,10) : '—'}</td>
+        <td>${esc(cl.tech_name||'—')}</td>
+        <td><span class="badge badge-blue">${esc(cl.job_type||'—')}</span></td>
+        <td id="outcome-${esc(cl.id||'')}"><span class="badge badge-gray">Not set</span></td>
+        <td><input style="font-family:inherit;font-size:12px;border:1px solid #e5e7eb;padding:4px 8px;outline:none;width:100%;" placeholder="Optional note..." /></td>
+        <td>
+          <button class="action-btn" onclick="markClaim('${esc(cl.id||'')}','clean')">Clean</button>
+          <button class="action-btn danger" onclick="markClaim('${esc(cl.id||'')}','issue')" style="margin-left:4px;">Issue</button>
+        </td>
+      </tr>`).join('');
+  }
+
+  function markClaim(id, outcome) {
+    const el = document.getElementById('outcome-' + id);
+    if (!el) return;
+    el.innerHTML = outcome === 'clean'
+      ? '<span class="badge badge-green">Clean</span>'
+      : '<span class="badge badge-red">Issue</span>';
+    fetch(`${API}/dashboard/claim-outcome`, { method: 'POST', headers: authHeaders(), body: JSON.stringify({ checklist_id: id, outcome }) }).catch(()=>{});
+  }
+
+  // Team link copy
+  function copyTeamLink() {
+    const link = document.getElementById('teamLinkDisplay').textContent;
+    navigator.clipboard.writeText(link).catch(()=>{});
+    const btn = document.getElementById('copyLinkBtn');
+    if (btn) { btn.textContent = 'Copied'; btn.classList.add('copied'); setTimeout(()=>{ btn.textContent='Copy link'; btn.classList.remove('copied'); }, 2000); }
+  }
+
+  // PIN
+  function togglePin() {
+    pinVisible = !pinVisible;
+    const el = document.getElementById('pinDisplay');
+    el.textContent = pinVisible ? currentPin : '------';
+    el.className = pinVisible ? 'pin-val' : 'pin-val hidden';
+    document.getElementById('pinToggleBtn').textContent = pinVisible ? 'Hide' : 'Show';
+  }
+
+  async function updatePin() {
+    const val = document.getElementById('newPinInput').value.trim();
+    const msg = document.getElementById('pinMsg');
+    if (!/^\d{4,8}$/.test(val)) { msg.textContent = 'PIN must be 4-8 digits.'; msg.style.color='#ef4444'; return; }
+    try {
+      const res = await fetch(`${API}/dashboard/pin`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify({ pin: val }) });
+      if (!res.ok) throw new Error();
+      currentPin = val;
+      document.getElementById('pinDisplay').textContent = pinVisible ? val : '------';
+      document.getElementById('newPinInput').value = '';
+      msg.textContent = 'PIN updated.'; msg.style.color='#16a34a';
+      setTimeout(()=>{ msg.textContent=''; },3000);
+    } catch { msg.textContent = 'Could not update PIN.'; msg.style.color='#ef4444'; }
+  }
+
+  function revokeAll() {
+    if (!confirm('Revoke all active field tech sessions? Techs will need to re-enter the PIN.')) return;
+    fetch(`${API}/dashboard/revoke-all`, { method: 'POST', headers: authHeaders() }).catch(()=>{});
+    document.getElementById('sessionsBody').innerHTML = '<tr><td colspan="6" class="empty-state">All sessions revoked.</td></tr>';
+  }
+
+  // Load sessions
+  async function loadSessions() {
+    try {
+      const res = await fetch(`${API}/dashboard/sessions`, { headers: authHeaders() });
+      const data = await res.json();
+      const sessions = data.sessions || data || [];
+      const body = document.getElementById('sessionsBody');
+      if (!sessions.length) { body.innerHTML = '<tr><td colspan="6" class="empty-state">No active sessions.</td></tr>'; return; }
+      body.innerHTML = sessions.map(s => `
+        <tr>
+          <td class="td-name">${esc(s.tech_name||'—')}</td>
+          <td>${esc(s.device||'—')}</td>
+          <td>${esc(s.ip||'—')}</td>
+          <td>${s.last_active ? relativeTime(s.last_active) : '—'}</td>
+          <td><span class="badge badge-green">${esc(s.status||'active')}</span></td>
+          <td><button class="action-btn danger" onclick="revokeSession('${esc(s.id||'')}',this)">Revoke</button></td>
+        </tr>`).join('');
+    } catch (_) {}
+  }
+
+  function revokeSession(id, btn) {
+    fetch(`${API}/dashboard/sessions/${id}`, { method: 'DELETE', headers: authHeaders() }).catch(()=>{});
+    btn.closest('tr').remove();
+  }
+
+  // Settings save
+  async function saveSettings() {
+    const company = document.getElementById('settingCompany').value.trim();
+    const email = document.getElementById('settingEmail').value.trim();
+    const alertEl = document.getElementById('settingsAlert');
+    try {
+      const res = await fetch(`${API}/dashboard/settings`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify({ company_name: company, email }) });
+      if (!res.ok) throw new Error();
+      alertEl.innerHTML = '<div class="inline-alert success">Settings saved.</div>';
+      setTimeout(() => { alertEl.innerHTML = ''; }, 3000);
+    } catch {
+      alertEl.innerHTML = '<div class="inline-alert error">Could not save settings.</div>';
+    }
+  }
+
+  async function changePassword() {
+    const current = document.getElementById('pwCurrent').value;
+    const newpw = document.getElementById('pwNew').value;
+    if (!current || newpw.length < 8) return;
+    try {
+      await fetch(`${API}/auth/change-password`, { method: 'POST', headers: authHeaders(), body: JSON.stringify({ current_password: current, new_password: newpw }) });
+      document.getElementById('pwCurrent').value = '';
+      document.getElementById('pwNew').value = '';
+    } catch (_) {}
+  }
+
+  function handleLogoUpload(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      document.getElementById('logoImg').src = e.target.result;
+      document.getElementById('logoPreview').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function confirmDelete() {
+    if (confirm('Delete your account? This is permanent and cannot be undone.')) {
+      fetch(`${API}/auth/delete`, { method: 'DELETE', headers: authHeaders() })
+        .finally(() => { sessionStorage.removeItem('rdai_token'); window.location.href = 'index.html'; });
+    }
+  }
+
+  function viewChecklist(id) { if (id) window.open(`${API}/checklists/${id}/pdf`, '_blank'); }
+  function downloadPDF(id, type) { if (id) window.open(`${API}/checklists/${id}/pdf?format=${type}`, '_blank'); }
+  function downloadReport() { window.open(`${API}/dashboard/report`, '_blank'); }
+  function logout() { sessionStorage.removeItem('rdai_token'); window.location.href = 'login.html'; }
+
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function relativeTime(ts) {
+    const diff = Math.floor((Date.now() - new Date(ts)) / 1000);
+    if (diff < 60) return 'Just now';
+    if (diff < 3600) return `${Math.floor(diff/60)}m ago`;
+    if (diff < 86400) return `${Math.floor(diff/3600)}h ago`;
+    return new Date(ts).toLocaleDateString();
+  }
+
+  // Init
+  loadStats();
+  loadChecklists();
+  loadSessions();
+</script>
+</body>
+</html>

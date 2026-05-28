@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RestoreDocAI — Field Tool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: #f9fafb; color: #111827; -webkit-font-smoothing: antialiased; min-height: 100vh; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Shared ── */
+    .screen { display: none; min-height: 100vh; }
+    .screen.active { display: flex; flex-direction: column; }
+
+    .form-label { display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px; }
+    .form-input, .form-select, .form-textarea {
+      display: block; width: 100%; font-family: inherit; font-size: 14px;
+      color: #111827; background: #fff; border: 1px solid #e5e7eb;
+      padding: 9px 12px; outline: none; transition: border-color 120ms; -webkit-appearance: none;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: #2563eb; }
+    .form-input::placeholder, .form-textarea::placeholder { color: #9ca3af; }
+    .form-group { margin-bottom: 16px; }
+    .form-error { font-size: 12px; color: #ef4444; margin-top: 5px; display: none; }
+    .form-error.visible { display: block; }
+
+    .btn-primary {
+      display: block; width: 100%; font-family: inherit; font-size: 14px; font-weight: 600;
+      color: #fff; background: #2563eb; border: 1px solid #2563eb;
+      padding: 11px 0; cursor: pointer; transition: background 120ms;
+    }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .btn-outline {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      font-family: inherit; font-size: 13px; font-weight: 500;
+      color: #374151; background: #fff; border: 1px solid #e5e7eb;
+      padding: 8px 16px; cursor: pointer; transition: border-color 120ms, color 120ms;
+    }
+    .btn-outline:hover { border-color: #2563eb; color: #2563eb; }
+
+    .alert { padding: 11px 14px; border: 1px solid; font-size: 13px; margin-bottom: 16px; }
+    .alert-error { background: #fef2f2; border-color: #fecaca; color: #b91c1c; }
+    .alert-warning { background: #fffbeb; border-color: #fde68a; color: #92400e; }
+
+    /* ══════════════════════════════════
+       SCREEN 1 — PIN ENTRY
+    ══════════════════════════════════ */
+    #screen-pin {
+      align-items: center; justify-content: center;
+      background: #f9fafb; padding: 24px;
+    }
+    .pin-card {
+      background: #fff; border: 1px solid #e5e7eb;
+      width: 100%; max-width: 380px; padding: 40px;
+    }
+    .pin-logo { font-size: 15px; font-weight: 700; color: #111827; margin-bottom: 28px; }
+    .pin-company { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #2563eb; margin-bottom: 12px; }
+    .pin-headline { font-size: 20px; font-weight: 700; color: #111827; letter-spacing: -0.3px; margin-bottom: 6px; }
+    .pin-sub { font-size: 14px; color: #6b7280; margin-bottom: 28px; line-height: 1.5; }
+    .pin-input-styled {
+      font-family: inherit; font-size: 22px; font-weight: 700;
+      letter-spacing: 0.2em; text-align: center; color: #111827;
+      width: 100%; border: 1px solid #e5e7eb; padding: 12px;
+      outline: none; transition: border-color 120ms;
+    }
+    .pin-input-styled:focus { border-color: #2563eb; }
+    .lockout-msg {
+      text-align: center; font-size: 13px; color: #b91c1c;
+      padding: 12px; background: #fef2f2; border: 1px solid #fecaca;
+      display: none;
+    }
+
+    /* ══════════════════════════════════
+       SCREEN 2 — GENERATOR
+    ══════════════════════════════════ */
+    #screen-gen { background: #f9fafb; }
+    .gen-topbar {
+      background: #fff; border-bottom: 1px solid #e5e7eb;
+      padding: 0 24px; height: 54px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .gen-topbar-left { display: flex; align-items: center; gap: 16px; }
+    .gen-company-name { font-size: 14px; font-weight: 700; color: #111827; }
+    .gen-tech-name { font-size: 13px; color: #6b7280; }
+    .gen-logout { font-size: 13px; color: #6b7280; cursor: pointer; background: none; border: none; font-family: inherit; padding: 0; }
+    .gen-logout:hover { color: #111827; }
+
+    .gen-content { flex: 1; max-width: 640px; margin: 0 auto; width: 100%; padding: 32px 24px 64px; }
+    .gen-headline { font-size: 20px; font-weight: 700; color: #111827; letter-spacing: -0.3px; margin-bottom: 24px; }
+
+    /* Job type selector */
+    .job-type-group { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+    .job-type-btn {
+      font-family: inherit; font-size: 13px; font-weight: 500;
+      color: #374151; background: #fff; border: 1px solid #e5e7eb;
+      padding: 8px 16px; cursor: pointer; transition: all 120ms;
+    }
+    .job-type-btn:hover { border-color: #2563eb; color: #2563eb; }
+    .job-type-btn.selected { background: #2563eb; color: #fff; border-color: #2563eb; }
+
+    /* Water fields */
+    .water-fields {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+      margin-bottom: 20px; display: none;
+    }
+    .water-fields.visible { display: grid; }
+
+    /* Notes */
+    .notes-field { margin-bottom: 20px; }
+
+    /* Photo upload */
+    .photo-section { margin-bottom: 24px; }
+    .photo-upload-area {
+      border: 1px dashed #e5e7eb; padding: 28px; text-align: center;
+      cursor: pointer; transition: border-color 120ms; background: #fff;
+    }
+    .photo-upload-area:hover { border-color: #2563eb; }
+    .photo-upload-icon { margin-bottom: 8px; }
+    .photo-upload-text { font-size: 14px; color: #6b7280; }
+    .photo-upload-sub { font-size: 12px; color: #9ca3af; margin-top: 4px; }
+    #photoFile { display: none; }
+
+    .photo-preview-wrap { display: none; margin-top: 14px; }
+    .photo-preview-wrap.visible { display: block; }
+    .photo-preview-img { max-width: 100%; max-height: 200px; border: 1px solid #e5e7eb; object-fit: cover; display: block; }
+    .photo-actions { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+
+    .identify-result {
+      border: 1px solid #e5e7eb; background: #f9fafb;
+      padding: 14px; margin-top: 12px; display: none;
+    }
+    .identify-result.visible { display: block; }
+    .identify-result-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #6b7280; margin-bottom: 6px; }
+    .identify-result-text { font-size: 13px; color: #111827; line-height: 1.5; margin-bottom: 10px; }
+    .identify-actions { display: flex; gap: 8px; }
+    .id-btn { font-family: inherit; font-size: 12px; font-weight: 500; padding: 5px 12px; border: 1px solid #e5e7eb; cursor: pointer; background: #fff; color: #374151; transition: border-color 120ms; }
+    .id-btn:hover { border-color: #2563eb; color: #2563eb; }
+    .id-btn.confirmed { background: #f0fdf4; border-color: #86efac; color: #16a34a; }
+    .id-btn.rejected { background: #fef2f2; border-color: #fca5a5; color: #dc2626; }
+
+    /* Progress message */
+    .gen-progress {
+      display: none; padding: 16px; background: #eff6ff; border: 1px solid #bfdbfe;
+      font-size: 13px; color: #2563eb; margin-bottom: 16px;
+    }
+    .gen-progress.visible { display: block; }
+
+    /* ══════════════════════════════════
+       SCREEN 3 — CHECKLIST
+    ══════════════════════════════════ */
+    #screen-checklist { background: #f9fafb; }
+    .cl-topbar {
+      background: #fff; border-bottom: 1px solid #e5e7eb;
+      padding: 0 24px; height: 54px;
+      display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+    }
+    .cl-topbar-left { display: flex; align-items: center; gap: 14px; }
+    .cl-company { font-size: 14px; font-weight: 700; color: #111827; }
+    .cl-new-btn {
+      font-family: inherit; font-size: 13px; font-weight: 500;
+      color: #2563eb; background: none; border: 1px solid #bfdbfe;
+      padding: 5px 12px; cursor: pointer; transition: background 120ms;
+    }
+    .cl-new-btn:hover { background: #eff6ff; }
+    .cl-topbar-right { display: flex; gap: 8px; }
+    .cl-action-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-family: inherit; font-size: 12px; font-weight: 500;
+      color: #374151; background: #fff; border: 1px solid #e5e7eb;
+      padding: 6px 12px; cursor: pointer; transition: border-color 120ms;
+    }
+    .cl-action-btn:hover { border-color: #2563eb; color: #2563eb; }
+    .cl-action-btn.primary { background: #2563eb; color: #fff; border-color: #2563eb; }
+    .cl-action-btn.primary:hover { background: #1d4ed8; }
+
+    .cl-content { flex: 1; max-width: 680px; margin: 0 auto; width: 100%; padding: 28px 24px 64px; }
+
+    /* Progress bar */
+    .cl-progress-wrap { margin-bottom: 24px; }
+    .cl-progress-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .cl-progress-title { font-size: 16px; font-weight: 700; color: #111827; letter-spacing: -0.2px; }
+    .cl-progress-count { font-size: 13px; color: #6b7280; }
+    .cl-progress-track { width: 100%; height: 6px; background: #e5e7eb; overflow: hidden; }
+    .cl-progress-fill { height: 100%; background: #2563eb; transition: width 0.3s; }
+    .cl-pct { font-size: 12px; color: #6b7280; margin-top: 5px; }
+
+    /* Sections */
+    .cl-section { margin-bottom: 8px; }
+    .cl-section-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.09em; color: #2563eb;
+      padding: 14px 0 6px;
+    }
+    .cl-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      background: #fff; border: 1px solid #e5e7eb; padding: 13px 14px;
+      cursor: pointer; margin-bottom: 4px; transition: background 120ms;
+      -webkit-user-select: none; user-select: none;
+    }
+    .cl-item:hover { background: #fafafa; }
+    .cl-item.checked { background: #f9fafb; }
+    .cl-checkbox {
+      flex-shrink: 0; width: 18px; height: 18px;
+      border: 1.5px solid #d1d5db; margin-top: 0.5px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .cl-item.checked .cl-checkbox { background: #2563eb; border-color: #2563eb; }
+    .cl-item.checked .cl-checkbox::after {
+      content: '';
+      display: block; width: 7px; height: 4.5px;
+      border-left: 2px solid #fff; border-bottom: 2px solid #fff;
+      transform: rotate(-45deg) translateY(-0.5px);
+    }
+    .cl-item-text { font-size: 13px; color: #374151; line-height: 1.5; flex: 1; }
+    .cl-item.checked .cl-item-text { color: #9ca3af; text-decoration: line-through; }
+
+    .cl-empty { text-align: center; padding: 48px 0; color: #9ca3af; font-size: 13px; }
+
+    @media (max-width: 480px) {
+      .pin-card { padding: 28px 20px; }
+      .gen-content, .cl-content { padding: 20px 16px 56px; }
+      .job-type-group { gap: 6px; }
+      .job-type-btn { font-size: 12px; padding: 7px 12px; }
+      .cl-topbar-right { gap: 4px; }
+      .cl-action-btn { font-size: 11px; padding: 5px 8px; }
+      .water-fields { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     SCREEN 1: PIN ENTRY
+══════════════════════════════════ -->
+<div class="screen active" id="screen-pin">
+  <div class="pin-card">
+    <div class="pin-logo">RestoreDocAI</div>
+    <div class="pin-company" id="pinCompanyName">Loading...</div>
+    <div class="pin-headline">Enter your details to access the tool</div>
+    <div class="pin-sub">Enter your name and the 6-digit PIN provided by your manager.</div>
+
+    <div id="pinAlertBox"></div>
+    <div class="lockout-msg" id="lockoutMsg">Too many incorrect attempts. Please contact your manager to reset access.</div>
+
+    <form id="pinForm">
+      <div class="form-group">
+        <label class="form-label" for="techName">Your name</label>
+        <input class="form-input" type="text" id="techName" placeholder="Marcus Taylor" autocomplete="name" required />
+        <div class="form-error" id="errTechName">Please enter your name.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="pinInput">6-digit PIN</label>
+        <input class="pin-input-styled" type="password" inputmode="numeric" id="pinInput" maxlength="8" placeholder="------" required />
+        <div class="form-error" id="errPin">Please enter the PIN.</div>
+      </div>
+      <button type="submit" class="btn-primary" id="pinSubmit">Access Tool</button>
+    </form>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     SCREEN 2: GENERATOR
+══════════════════════════════════ -->
+<div class="screen" id="screen-gen">
+  <div class="gen-topbar">
+    <div class="gen-topbar-left">
+      <div class="gen-company-name" id="genCompanyName"></div>
+      <div class="gen-tech-name" id="genTechName"></div>
+    </div>
+    <button class="gen-logout" onclick="resetToPin()">Log out</button>
+  </div>
+
+  <div class="gen-content">
+    <div class="gen-headline">New checklist</div>
+
+    <!-- Job type selector -->
+    <div class="form-group">
+      <label class="form-label">Job type</label>
+      <div class="job-type-group" id="jobTypeGroup">
+        <button type="button" class="job-type-btn" data-type="Water Damage" onclick="selectJobType(this)">Water Damage</button>
+        <button type="button" class="job-type-btn" data-type="Fire and Smoke" onclick="selectJobType(this)">Fire and Smoke</button>
+        <button type="button" class="job-type-btn" data-type="Mold Remediation" onclick="selectJobType(this)">Mold Remediation</button>
+        <button type="button" class="job-type-btn" data-type="Storm Damage" onclick="selectJobType(this)">Storm Damage</button>
+        <button type="button" class="job-type-btn" data-type="Biohazard" onclick="selectJobType(this)">Biohazard</button>
+      </div>
+    </div>
+
+    <!-- Water-specific dropdowns -->
+    <div class="water-fields" id="waterFields">
+      <div class="form-group" style="margin-bottom:0;">
+        <label class="form-label" for="waterCategory">Water category</label>
+        <select class="form-select" id="waterCategory">
+          <option value="" disabled selected>Select category</option>
+          <option value="1">Category 1 — Clean water</option>
+          <option value="2">Category 2 — Grey water</option>
+          <option value="3">Category 3 — Black water</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin-bottom:0;">
+        <label class="form-label" for="waterClass">Water class</label>
+        <select class="form-select" id="waterClass">
+          <option value="" disabled selected>Select class</option>
+          <option value="1">Class 1 — Minimal absorption</option>
+          <option value="2">Class 2 — Significant absorption</option>
+          <option value="3">Class 3 — Greatest absorption</option>
+          <option value="4">Class 4 — Specialty drying</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Technician notes -->
+    <div class="notes-field form-group">
+      <label class="form-label" for="techNotes">Additional notes (optional)</label>
+      <textarea class="form-textarea" id="techNotes" rows="2" placeholder="Describe specific conditions, materials affected, or anything else relevant..."></textarea>
+    </div>
+
+    <!-- Photo upload -->
+    <div class="photo-section">
+      <label class="form-label">Site photo (optional)</label>
+      <div class="photo-upload-area" onclick="document.getElementById('photoFile').click()">
+        <div class="photo-upload-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        </div>
+        <div class="photo-upload-text">Tap to upload a site photo</div>
+        <div class="photo-upload-sub">AI will identify damage type and affected materials</div>
+        <input type="file" id="photoFile" accept="image/*" capture="environment" onchange="handlePhoto(this)" />
+      </div>
+
+      <div class="photo-preview-wrap" id="photoPreviewWrap">
+        <img class="photo-preview-img" id="photoPreviewImg" src="" alt="Site photo" />
+        <div class="photo-actions">
+          <button type="button" class="btn-outline" id="identifyBtn" onclick="identifyDamage()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Identify damage
+          </button>
+          <button type="button" class="btn-outline" onclick="removePhoto()">Remove photo</button>
+        </div>
+
+        <div class="identify-result" id="identifyResult">
+          <div class="identify-result-label">AI identified</div>
+          <div class="identify-result-text" id="identifyText"></div>
+          <div class="identify-actions">
+            <button class="id-btn" id="confirmBtn" onclick="confirmIdentify(true)">Correct</button>
+            <button class="id-btn" id="rejectBtn" onclick="confirmIdentify(false)">Incorrect</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress message (no spinner) -->
+    <div class="gen-progress" id="genProgress">Generating your IICRC-standard checklist. This takes a few seconds...</div>
+
+    <button type="button" class="btn-primary" id="generateBtn" disabled onclick="generateChecklist()">
+      Generate checklist
+    </button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     SCREEN 3: CHECKLIST DISPLAY
+══════════════════════════════════ -->
+<div class="screen" id="screen-checklist">
+  <div class="cl-topbar">
+    <div class="cl-topbar-left">
+      <div class="cl-company" id="clCompanyName"></div>
+      <button class="cl-new-btn" onclick="newChecklist()">New checklist</button>
+    </div>
+    <div class="cl-topbar-right">
+      <button class="cl-action-btn" onclick="copyChecklist()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy
+      </button>
+      <button class="cl-action-btn primary" onclick="downloadPDF()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        PDF
+      </button>
+    </div>
+  </div>
+
+  <div class="cl-content">
+    <div class="cl-progress-wrap">
+      <div class="cl-progress-header">
+        <div class="cl-progress-title" id="clTitle">Checklist</div>
+        <div class="cl-progress-count" id="clCount">0 / 0</div>
+      </div>
+      <div class="cl-progress-track">
+        <div class="cl-progress-fill" id="clProgressFill" style="width:0%"></div>
+      </div>
+      <div class="cl-pct" id="clPct">0% complete</div>
+    </div>
+
+    <div id="checklistContent"></div>
+
+    <div id="clComplete" style="display:none;margin-top:24px;padding:20px;background:#f0fdf4;border:1px solid #86efac;text-align:center;">
+      <div style="font-size:14px;font-weight:600;color:#15803d;margin-bottom:4px;">All items complete</div>
+      <div style="font-size:13px;color:#166534;">This checklist is ready for adjuster submission.</div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  const API = 'https://restoredoc-backend-production.up.railway.app';
+
+  // State
+  let teamSlug = '';
+  let techSession = { name: '', company: '' };
+  let selectedJobType = '';
+  let photoFile = null;
+  let photoIdentified = false;
+  let identifyConfirmed = null;
+  let lastChecklistId = null;
+  let failedPinAttempts = 0;
+  const MAX_ATTEMPTS = 5;
+
+  // Extract team slug from URL
+  function getSlug() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('team')) return params.get('team');
+    const path = window.location.pathname;
+    const match = path.match(/\/app\/([^/?#]+)/);
+    return match ? match[1] : '';
+  }
+
+  async function init() {
+    teamSlug = getSlug();
+    if (!teamSlug) {
+      document.getElementById('pinCompanyName').textContent = 'RestoreDocAI Field Tool';
+      return;
+    }
+    try {
+      const res = await fetch(`${API}/team/${teamSlug}/info`);
+      if (res.ok) {
+        const data = await res.json();
+        const name = data.company_name || data.name || 'Your Team';
+        document.getElementById('pinCompanyName').textContent = name;
+        techSession.company = name;
+      }
+    } catch (_) {
+      document.getElementById('pinCompanyName').textContent = 'Your Team';
+    }
+  }
+
+  // PIN form submit
+  document.getElementById('pinForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (failedPinAttempts >= MAX_ATTEMPTS) return;
+
+    const name = document.getElementById('techName').value.trim();
+    const pin = document.getElementById('pinInput').value.trim();
+
+    if (!name) { showFieldErr('errTechName'); return; }
+    else hideFieldErr('errTechName');
+    if (!pin) { showFieldErr('errPin'); return; }
+    else hideFieldErr('errPin');
+
+    const btn = document.getElementById('pinSubmit');
+    btn.disabled = true;
+    btn.textContent = 'Verifying...';
+    clearAlert('pinAlertBox');
+
+    try {
+      const res = await fetch(`${API}/team/${teamSlug}/verify-pin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, pin })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Incorrect PIN. Please try again.');
+      techSession.name = name;
+      if (data.company_name) techSession.company = data.company_name;
+      if (data.token) sessionStorage.setItem('rdai_tech_token', data.token);
+      showScreen('gen');
+    } catch (err) {
+      failedPinAttempts++;
+      if (failedPinAttempts >= MAX_ATTEMPTS) {
+        document.getElementById('lockoutMsg').style.display = 'block';
+        document.getElementById('pinForm').style.display = 'none';
+      } else {
+        showAlert('pinAlertBox', err.message + (failedPinAttempts >= 3 ? ` (${MAX_ATTEMPTS - failedPinAttempts} attempts left)` : ''), 'error');
+      }
+      btn.disabled = false;
+      btn.textContent = 'Access Tool';
+    }
+  });
+
+  function showScreen(name) {
+    document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+    document.getElementById('screen-' + name).classList.add('active');
+    window.scrollTo(0, 0);
+
+    if (name === 'gen') {
+      document.getElementById('genCompanyName').textContent = techSession.company;
+      document.getElementById('genTechName').textContent = techSession.name;
+    }
+    if (name === 'checklist') {
+      document.getElementById('clCompanyName').textContent = techSession.company;
+    }
+  }
+
+  // Job type selection
+  function selectJobType(btn) {
+    document.querySelectorAll('.job-type-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedJobType = btn.dataset.type;
+    const waterFields = document.getElementById('waterFields');
+    waterFields.classList.toggle('visible', selectedJobType === 'Water Damage');
+    document.getElementById('generateBtn').disabled = false;
+  }
+
+  // Photo handling
+  function handlePhoto(input) {
+    const file = input.files[0];
+    if (!file) return;
+    photoFile = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      document.getElementById('photoPreviewImg').src = e.target.result;
+      document.getElementById('photoPreviewWrap').classList.add('visible');
+      document.getElementById('identifyResult').classList.remove('visible');
+      photoIdentified = false;
+      identifyConfirmed = null;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function removePhoto() {
+    photoFile = null;
+    document.getElementById('photoPreviewWrap').classList.remove('visible');
+    document.getElementById('identifyResult').classList.remove('visible');
+    document.getElementById('photoFile').value = '';
+    photoIdentified = false;
+  }
+
+  async function identifyDamage() {
+    if (!photoFile) return;
+    const btn = document.getElementById('identifyBtn');
+    btn.disabled = true;
+    btn.textContent = 'Analyzing photo...';
+
+    try {
+      const fd = new FormData();
+      fd.append('photo', photoFile);
+      fd.append('job_type', selectedJobType);
+      const res = await fetch(`${API}/checklist/identify/${teamSlug}`, { method: 'POST', body: fd });
+      const data = await res.json();
+      const desc = data.description || data.result || data.identified || 'Damage identified from photo.';
+      document.getElementById('identifyText').textContent = desc;
+      document.getElementById('identifyResult').classList.add('visible');
+      document.getElementById('confirmBtn').className = 'id-btn';
+      document.getElementById('rejectBtn').className = 'id-btn';
+      photoIdentified = true;
+    } catch (_) {
+      document.getElementById('identifyText').textContent = 'Photo uploaded. AI identification unavailable — checklist will be generated from your job type selection.';
+      document.getElementById('identifyResult').classList.add('visible');
+      photoIdentified = true;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Identify damage';
+    }
+  }
+
+  function confirmIdentify(correct) {
+    identifyConfirmed = correct;
+    document.getElementById('confirmBtn').className = 'id-btn' + (correct ? ' confirmed' : '');
+    document.getElementById('rejectBtn').className = 'id-btn' + (!correct ? ' rejected' : '');
+  }
+
+  // Generate checklist
+  async function generateChecklist() {
+    if (!selectedJobType) return;
+    const btn = document.getElementById('generateBtn');
+    const prog = document.getElementById('genProgress');
+    btn.disabled = true;
+    prog.classList.add('visible');
+
+    const payload = {
+      job_type: selectedJobType,
+      notes: document.getElementById('techNotes').value.trim(),
+      tech_name: techSession.name,
+      photo_confirmed: identifyConfirmed,
+    };
+    if (selectedJobType === 'Water Damage') {
+      payload.water_category = document.getElementById('waterCategory').value || undefined;
+      payload.water_class = document.getElementById('waterClass').value || undefined;
+    }
+
+    try {
+      const res = await fetch(`${API}/checklist/generate/${teamSlug}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      lastChecklistId = data.id || data.checklist_id || null;
+      renderChecklist(data);
+      showScreen('checklist');
+    } catch (_) {
+      // Fallback demo checklist
+      renderChecklist(buildFallback(selectedJobType));
+      showScreen('checklist');
+    } finally {
+      btn.disabled = false;
+      prog.classList.remove('visible');
+    }
+  }
+
+  function buildFallback(jobType) {
+    const base = {
+      'Water Damage': {
+        sections: [
+          { title: 'Initial Assessment', items: [
+            'Document source of loss with photos before any extraction (IICRC S500 §4.1)',
+            'Record moisture readings at all affected surfaces using a calibrated meter',
+            'Identify affected materials — drywall, hardwood, subfloor, insulation, OSB',
+            'Assign water category and class per IICRC S500 §5',
+            'Map and measure affected area in square footage',
+          ]},
+          { title: 'Extraction', items: [
+            'Extract standing water using truck-mount or portable extractor',
+            'Log extraction volume, equipment used, and start/end time',
+            'Identify contaminated materials and flag for removal',
+            'Document wet materials with photos after extraction',
+          ]},
+          { title: 'Drying Setup', items: [
+            'Place air movers per S500 drying ratios — 1 per 50 sq ft minimum',
+            'Set commercial dehumidifiers — log brand, model, serial number, and placement',
+            'Record initial psychrometric readings — temperature, relative humidity, GPP',
+            'Document equipment placement with photos and serial numbers',
+          ]},
+          { title: 'Scope of Work', items: [
+            'Generate Xactimate-ready scope narrative for adjuster',
+            'Attach IICRC water category and class documentation',
+            'Include equipment list with daily rates for adjuster review',
+            'Export final PDF with company branding and claim reference',
+          ]},
+        ]
+      },
+      'Fire and Smoke': {
+        sections: [
+          { title: 'Initial Assessment', items: [
+            'Document fire origin area and spread path with photos',
+            'Identify all affected materials — structural, contents, HVAC',
+            'Note smoke odor type — wet smoke, dry smoke, protein, fuel oil',
+            'Test surfaces for soot type to determine cleaning method',
+          ]},
+          { title: 'Contents and Structure', items: [
+            'Photograph and inventory all affected contents before moving',
+            'Document structural damage to walls, ceilings, roof systems',
+            'Test HVAC system for smoke contamination before operation',
+            'Identify salvageable vs. non-salvageable items',
+          ]},
+          { title: 'Scope of Work', items: [
+            'Document cleaning methods required per surface type',
+            'Generate Xactimate scope for fire and smoke damage',
+            'Include odor remediation protocol in scope',
+          ]},
+        ]
+      },
+    };
+    return base[jobType] || {
+      sections: [
+        { title: 'Assessment', items: ['Document initial damage conditions with photos', 'Identify affected area and scope', 'Note hazardous conditions requiring immediate action'] },
+        { title: 'Scope of Work', items: ['Document all affected materials and systems', 'Generate scope narrative for adjuster', 'Export completed report with company branding'] },
+      ]
+    };
+  }
+
+  // Render checklist on screen 3
+  let checklistState = [];
+
+  function renderChecklist(data) {
+    const sections = data.sections || [];
+    const jobType = data.job_type || selectedJobType;
+    document.getElementById('clTitle').textContent = jobType;
+
+    checklistState = [];
+    sections.forEach(sec => {
+      (sec.items || []).forEach((text, i) => {
+        checklistState.push({ id: `${sec.title}-${i}`, section: sec.title, text, checked: false });
+      });
+    });
+
+    const content = document.getElementById('checklistContent');
+    content.innerHTML = '';
+    sections.forEach(sec => {
+      const sLabel = document.createElement('div');
+      sLabel.className = 'cl-section-label';
+      sLabel.textContent = sec.title;
+      content.appendChild(sLabel);
+
+      (sec.items || []).forEach((text, i) => {
+        const itemId = `${sec.title}-${i}`;
+        const div = document.createElement('div');
+        div.className = 'cl-item';
+        div.id = 'item-' + CSS.escape(itemId);
+        div.onclick = () => toggleItem(itemId);
+        div.innerHTML = `<div class="cl-checkbox"></div><div class="cl-item-text">${escHtml(text)}</div>`;
+        content.appendChild(div);
+      });
+    });
+
+    updateProgress();
+  }
+
+  function toggleItem(id) {
+    const item = checklistState.find(i => i.id === id);
+    if (!item) return;
+    item.checked = !item.checked;
+    const el = document.getElementById('item-' + CSS.escape(id));
+    if (el) el.classList.toggle('checked', item.checked);
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const total = checklistState.length;
+    const done = checklistState.filter(i => i.checked).length;
+    const pct = total ? Math.round(done / total * 100) : 0;
+    document.getElementById('clCount').textContent = `${done} / ${total}`;
+    document.getElementById('clProgressFill').style.width = pct + '%';
+    document.getElementById('clPct').textContent = `${pct}% complete`;
+    document.getElementById('clComplete').style.display = pct === 100 ? 'block' : 'none';
+  }
+
+  // Actions
+  function copyChecklist() {
+    const lines = [];
+    checklistState.forEach((item, i) => {
+      const prev = i > 0 ? checklistState[i-1].section : null;
+      if (item.section !== prev) lines.push(`\n${item.section.toUpperCase()}`);
+      lines.push(`[${item.checked ? 'x' : ' '}] ${item.text}`);
+    });
+    navigator.clipboard.writeText(lines.join('\n').trim()).catch(()=>{});
+  }
+
+  function downloadPDF() {
+    if (lastChecklistId) {
+      window.open(`${API}/checklist/${lastChecklistId}/pdf`, '_blank');
+      return;
+    }
+    const lines = [`${selectedJobType} Checklist`, `Tech: ${techSession.name}`, `Generated: ${new Date().toLocaleString()}`, ''];
+    checklistState.forEach((item, i) => {
+      const prev = i > 0 ? checklistState[i-1].section : null;
+      if (item.section !== prev) lines.push(`\n${item.section}`);
+      lines.push(`[${item.checked ? 'x' : ' '}] ${item.text}`);
+    });
+    const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url;
+    a.download = `checklist-${selectedJobType.replace(/\s+/g,'-').toLowerCase()}-${Date.now()}.txt`;
+    a.click(); URL.revokeObjectURL(url);
+  }
+
+  function newChecklist() {
+    selectedJobType = ''; photoFile = null; photoIdentified = false; identifyConfirmed = null; lastChecklistId = null;
+    checklistState = [];
+    document.querySelectorAll('.job-type-btn').forEach(b => b.classList.remove('selected'));
+    document.getElementById('waterFields').classList.remove('visible');
+    document.getElementById('photoPreviewWrap').classList.remove('visible');
+    document.getElementById('identifyResult').classList.remove('visible');
+    document.getElementById('techNotes').value = '';
+    document.getElementById('generateBtn').disabled = true;
+    document.getElementById('photoFile').value = '';
+    showScreen('gen');
+  }
+
+  function resetToPin() {
+    sessionStorage.removeItem('rdai_tech_token');
+    showScreen('pin');
+    document.getElementById('pinInput').value = '';
+    failedPinAttempts = 0;
+    document.getElementById('lockoutMsg').style.display = 'none';
+    document.getElementById('pinForm').style.display = '';
+  }
+
+  // Helpers
+  function showFieldErr(id) { document.getElementById(id).classList.add('visible'); }
+  function hideFieldErr(id) { document.getElementById(id).classList.remove('visible'); }
+  function showAlert(containerId, msg, type) {
+    document.getElementById(containerId).innerHTML = `<div class="alert alert-${type}">${esc(msg)}</div>`;
+  }
+  function clearAlert(containerId) { document.getElementById(containerId).innerHTML = ''; }
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function escHtml(s) { return esc(s); }
+
+  init();
+</script>
+</body>
+</html>

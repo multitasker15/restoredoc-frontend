@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enterprise — RestoreDocAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: #fff; color: #111827; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+
+    .nav { position: sticky; top: 0; z-index: 100; background: #fff; border-bottom: 1px solid #e5e7eb; }
+    .nav-inner { max-width: 1160px; margin: 0 auto; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+    .nav-logo { font-size: 16px; font-weight: 700; color: #111827; letter-spacing: -0.3px; }
+    .nav-right { display: flex; gap: 10px; }
+    .btn { display: inline-flex; align-items: center; font-family: inherit; font-size: 13px; font-weight: 500; padding: 0 14px; height: 34px; border: 1px solid transparent; cursor: pointer; letter-spacing: -0.01em; }
+    .btn-solid { background: #2563eb; color: #fff; border-color: #2563eb; }
+    .btn-solid:hover { background: #1d4ed8; }
+    .btn-ghost { background: transparent; color: #374151; border-color: #e5e7eb; }
+    .btn-ghost:hover { border-color: #9ca3af; }
+
+    /* Page header */
+    .page-header { border-bottom: 1px solid #e5e7eb; padding: 72px 32px 60px; text-align: center; background: #fff; }
+    .page-header-inner { max-width: 680px; margin: 0 auto; }
+    .eyebrow { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #2563eb; margin-bottom: 14px; }
+    .page-headline { font-size: 40px; font-weight: 700; color: #111827; letter-spacing: -1.2px; line-height: 1.15; margin-bottom: 16px; }
+    .page-sub { font-size: 17px; color: #6b7280; line-height: 1.65; }
+
+    /* Benefits row */
+    .benefits-bar { border-bottom: 1px solid #e5e7eb; background: #f9fafb; }
+    .benefits-inner { max-width: 1160px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); }
+    .benefit-col { padding: 36px 36px; border-right: 1px solid #e5e7eb; }
+    .benefit-col:last-child { border-right: none; }
+    .benefit-title { font-size: 15px; font-weight: 600; color: #111827; margin-bottom: 8px; }
+    .benefit-desc { font-size: 14px; color: #6b7280; line-height: 1.65; }
+
+    /* Main content */
+    .page-wrap {
+      max-width: 1160px; margin: 0 auto; padding: 64px 32px 96px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+    }
+
+    /* Left: trust info */
+    .trust-block { margin-bottom: 36px; }
+    .trust-heading { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #374151; margin-bottom: 16px; }
+    .trust-item { display: flex; align-items: flex-start; gap: 12px; padding: 14px 0; border-bottom: 1px solid #e5e7eb; }
+    .trust-item:first-of-type { border-top: 1px solid #e5e7eb; }
+    .trust-chk { flex-shrink: 0; width: 15px; height: 15px; background: #2563eb; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+    .trust-chk::after { content: ''; display: block; width: 5px; height: 3px; border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff; transform: rotate(-45deg) translateY(-0.5px); }
+    .trust-text { font-size: 14px; color: #374151; line-height: 1.5; }
+
+    .response-note {
+      display: flex; align-items: center; gap: 10px;
+      padding: 16px; background: #f9fafb; border: 1px solid #e5e7eb; margin-top: 24px;
+    }
+    .response-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; flex-shrink: 0; }
+    .response-text { font-size: 13px; color: #6b7280; }
+    .response-text strong { color: #111827; }
+
+    /* Right: form */
+    .form-card { border: 1px solid #e5e7eb; padding: 36px; }
+    .form-card-title { font-size: 18px; font-weight: 700; color: #111827; letter-spacing: -0.3px; margin-bottom: 6px; }
+    .form-card-sub { font-size: 13px; color: #6b7280; margin-bottom: 28px; }
+
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px; }
+    .form-input, .form-select, .form-textarea {
+      display: block; width: 100%; font-family: inherit; font-size: 14px; color: #111827;
+      background: #fff; border: 1px solid #e5e7eb; padding: 9px 12px; outline: none; transition: border-color 120ms; -webkit-appearance: none;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: #2563eb; }
+    .form-input::placeholder, .form-textarea::placeholder { color: #9ca3af; }
+    .form-textarea { resize: vertical; min-height: 90px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-divider { height: 1px; background: #e5e7eb; margin: 20px 0; }
+
+    .btn-submit { display: block; width: 100%; font-family: inherit; font-size: 14px; font-weight: 600; color: #fff; background: #2563eb; border: 1px solid #2563eb; padding: 11px 0; cursor: pointer; transition: background 120ms; }
+    .btn-submit:hover { background: #1d4ed8; }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+    .form-note { font-size: 12px; color: #9ca3af; text-align: center; margin-top: 12px; }
+
+    .success-state { display: none; text-align: center; padding: 32px 0; }
+    .success-icon { width: 48px; height: 48px; background: #f0fdf4; border: 1px solid #bbf7d0; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+    .success-icon::after { content: ''; display: block; width: 18px; height: 11px; border-left: 2.5px solid #16a34a; border-bottom: 2.5px solid #16a34a; transform: rotate(-45deg) translateY(-2px); }
+    .success-title { font-size: 18px; font-weight: 700; color: #111827; margin-bottom: 8px; }
+    .success-body { font-size: 14px; color: #6b7280; line-height: 1.6; }
+
+    .footer { border-top: 1px solid #e5e7eb; padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; }
+    .footer-copy { font-size: 13px; color: #9ca3af; }
+    .footer a { font-size: 13px; color: #6b7280; }
+
+    @media (max-width: 900px) {
+      .page-wrap { grid-template-columns: 1fr; gap: 48px; }
+      .benefits-inner { grid-template-columns: 1fr; }
+      .benefit-col { border-right: none; border-bottom: 1px solid #e5e7eb; }
+      .benefit-col:last-child { border-bottom: none; }
+    }
+    @media (max-width: 540px) {
+      .page-header { padding: 48px 20px 40px; }
+      .page-headline { font-size: 28px; }
+      .page-wrap { padding: 36px 20px 64px; }
+      .form-card { padding: 24px 20px; }
+      .form-row { grid-template-columns: 1fr; }
+      .nav-inner { padding: 0 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">RestoreDocAI</a>
+    <div class="nav-right">
+      <a href="login.html" class="btn btn-ghost">Log in</a>
+      <a href="signup.html" class="btn btn-solid">Get Started</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="eyebrow">Enterprise</div>
+    <h1 class="page-headline">Enterprise solutions for large restoration operations</h1>
+    <p class="page-sub">Multi-location, unlimited techs, white-label options, and dedicated account management.</p>
+  </div>
+</div>
+
+<div class="benefits-bar">
+  <div class="benefits-inner">
+    <div class="benefit-col">
+      <div class="benefit-title">Unlimited techs across all locations</div>
+      <div class="benefit-desc">No per-seat limits. Every tech at every branch has access without adding to your cost.</div>
+    </div>
+    <div class="benefit-col">
+      <div class="benefit-title">White label coming soon — your brand, your tool</div>
+      <div class="benefit-desc">Deploy RestoreDocAI under your company brand. Custom domain, logo, and PDF headers.</div>
+    </div>
+    <div class="benefit-col">
+      <div class="benefit-title">Dedicated account management and SLA</div>
+      <div class="benefit-desc">A named account manager, quarterly reviews, and a guaranteed response SLA for your operations team.</div>
+    </div>
+  </div>
+</div>
+
+<div class="page-wrap">
+  <!-- Left -->
+  <div>
+    <div class="trust-block">
+      <div class="trust-heading">Enterprise includes</div>
+      <div class="trust-item"><div class="trust-chk"></div><div class="trust-text">Unlimited checklists and unlimited team members</div></div>
+      <div class="trust-item"><div class="trust-chk"></div><div class="trust-text">SSO and SAML integration with your identity provider</div></div>
+      <div class="trust-item"><div class="trust-chk"></div><div class="trust-text">Custom data retention and compliance export</div></div>
+      <div class="trust-item"><div class="trust-chk"></div><div class="trust-text">API access and webhook integrations</div></div>
+      <div class="trust-item"><div class="trust-chk"></div><div class="trust-text">Full custom onboarding for your operations team</div></div>
+      <div class="trust-item"><div class="trust-chk"></div><div class="trust-text">Priority phone support with named account manager</div></div>
+    </div>
+
+    <div class="response-note">
+      <div class="response-dot"></div>
+      <div class="response-text"><strong>We respond within one business day.</strong> Enterprise inquiries are handled by our sales team directly.</div>
+    </div>
+  </div>
+
+  <!-- Right: form -->
+  <div>
+    <div class="form-card">
+      <div class="form-card-title">Contact sales</div>
+      <div class="form-card-sub">Tell us about your operation and we will put together a custom proposal.</div>
+
+      <form id="salesForm" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="firstName">First name</label>
+            <input class="form-input" type="text" id="firstName" placeholder="Marcus" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="lastName">Last name</label>
+            <input class="form-input" type="text" id="lastName" placeholder="Taylor" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="company">Company name</label>
+          <input class="form-input" type="text" id="company" placeholder="Atlas Restoration Group" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="salesEmail">Work email</label>
+          <input class="form-input" type="email" id="salesEmail" placeholder="marcus@atlasrestoration.com" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="phone">Phone number</label>
+          <input class="form-input" type="tel" id="phone" placeholder="+1 (555) 000-0000" />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="teamSize">Team size</label>
+            <select class="form-select" id="teamSize">
+              <option value="" disabled selected>Select size</option>
+              <option value="1-5">1 – 5</option>
+              <option value="6-15">6 – 15</option>
+              <option value="16-25">16 – 25</option>
+              <option value="25+">25+</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="locations">Number of locations</label>
+            <select class="form-select" id="locations">
+              <option value="" disabled selected>Select</option>
+              <option value="1">1 location</option>
+              <option value="2-5">2 – 5 locations</option>
+              <option value="6-15">6 – 15 locations</option>
+              <option value="15+">15+ locations</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="currentSoftware">Current documentation software</label>
+          <input class="form-input" type="text" id="currentSoftware" placeholder="e.g. Xactimate, pen and paper, custom spreadsheet" />
+        </div>
+
+        <div class="form-divider"></div>
+
+        <div class="form-group">
+          <label class="form-label" for="message">What are your biggest documentation challenges?</label>
+          <textarea class="form-textarea" id="message" placeholder="Tell us about your current process, claim issues, adjuster friction, or anything else we should know..."></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit" id="salesSubmit">Contact Sales</button>
+        <div class="form-note">We respond within one business day</div>
+      </form>
+
+      <div class="success-state" id="successState">
+        <div class="success-icon"></div>
+        <div class="success-title">Message received</div>
+        <div class="success-body">Our enterprise sales team will review your information and reach out within one business day.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <span class="footer-copy">Copyright 2025 RestoreDocAI</span>
+  <a href="pricing.html">Back to pricing</a>
+</div>
+
+<script>
+  const API = 'https://restoredoc-backend-production.up.railway.app';
+
+  document.getElementById('salesForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('salesSubmit');
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+
+    const payload = {
+      first_name: document.getElementById('firstName').value.trim(),
+      last_name: document.getElementById('lastName').value.trim(),
+      company: document.getElementById('company').value.trim(),
+      email: document.getElementById('salesEmail').value.trim(),
+      phone: document.getElementById('phone').value.trim(),
+      team_size: document.getElementById('teamSize').value,
+      locations: document.getElementById('locations').value,
+      current_software: document.getElementById('currentSoftware').value.trim(),
+      message: document.getElementById('message').value.trim(),
+      type: 'enterprise'
+    };
+
+    try {
+      await fetch(`${API}/sales/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    } catch (_) {}
+
+    document.getElementById('salesForm').style.display = 'none';
+    document.getElementById('successState').style.display = 'block';
+  });
+</script>
+</body>
+</html>

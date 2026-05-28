@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book a Demo — RestoreDocAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #fff;
+      color: #111827;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      background: #fff; border-bottom: 1px solid #e5e7eb;
+    }
+    .nav-inner {
+      max-width: 1160px; margin: 0 auto; padding: 0 32px;
+      display: flex; align-items: center; justify-content: space-between; height: 60px;
+    }
+    .nav-logo { font-size: 16px; font-weight: 700; color: #111827; letter-spacing: -0.3px; }
+    .nav-right { display: flex; gap: 10px; }
+    .btn { display: inline-flex; align-items: center; font-family: inherit; font-size: 13px; font-weight: 500; padding: 0 14px; height: 34px; border: 1px solid transparent; cursor: pointer; letter-spacing: -0.01em; text-decoration: none; }
+    .btn-solid { background: #2563eb; color: #fff; border-color: #2563eb; }
+    .btn-solid:hover { background: #1d4ed8; }
+    .btn-ghost { background: transparent; color: #374151; border-color: #e5e7eb; }
+    .btn-ghost:hover { border-color: #9ca3af; }
+
+    .page-wrap {
+      max-width: 1160px; margin: 0 auto; padding: 72px 32px 96px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+    }
+
+    /* Left: info */
+    .info-eyebrow {
+      font-size: 12px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.08em; color: #2563eb; margin-bottom: 14px;
+    }
+    .info-headline {
+      font-size: 36px; font-weight: 700; color: #111827;
+      letter-spacing: -1px; line-height: 1.15; margin-bottom: 16px;
+    }
+    .info-sub {
+      font-size: 16px; color: #6b7280; line-height: 1.7; margin-bottom: 40px;
+    }
+    .what-heading {
+      font-size: 13px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.06em; color: #374151; margin-bottom: 16px;
+    }
+    .what-list { display: flex; flex-direction: column; gap: 12px; }
+    .what-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 16px; border: 1px solid #e5e7eb;
+    }
+    .what-num {
+      flex-shrink: 0; width: 22px; height: 22px;
+      background: #eff6ff; color: #2563eb;
+      font-size: 11px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .what-text { font-size: 14px; color: #374151; line-height: 1.5; }
+
+    /* Right: form */
+    .form-card { border: 1px solid #e5e7eb; padding: 36px; background: #fff; }
+    .form-card-title { font-size: 18px; font-weight: 700; color: #111827; letter-spacing: -0.3px; margin-bottom: 24px; }
+
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px; }
+    .form-input, .form-select, .form-textarea {
+      display: block; width: 100%; font-family: inherit; font-size: 14px;
+      color: #111827; background: #fff; border: 1px solid #e5e7eb;
+      padding: 9px 12px; outline: none; transition: border-color 120ms; -webkit-appearance: none;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: #2563eb; }
+    .form-input::placeholder, .form-textarea::placeholder { color: #9ca3af; }
+    .form-textarea { resize: vertical; min-height: 100px; font-size: 14px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    .btn-submit {
+      display: block; width: 100%; font-family: inherit; font-size: 14px; font-weight: 600;
+      color: #fff; background: #2563eb; border: 1px solid #2563eb;
+      padding: 11px 0; cursor: pointer; transition: background 120ms; margin-top: 8px;
+    }
+    .btn-submit:hover { background: #1d4ed8; }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .form-note { font-size: 13px; color: #9ca3af; text-align: center; margin-top: 14px; }
+    .form-note a { color: #2563eb; }
+
+    .success-state {
+      display: none; text-align: center; padding: 32px 0;
+    }
+    .success-icon {
+      width: 48px; height: 48px; background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+    }
+    .success-icon::after {
+      content: '';
+      display: block; width: 18px; height: 11px;
+      border-left: 2.5px solid #16a34a; border-bottom: 2.5px solid #16a34a;
+      transform: rotate(-45deg) translateY(-2px);
+    }
+    .success-title { font-size: 18px; font-weight: 700; color: #111827; margin-bottom: 8px; }
+    .success-body { font-size: 14px; color: #6b7280; line-height: 1.6; }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid #e5e7eb; padding: 24px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-copy { font-size: 13px; color: #9ca3af; }
+    .footer a { font-size: 13px; color: #6b7280; }
+
+    @media (max-width: 860px) {
+      .page-wrap { grid-template-columns: 1fr; gap: 48px; padding-top: 48px; }
+    }
+    @media (max-width: 540px) {
+      .page-wrap { padding: 36px 20px 64px; }
+      .form-card { padding: 24px 20px; }
+      .form-row { grid-template-columns: 1fr; }
+      .info-headline { font-size: 28px; }
+      .nav-inner { padding: 0 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">RestoreDocAI</a>
+    <div class="nav-right">
+      <a href="login.html" class="btn btn-ghost">Log in</a>
+      <a href="signup.html" class="btn btn-solid">Start Free Trial</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <!-- Left column -->
+  <div>
+    <div class="info-eyebrow">Pro Plan Demo</div>
+    <h1 class="info-headline">See RestoreDocAI in action</h1>
+    <p class="info-sub">30 minute demo tailored to your team size and damage categories. We walk through your actual workflow.</p>
+
+    <div class="what-heading">What you will see</div>
+    <div class="what-list">
+      <div class="what-item">
+        <div class="what-num">1</div>
+        <div class="what-text">Live checklist generation for your most common job types — water, fire, mold, storm, or biohazard</div>
+      </div>
+      <div class="what-item">
+        <div class="what-num">2</div>
+        <div class="what-text">Owner dashboard and team management walkthrough — PIN access, activity logs, and analytics</div>
+      </div>
+      <div class="what-item">
+        <div class="what-num">3</div>
+        <div class="what-text">API integration options for your existing software — Xactimate, JobNimbus, and custom workflows</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right column: form -->
+  <div>
+    <div class="form-card">
+      <div class="form-card-title">Request a demo</div>
+
+      <form id="demoForm" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="firstName">First name</label>
+            <input class="form-input" type="text" id="firstName" placeholder="Marcus" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="lastName">Last name</label>
+            <input class="form-input" type="text" id="lastName" placeholder="Taylor" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="company">Company name</label>
+          <input class="form-input" type="text" id="company" placeholder="Precision Restoration" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="demoEmail">Work email</label>
+          <input class="form-input" type="email" id="demoEmail" placeholder="marcus@precisionrestoration.com" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="phone">Phone number</label>
+          <input class="form-input" type="tel" id="phone" placeholder="+1 (555) 000-0000" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="teamSize">Team size</label>
+          <select class="form-select" id="teamSize">
+            <option value="" disabled selected>Select team size</option>
+            <option value="1-5">1 – 5 people</option>
+            <option value="6-15">6 – 15 people</option>
+            <option value="16-25">16 – 25 people</option>
+            <option value="25+">25+ people</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="message">What are your biggest documentation challenges?</label>
+          <textarea class="form-textarea" id="message" placeholder="Tell us about your current process, common job types, or what's slowing your claims..."></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit" id="demoSubmit">Request Demo</button>
+        <div class="form-note">Prefer email? <a href="mailto:sales@restoredocai.com">sales@restoredocai.com</a></div>
+      </form>
+
+      <div class="success-state" id="successState">
+        <div class="success-icon"></div>
+        <div class="success-title">Demo request received</div>
+        <div class="success-body">Someone from our team will reach out within one business day to schedule your session.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <span class="footer-copy">Copyright 2025 RestoreDocAI</span>
+  <a href="index.html">Back to home</a>
+</div>
+
+<script>
+  const API = 'https://restoredoc-backend-production.up.railway.app';
+
+  document.getElementById('demoForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('demoSubmit');
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+
+    const payload = {
+      first_name: document.getElementById('firstName').value.trim(),
+      last_name: document.getElementById('lastName').value.trim(),
+      company: document.getElementById('company').value.trim(),
+      email: document.getElementById('demoEmail').value.trim(),
+      phone: document.getElementById('phone').value.trim(),
+      team_size: document.getElementById('teamSize').value,
+      message: document.getElementById('message').value.trim(),
+      type: 'demo'
+    };
+
+    try {
+      await fetch(`${API}/demo/request`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    } catch (_) {}
+
+    document.getElementById('demoForm').style.display = 'none';
+    document.getElementById('successState').style.display = 'block';
+  });
+</script>
+</body>
+</html>
