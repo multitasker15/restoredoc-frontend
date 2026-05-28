@@ -384,6 +384,10 @@
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         PDF
       </button>
+      <button class="cl-action-btn" id="xactimateBtn" onclick="downloadXactimate()" style="display:none;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Xactimate Scope
+      </button>
     </div>
   </div>
 
@@ -404,6 +408,16 @@
     <div id="clComplete" style="display:none;margin-top:24px;padding:20px;background:#f0fdf4;border:1px solid #86efac;text-align:center;">
       <div style="font-size:14px;font-weight:600;color:#15803d;margin-bottom:4px;">All items complete</div>
       <div style="font-size:13px;color:#166534;">This checklist is ready for adjuster submission.</div>
+    </div>
+
+    <!-- Xactimate CTA — shown when checklist has an ID -->
+    <div id="xactimateCTA" style="display:none;margin-top:20px;border:1px solid #e5e7eb;padding:16px;background:#fff;">
+      <div style="font-size:13px;font-weight:600;color:#111827;margin-bottom:4px;">Download Xactimate-Ready Scope of Work</div>
+      <div style="font-size:12px;color:#6b7280;margin-bottom:12px;">Pre-populated line items formatted for adjuster reference. Eliminates manual data entry per job.</div>
+      <button onclick="downloadXactimate()" style="display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-size:13px;font-weight:500;color:#fff;background:#2563eb;border:1px solid #2563eb;padding:8px 16px;cursor:pointer;transition:background 120ms;" onmouseover="this.style.background='#1d4ed8'" onmouseout="this.style.background='#2563eb'">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Download Xactimate Scope of Work
+      </button>
     </div>
   </div>
 </div>
@@ -639,6 +653,13 @@
       }
       renderChecklist(data);
       showScreen('checklist');
+      // Show Xactimate CTA and topbar button if we have an ID
+      if (lastChecklistId) {
+        const xBtn = document.getElementById('xactimateBtn');
+        const xCTA = document.getElementById('xactimateCTA');
+        if (xBtn) xBtn.style.display = '';
+        if (xCTA) xCTA.style.display = '';
+      }
     } catch (_) {
       // Fallback demo checklist
       renderChecklist(buildFallback(selectedJobType));
@@ -817,9 +838,27 @@
     a.click(); URL.revokeObjectURL(url);
   }
 
+  function downloadXactimate() {
+    if (!lastChecklistId) {
+      alert('Save the checklist first to download the Xactimate scope. Generate a checklist using the tool and this button will become available.');
+      return;
+    }
+    // Opens directly — requires owner login. Show message if unauthenticated.
+    const token = sessionStorage.getItem('rdai_token');
+    if (!token) {
+      alert('Xactimate Scope of Work download requires owner login. Log in to your dashboard and download from the Checklists tab.');
+      return;
+    }
+    window.open(`${API}/checklist/${lastChecklistId}/xactimate-pdf`, '_blank');
+  }
+
   function newChecklist() {
     selectedJobType = ''; photoFile = null; photoIdentified = false; identifyConfirmed = null; lastChecklistId = null;
     checklistState = [];
+    const xBtn = document.getElementById('xactimateBtn');
+    const xCTA = document.getElementById('xactimateCTA');
+    if (xBtn) xBtn.style.display = 'none';
+    if (xCTA) xCTA.style.display = 'none';
     document.querySelectorAll('.job-type-btn').forEach(b => b.classList.remove('selected'));
     document.getElementById('waterFields').classList.remove('visible');
     document.getElementById('photoPreviewWrap').classList.remove('visible');

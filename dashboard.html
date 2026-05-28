@@ -508,6 +508,7 @@
                   <th>Photo AI</th>
                   <th>Completion</th>
                   <th>Actions</th>
+                  <th>Xactimate</th>
                 </tr>
               </thead>
               <tbody id="checklistsBody">
@@ -900,7 +901,7 @@
     const slice = filtered.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
 
     const body = document.getElementById('checklistsBody');
-    if (!slice.length) { body.innerHTML = '<tr><td colspan="7" class="empty-state">No checklists found.</td></tr>'; }
+    if (!slice.length) { body.innerHTML = '<tr><td colspan="8" class="empty-state">No checklists found.</td></tr>'; }
     else body.innerHTML = slice.map(cl => {
       const date = (cl.createdAt || cl.created_at || '').slice(0,10);
       const tech = cl.techName || cl.tech_name || '—';
@@ -921,7 +922,11 @@
         <td onclick="event.stopPropagation()">
           <button class="action-btn" onclick="viewChecklist('${esc(cl.id||'')}')">View</button>
           <button class="action-btn" onclick="downloadPDF('${esc(cl.id||'')}','standard')" style="margin-left:4px;">PDF</button>
-          <button class="action-btn" onclick="downloadPDF('${esc(cl.id||'')}','xactimate')" style="margin-left:4px;">Xactimate</button>
+        </td>
+        <td onclick="event.stopPropagation()">
+          <button class="action-btn" onclick="downloadXactimatePDF('${esc(cl.id||'')}')" style="color:#2563eb;border-color:#bfdbfe;">
+            Xactimate PDF
+          </button>
         </td>
       </tr>
       <tr><td colspan="7" style="padding:0;"><div class="row-expanded-content" id="exp-${esc(cl.id||'')}">
@@ -1168,6 +1173,27 @@
     alert('PDF download not available for this checklist yet.');
   }
   function downloadReport() { window.open(`${API}/dashboard/report?token=${sessionStorage.getItem('rdai_token')}`, '_blank'); }
+
+  async function downloadXactimatePDF(id) {
+    if (!id) return;
+    const t = sessionStorage.getItem('rdai_token');
+    // Try to open via authenticated URL
+    try {
+      const r = await fetch(`${API}/checklist/${id}/xactimate-pdf`, { headers: authHeaders() });
+      if (r.ok) {
+        const blob = await r.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `xactimate-scope-${id.slice(0,8)}.pdf`;
+        a.click();
+        URL.revokeObjectURL(url);
+        return;
+      }
+    } catch (_) {}
+    // Fallback: open in new tab with token in header (will prompt download)
+    window.open(`${API}/checklist/${id}/xactimate-pdf`, '_blank');
+  }
   function logout() { sessionStorage.removeItem('rdai_token'); window.location.href = 'login.html'; }
 
   function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
