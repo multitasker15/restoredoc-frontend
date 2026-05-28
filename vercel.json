@@ -1,0 +1,8 @@
+{
+  "cleanUrls": true,
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/app/(.*)", "dest": "/app.html" },
+    { "src": "/app", "dest": "/app.html" }
+  ]
+}

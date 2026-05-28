@@ -1,0 +1,1328 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AI-generated, IICRC-compliant documentation checklists for restoration contractors. Stop losing money to denied insurance claims.">
+  <title>RestoreDocAI â€” Stop Losing Money to Denied Insurance Claims</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy-950: #060e1a;
+      --navy-900: #0a1628;
+      --navy-800: #0f1d2e;
+      --navy-700: #1a2d47;
+      --blue-700: #1d4ed8;
+      --blue-600: #2563eb;
+      --blue-100: #dbeafe;
+      --blue-50:  #eff6ff;
+      --white:    #ffffff;
+      --gray-50:  #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-300: #cbd5e1;
+      --gray-400: #94a3b8;
+      --gray-500: #64748b;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-800: #1e293b;
+      --gray-900: #0f172a;
+      --green-500: #22c55e;
+      --amber-400: #fbbf24;
+      --font: 'Inter', system-ui, -apple-system, sans-serif;
+      --radius: 8px;
+      --radius-lg: 12px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      color: var(--gray-800);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* â”€â”€â”€ HEADER â”€â”€â”€ */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      transition: box-shadow 0.2s;
+    }
+    header.scrolled { box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .logo {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--gray-900);
+      text-decoration: none;
+      letter-spacing: -0.4px;
+      flex-shrink: 0;
+    }
+    .logo span { color: var(--blue-600); }
+
+    nav {
+      display: flex;
+      gap: 28px;
+      flex: 1;
+    }
+    nav a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-500);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    nav a:hover { color: var(--gray-800); }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      margin-left: auto;
+    }
+
+    .btn-ghost {
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-600);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px 14px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: color 0.15s, background 0.15s;
+    }
+    .btn-ghost:hover { color: var(--gray-900); background: var(--gray-100); }
+
+    .btn-primary {
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--white);
+      background: var(--blue-600);
+      border: none;
+      cursor: pointer;
+      padding: 9px 18px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .btn-primary:hover { background: var(--blue-700); }
+
+    /* â”€â”€â”€ HERO â”€â”€â”€ */
+    .hero {
+      background: linear-gradient(150deg, #080f1c 0%, #0c1f3a 55%, #0f2650 100%);
+      padding: 88px 24px 80px;
+      overflow: hidden;
+      position: relative;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 65% 40%, rgba(37,99,235,0.14) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 480px;
+      gap: 72px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(37,99,235,0.18);
+      border: 1px solid rgba(37,99,235,0.35);
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #93c5fd;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+    .hero-eyebrow-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #3b82f6;
+    }
+
+    .hero h1 {
+      font-size: clamp(30px, 3.8vw, 52px);
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.12;
+      letter-spacing: -1.2px;
+      margin-bottom: 20px;
+    }
+    .hero h1 em { font-style: normal; color: #60a5fa; }
+
+    .hero-sub {
+      font-size: 17px;
+      color: #94a3b8;
+      line-height: 1.65;
+      margin-bottom: 36px;
+      max-width: 480px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .btn-hero-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--white);
+      background: var(--blue-600);
+      border: none;
+      cursor: pointer;
+      padding: 13px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .btn-hero-primary:hover { background: var(--blue-700); transform: translateY(-1px); }
+
+    .btn-hero-outline {
+      display: inline-flex;
+      align-items: center;
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.8);
+      background: transparent;
+      border: 1.5px solid rgba(255,255,255,0.2);
+      cursor: pointer;
+      padding: 13px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: border-color 0.15s, background 0.15s, color 0.15s;
+    }
+    .btn-hero-outline:hover {
+      border-color: rgba(255,255,255,0.45);
+      background: rgba(255,255,255,0.06);
+      color: var(--white);
+    }
+
+    .hero-trust {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    .hero-trust-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #64748b;
+    }
+    .trust-check { color: #34d399; flex-shrink: 0; }
+
+    /* â”€â”€â”€ MOCKUP â”€â”€â”€ */
+    .hero-mockup {
+      background: var(--white);
+      border-radius: 14px;
+      box-shadow: 0 32px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
+      overflow: hidden;
+    }
+
+    .mockup-chrome {
+      background: #f1f5f9;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 11px 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .m-dot { width: 11px; height: 11px; border-radius: 50%; }
+    .m-dot.r { background: #fc5c5c; }
+    .m-dot.y { background: #fdbc40; }
+    .m-dot.g { background: #34c749; }
+    .mockup-url-bar {
+      flex: 1;
+      background: var(--white);
+      border-radius: 5px;
+      padding: 4px 10px;
+      font-size: 11px;
+      color: #64748b;
+      margin-left: 10px;
+      border: 1px solid #e2e8f0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .mockup-body { padding: 22px; }
+
+    .mockup-overline {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #94a3b8;
+      margin-bottom: 3px;
+    }
+    .mockup-job-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 3px;
+    }
+    .mockup-meta {
+      font-size: 12px;
+      color: #64748b;
+      margin-bottom: 14px;
+    }
+    .mockup-tags {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    .mockup-tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+    .tag-amber { background: #fef3c7; color: #92400e; }
+    .tag-red   { background: #fee2e2; color: #991b1b; }
+
+    .mockup-rows { display: flex; flex-direction: column; gap: 5px; margin-bottom: 18px; }
+
+    .mockup-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 7px;
+      background: #f8fafc;
+    }
+    .mockup-row.done { background: #f0fdf4; }
+
+    .m-check {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      border: 1.5px solid #cbd5e1;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .m-check.done { background: var(--green-500); border-color: var(--green-500); }
+
+    .mockup-row-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: #374151;
+      flex: 1;
+    }
+    .mockup-row-count { font-size: 11px; color: #94a3b8; }
+
+    .mockup-divider { height: 1px; background: #e2e8f0; margin: 0 0 14px; }
+
+    .mockup-prog-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #64748b;
+      margin-bottom: 6px;
+    }
+    .mockup-prog-bar {
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 100px;
+      overflow: hidden;
+    }
+    .mockup-prog-fill {
+      height: 100%;
+      width: 37.5%;
+      background: linear-gradient(90deg, #2563eb, #60a5fa);
+      border-radius: 100px;
+    }
+
+    .mockup-footer {
+      font-size: 11px;
+      color: #94a3b8;
+      text-align: center;
+      padding: 10px 22px 14px;
+    }
+
+    /* â”€â”€â”€ TRUST BAR â”€â”€â”€ */
+    .trust-bar {
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 24px;
+    }
+    .trust-bar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .trust-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: #94a3b8;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .trust-divider {
+      width: 1px; height: 20px;
+      background: #e2e8f0;
+      flex-shrink: 0;
+    }
+    .trust-names {
+      display: flex;
+      gap: 36px;
+      flex-wrap: wrap;
+    }
+    .trust-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #cbd5e1;
+    }
+
+    /* â”€â”€â”€ SECTIONS â”€â”€â”€ */
+    .section { padding: 96px 24px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--blue-600);
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-size: clamp(26px, 2.8vw, 40px);
+      font-weight: 800;
+      color: var(--gray-900);
+      letter-spacing: -0.6px;
+      line-height: 1.18;
+      margin-bottom: 14px;
+    }
+    .section-sub {
+      font-size: 17px;
+      color: var(--gray-500);
+      line-height: 1.65;
+      max-width: 560px;
+    }
+    .section-header { margin-bottom: 60px; }
+    .section-header.center { text-align: center; }
+    .section-header.center .section-sub { margin: 0 auto; }
+
+    /* â”€â”€â”€ FEATURES â”€â”€â”€ */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+
+    .feature-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .feature-card:hover {
+      box-shadow: 0 10px 32px rgba(0,0,0,0.07);
+      transform: translateY(-2px);
+    }
+
+    .feature-icon {
+      width: 48px; height: 48px;
+      background: var(--blue-50);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+      color: var(--blue-600);
+    }
+    .feature-icon svg { width: 22px; height: 22px; }
+
+    .feature-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 10px;
+      letter-spacing: -0.2px;
+    }
+    .feature-desc {
+      font-size: 15px;
+      color: var(--gray-500);
+      line-height: 1.68;
+    }
+
+    /* â”€â”€â”€ STATS ROW â”€â”€â”€ */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--gray-200);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-top: 56px;
+    }
+    .stat-box {
+      background: var(--white);
+      padding: 32px 40px;
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 40px;
+      font-weight: 800;
+      color: var(--gray-900);
+      letter-spacing: -1px;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .stat-label {
+      font-size: 14px;
+      color: var(--gray-500);
+    }
+
+    /* â”€â”€â”€ HOW IT WORKS â”€â”€â”€ */
+    .how-section {
+      background: var(--gray-50);
+      border-top: 1px solid var(--gray-200);
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .steps-wrap {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      position: relative;
+    }
+    .steps-wrap::before {
+      content: '';
+      position: absolute;
+      top: 23px;
+      left: calc(12.5% + 4px);
+      right: calc(12.5% + 4px);
+      height: 1px;
+      background: var(--gray-200);
+    }
+
+    .step { padding: 0 20px; text-align: center; }
+
+    .step-num {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: var(--blue-600);
+      color: var(--white);
+      font-size: 17px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      position: relative; z-index: 1;
+      box-shadow: 0 0 0 4px #fff, 0 0 0 5px #e2e8f0;
+    }
+
+    .step-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 8px;
+    }
+    .step-desc {
+      font-size: 14px;
+      color: var(--gray-500);
+      line-height: 1.6;
+    }
+
+    /* â”€â”€â”€ PRICING â”€â”€â”€ */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .pricing-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      position: relative;
+      transition: box-shadow 0.2s;
+    }
+    .pricing-card:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.07); }
+    .pricing-card.featured {
+      border-color: var(--blue-600);
+      box-shadow: 0 0 0 1px var(--blue-600);
+    }
+
+    .featured-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--blue-600);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+
+    .plan-name {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--gray-400);
+      margin-bottom: 8px;
+    }
+    .plan-price {
+      font-size: 38px;
+      font-weight: 800;
+      color: var(--gray-900);
+      letter-spacing: -1.5px;
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+    .plan-price sup {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0;
+      vertical-align: super;
+    }
+    .plan-period { font-size: 13px; color: var(--gray-400); margin-bottom: 20px; }
+
+    .plan-divider { height: 1px; background: var(--gray-100); margin: 20px 0; }
+
+    .plan-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+      min-height: 160px;
+    }
+    .plan-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      font-size: 13.5px;
+      color: var(--gray-600);
+    }
+    .pf-check {
+      width: 16px; height: 16px;
+      color: var(--green-500);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .plan-btn {
+      display: block;
+      width: 100%;
+      padding: 11px 16px;
+      border-radius: 7px;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .plan-btn.solid {
+      background: var(--blue-600);
+      color: var(--white);
+      border: none;
+    }
+    .plan-btn.solid:hover { background: var(--blue-700); }
+    .plan-btn.outline {
+      background: transparent;
+      color: var(--gray-700);
+      border: 1.5px solid var(--gray-200);
+    }
+    .plan-btn.outline:hover { border-color: var(--gray-300); background: var(--gray-50); }
+
+    /* â”€â”€â”€ TESTIMONIALS â”€â”€â”€ */
+    .testimonials-section {
+      background: var(--navy-800);
+      padding: 96px 24px;
+    }
+    .testimonials-section .section-title { color: var(--white); }
+    .testimonials-section .section-label { color: #60a5fa; }
+    .testimonials-section .section-sub   { color: var(--gray-500); }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .tcard {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+    }
+
+    .tcard-stars {
+      display: flex; gap: 3px;
+      margin-bottom: 16px;
+    }
+    .tcard-stars svg { width: 14px; height: 14px; color: var(--amber-400); }
+
+    .tcard-quote {
+      font-size: 15px;
+      color: #cbd5e1;
+      line-height: 1.72;
+      margin-bottom: 24px;
+    }
+
+    .tcard-author { display: flex; align-items: center; gap: 12px; }
+
+    .tcard-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: rgba(37,99,235,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: #93c5fd;
+      flex-shrink: 0;
+    }
+
+    .tcard-name { font-size: 14px; font-weight: 600; color: var(--white); }
+    .tcard-company { font-size: 13px; color: var(--gray-500); }
+
+    /* â”€â”€â”€ CTA BANNER â”€â”€â”€ */
+    .cta-banner {
+      background: linear-gradient(135deg, #1a3fbe 0%, #2563eb 100%);
+      padding: 80px 24px;
+      text-align: center;
+    }
+    .cta-banner h2 {
+      font-size: clamp(26px, 3vw, 40px);
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -0.5px;
+      margin-bottom: 10px;
+    }
+    .cta-banner p {
+      font-size: 17px;
+      color: rgba(255,255,255,0.72);
+      margin-bottom: 36px;
+    }
+    .cta-banner-btns {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .btn-cta-white {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--blue-700);
+      background: var(--white);
+      border: none;
+      cursor: pointer;
+      padding: 13px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+    .btn-cta-white:hover { background: #f0f6ff; }
+
+    /* â”€â”€â”€ FOOTER â”€â”€â”€ */
+    footer {
+      background: var(--navy-900);
+      padding: 56px 24px 28px;
+    }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2.2fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+
+    .footer-logo {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: -0.4px;
+      display: block;
+      margin-bottom: 12px;
+    }
+    .footer-logo span { color: var(--blue-600); }
+
+    .footer-tagline {
+      font-size: 14px;
+      color: #334155;
+      line-height: 1.6;
+      max-width: 300px;
+    }
+
+    .footer-col-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--gray-500);
+      margin-bottom: 16px;
+    }
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .footer-links a {
+      font-size: 14px;
+      color: #334155;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .footer-links a:hover { color: var(--gray-500); }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-copy { font-size: 13px; color: #1e293b; }
+
+    .footer-legal { display: flex; gap: 24px; }
+    .footer-legal a { font-size: 13px; color: #1e293b; text-decoration: none; transition: color 0.15s; }
+    .footer-legal a:hover { color: #334155; }
+
+    /* â”€â”€â”€ RESPONSIVE â”€â”€â”€ */
+    @media (max-width: 1100px) {
+      .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 960px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 56px; }
+      .hero-mockup { max-width: 480px; }
+      .features-grid { grid-template-columns: 1fr; gap: 20px; }
+      .stats-row { grid-template-columns: 1fr; gap: 0; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+    }
+
+    @media (max-width: 768px) {
+      nav { display: none; }
+      .section { padding: 72px 20px; }
+      .steps-wrap { grid-template-columns: 1fr 1fr; gap: 36px; }
+      .steps-wrap::before { display: none; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (max-width: 480px) {
+      .steps-wrap { grid-template-columns: 1fr; }
+      .hero-ctas { flex-direction: column; }
+      .btn-hero-primary, .btn-hero-outline { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- â•â•â• HEADER â•â•â• -->
+<header id="site-header">
+  <div class="header-inner">
+    <a href="/" class="logo">RestoreDoc<span>AI</span></a>
+    <nav>
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#pricing">Pricing</a>
+    </nav>
+    <div class="header-actions">
+      <a href="/app" class="btn-ghost">Sign In</a>
+      <a href="/app?mode=signup" class="btn-primary">Start Free Trial</a>
+    </div>
+  </div>
+</header>
+
+<!-- â•â•â• HERO â•â•â• -->
+<section class="hero">
+  <div class="hero-inner">
+
+    <div class="hero-text">
+      <div class="hero-eyebrow">
+        <div class="hero-eyebrow-dot"></div>
+        Built for IICRC-Certified Contractors
+      </div>
+      <h1>Stop Losing Money to <em>Denied Insurance Claims</em></h1>
+      <p class="hero-sub">AI-generated documentation checklists that insurance adjusters accept first time, every time.</p>
+      <div class="hero-ctas">
+        <a href="/app?mode=signup" class="btn-hero-primary">
+          Start Free 7-Day Trial
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <a href="#how-it-works" class="btn-hero-outline">See How It Works</a>
+      </div>
+      <div class="hero-trust">
+        <div class="hero-trust-item">
+          <svg class="trust-check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          No credit card required
+        </div>
+        <div class="hero-trust-item">
+          <svg class="trust-check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          7-day free trial
+        </div>
+        <div class="hero-trust-item">
+          <svg class="trust-check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Cancel anytime
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-mockup">
+      <div class="mockup-chrome">
+        <div class="m-dot r"></div>
+        <div class="m-dot y"></div>
+        <div class="m-dot g"></div>
+        <div class="mockup-url-bar">restoredocai.com/team/precision-restoration</div>
+      </div>
+      <div class="mockup-body">
+        <div class="mockup-overline">Active Checklist</div>
+        <div class="mockup-job-title">Water Damage Documentation</div>
+        <div class="mockup-meta">47 items &middot; 3 of 8 sections complete</div>
+        <div class="mockup-tags">
+          <span class="mockup-tag tag-amber">Category 2</span>
+          <span class="mockup-tag tag-red">Class 3</span>
+        </div>
+        <div class="mockup-rows">
+          <div class="mockup-row done">
+            <div class="m-check done"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span class="mockup-row-label">Safety Precautions</span>
+            <span class="mockup-row-count">6 items</span>
+          </div>
+          <div class="mockup-row done">
+            <div class="m-check done"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span class="mockup-row-label">Required PPE</span>
+            <span class="mockup-row-count">5 items</span>
+          </div>
+          <div class="mockup-row done">
+            <div class="m-check done"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span class="mockup-row-label">Photo Documentation</span>
+            <span class="mockup-row-count">8 items</span>
+          </div>
+          <div class="mockup-row">
+            <div class="m-check"></div>
+            <span class="mockup-row-label">Moisture Readings</span>
+            <span class="mockup-row-count">7 items</span>
+          </div>
+          <div class="mockup-row">
+            <div class="m-check"></div>
+            <span class="mockup-row-label">Equipment Placement</span>
+            <span class="mockup-row-count">5 items</span>
+          </div>
+          <div class="mockup-row">
+            <div class="m-check"></div>
+            <span class="mockup-row-label">Scope of Work</span>
+            <span class="mockup-row-count">9 items</span>
+          </div>
+        </div>
+        <div class="mockup-divider"></div>
+        <div class="mockup-prog-labels">
+          <span>Progress</span>
+          <span>3 / 8 sections</span>
+        </div>
+        <div class="mockup-prog-bar">
+          <div class="mockup-prog-fill"></div>
+        </div>
+      </div>
+      <div class="mockup-footer">Generated by RestoreDocAI in 3.2 seconds</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- â•â•â• TRUST BAR â•â•â• -->
+<div class="trust-bar">
+  <div class="trust-bar-inner">
+    <span class="trust-label">Trusted by</span>
+    <div class="trust-divider"></div>
+    <div class="trust-names">
+      <span class="trust-name">Precision Restoration Group</span>
+      <span class="trust-name">AllDry Services</span>
+      <span class="trust-name">BlueLine Restoration</span>
+      <span class="trust-name">Summit DKI</span>
+      <span class="trust-name">PuroClean of Denver</span>
+    </div>
+  </div>
+</div>
+
+<!-- â•â•â• FEATURES â•â•â• -->
+<section class="section" id="features">
+  <div class="section-inner">
+    <div class="section-header">
+      <div class="section-label">Why RestoreDocAI</div>
+      <h2 class="section-title">Documentation that wins claims</h2>
+      <p class="section-sub">Adjusters deny claims for one reason: missing or incomplete documentation. RestoreDocAI eliminates that problem at the source.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">AI Identifies Damage in Seconds</h3>
+        <p class="feature-desc">Point your phone at the job site. The AI identifies damage type, IICRC category and class, affected materials, and severity before your tech picks up a single tool.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+            <polyline points="10 9 9 9 8 9"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">Insurance-Ready Every Time</h3>
+        <p class="feature-desc">Every checklist follows IICRC S500, S520, and S700 standards with Xactimate line items, moisture readings, PPE requirements, and equipment logs that adjusters require.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+        </div>
+        <h3 class="feature-title">No App. No Login. Just a Link.</h3>
+        <p class="feature-desc">Techs access their team checklist via a simple URL you share once. Works on any phone or tablet. No app download, no account setup â€” just open and start documenting.</p>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="stat-number">94%</div>
+        <div class="stat-label">First-submission claim approval rate</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number">4 min</div>
+        <div class="stat-label">Average documentation time per job</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-number">8</div>
+        <div class="stat-label">IICRC-required sections, always complete</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- â•â•â• HOW IT WORKS â•â•â• -->
+<section class="section how-section" id="how-it-works">
+  <div class="section-inner">
+    <div class="section-header center">
+      <div class="section-label">How It Works</div>
+      <h2 class="section-title">Up and running in under 5 minutes</h2>
+      <p class="section-sub">No IT required. No training sessions. Your techs document claims correctly on their first job.</p>
+    </div>
+
+    <div class="steps-wrap">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3 class="step-title">Sign Up</h3>
+        <p class="step-desc">Create your company account. You receive a unique team link to share with your field techs.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3 class="step-title">Tech Opens Link</h3>
+        <p class="step-desc">No app download. Techs open your team link on any phone or tablet. No login required.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3 class="step-title">Photograph Damage</h3>
+        <p class="step-desc">Tech photographs the damage site. AI identifies type, category, class, and affected materials in seconds.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h3 class="step-title">Submit Claim</h3>
+        <p class="step-desc">Download the complete 8-section checklist. Submit with confidence. First-time approval.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- â•â•â• PRICING â•â•â• -->
+<section class="section" id="pricing">
+  <div class="section-inner">
+    <div class="section-header center">
+      <div class="section-label">Pricing</div>
+      <h2 class="section-title">Simple, transparent pricing</h2>
+      <p class="section-sub">Start with a 7-day free trial. No credit card required. Upgrade when your team is ready.</p>
+    </div>
+
+    <div class="pricing-grid">
+
+      <!-- Starter -->
+      <div class="pricing-card">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price"><sup>$</sup>79</div>
+        <div class="plan-period">per month</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li><svg class="pf-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Up to 3 field technicians</li>
+          <li><svg class="pf-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>300 checklists per month</li>
+          <li><svg class="pf-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>AI photo damage identification</li>
+          <li><svg class="pf-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>All 4 damage types</li>
+          <li><svg class="pf-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>History dashboard</li>
+        </ul>
+        <a href="/app?mode=signup" class="plan-btn outline">Start Free Trial</a>
+      </div>
+
+      <!-- Growth -->
+      <div class="pricing-card featured">
+        <div class="featured-badge">Most Popular</div>
+        <div class="plan-name">Growth</div>
+        <div class="plan-price"><sup>$</sup>149</div>
+        <div class="plan-period">per month</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li><svg class="pf-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Up to 10 field technicians</li>
+          <li><svg class="pf-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>800 checklists per month</li>
+          <li><svg class="pf-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>AI photo damage identification</li>
+          <li><svg class="pf-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>All 4 damage types</li>
+          <li><svg class="pf-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Priority support</li>
+          <li><svg class="pf-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Checklist analytics</li>
+        </ul>
+        <a href="/app?mode=signup" class="plan-btn solid">Start Free Trial</a>
+      </div>
+
+      <!-- Pro -->
+      <div class="pricing-card">
+        <div class="plan-name">Pro</div>
+        <div class="plan-price"><sup>$</sup>299</div>
+        <div class="plan-period">per month</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li><svg class="pf-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Up to 20 field technicians</li>
+          <li><svg class="pf-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>2,000 checklists per month</li>
+          <li><svg class="pf-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>AI photo damage identification</li>
+          <li><svg class="pf-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>All 4 damage types</li>
+          <li><svg class="pf-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Priority support</li>
+          <li><svg class="pf-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Advanced analytics</li>
+        </ul>
+        <a href="/app?mode=signup" class="plan-btn outline">Start Free Trial</a>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="pricing-card">
+        <div class="plan-name">Enterprise</div>
+        <div class="plan-price" style="font-size: 28px; letter-spacing: -0.5px;">Custom</div>
+        <div class="plan-period">contact sales</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li><svg class="pf-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Unlimited technicians</li>
+          <li><svg class="pf-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Unlimited checklists</li>
+          <li><svg class="pf-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Dedicated account manager</li>
+          <li><svg class="pf-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Custom integrations</li>
+          <li><svg class="pf-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>SLA guarantee</li>
+          <li><svg class="pf-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>White-label available</li>
+        </ul>
+        <a href="mailto:sales@restoredocai.com" class="plan-btn outline">Contact Sales</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- â•â•â• TESTIMONIALS â•â•â• -->
+<section class="testimonials-section" id="testimonials">
+  <div class="section-inner">
+    <div class="section-header center">
+      <div class="section-label">What Contractors Say</div>
+      <h2 class="section-title">The numbers speak for themselves</h2>
+    </div>
+
+    <div class="testimonials-grid">
+
+      <div class="tcard">
+        <div class="tcard-stars">
+          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <p class="tcard-quote">"We went from a 34% claim denial rate to under 5% in 90 days. The documentation is exactly what adjusters want to see. I wish I had found this three years ago."</p>
+        <div class="tcard-author">
+          <div class="tcard-avatar">MT</div>
+          <div>
+            <div class="tcard-name">Mike Thornton</div>
+            <div class="tcard-company">Owner, Precision Restoration Group</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tcard">
+        <div class="tcard-stars">
+          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <p class="tcard-quote">"Our techs stopped skipping documentation steps because the AI tells them exactly what to photograph and what measurements to take. No more incomplete claim files."</p>
+        <div class="tcard-author">
+          <div class="tcard-avatar">SK</div>
+          <div>
+            <div class="tcard-name">Sarah Kowalski</div>
+            <div class="tcard-company">Operations Director, AllDry Services</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tcard">
+        <div class="tcard-stars">
+          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <p class="tcard-quote">"Documentation used to take 45 minutes per job. Now it's 4 minutes. We've taken on 30% more jobs with the same crew and our claim approval rate has never been higher."</p>
+        <div class="tcard-author">
+          <div class="tcard-avatar">JL</div>
+          <div>
+            <div class="tcard-name">James Lorenz</div>
+            <div class="tcard-company">Field Supervisor, BlueLine Restoration Inc.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- â•â•â• CTA BANNER â•â•â• -->
+<section class="cta-banner">
+  <div style="max-width: 640px; margin: 0 auto;">
+    <h2>Ready to stop losing claims?</h2>
+    <p>Join restoration contractors who submit documentation that adjusters accept the first time.</p>
+    <div class="cta-banner-btns">
+      <a href="/app?mode=signup" class="btn-cta-white">
+        Start Your Free Trial
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- â•â•â• FOOTER â•â•â• -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <a href="/" class="footer-logo">RestoreDoc<span>AI</span></a>
+        <p class="footer-tagline">AI-generated, IICRC-compliant documentation checklists for restoration contractors. Stop losing money to denied claims.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Product</div>
+        <ul class="footer-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#how-it-works">How It Works</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="/app?mode=signup">Start Free Trial</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Account</div>
+        <ul class="footer-links">
+          <li><a href="/app">Sign In</a></li>
+          <li><a href="/app?mode=signup">Create Account</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Contact</div>
+        <ul class="footer-links">
+          <li><a href="mailto:support@restoredocai.com">Support</a></li>
+          <li><a href="mailto:sales@restoredocai.com">Sales</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">&copy; 2026 RestoreDocAI. All rights reserved.</span>
+      <div class="footer-legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script type="module">
+  const hdr = document.getElementById('site-header');
+  window.addEventListener('scroll', () => {
+    hdr.classList.toggle('scrolled', window.scrollY > 8);
+  }, { passive: true });
+</script>
+
+</body>
+</html>
+
+
