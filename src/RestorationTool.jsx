@@ -195,10 +195,35 @@ export default function RestorationTool() {
       form.append("photoConfirmed", confirmed === false ? "false" : "true");
       if (photo && confirmed !== false) form.append("photo", photo);
       const teamSlug = company?.teamSlug || "test-team";
-      const res  = await fetch(`${API_BASE}/checklist/generate/${teamSlug}`, { method: "POST", body: form });
-      const data = await res.json();
-      if (!res.ok) { setError(data.error || "Failed to generate checklist."); setLoading(false); return; }
-      setChecklist(data.checklist);
+      const res = await fetch(`${API_BASE}/checklist/generate/${teamSlug}`, { method: "POST", body: form });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        setError(err.error || "Failed to generate checklist.");
+        setLoading(false);
+        return;
+      }
+      // Server streams SSE chunks; consume them and render progressively
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buf = "";
+      let finalData = null;
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += decoder.decode(value, { stream: true });
+        const lines = buf.split("\n");
+        buf = lines.pop(); // keep incomplete last line
+        for (const line of lines) {
+          if (!line.startsWith("data: ")) continue;
+          const payload = JSON.parse(line.slice(6));
+          if (payload.error) { setError(payload.error); setLoading(false); return; }
+          if (payload.done) { finalData = payload; }
+          else if (payload.chunk) {
+            setChecklist(prev => (prev || "") + payload.chunk);
+          }
+        }
+      }
+      if (finalData) setChecklist(finalData.checklist);
     } catch { setError("Failed to generate checklist. Please try again."); }
     setLoading(false);
   };
