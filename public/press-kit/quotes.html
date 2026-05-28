@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RestoreDocAI — Customer Testimonials</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: #fff; color: #111827; -webkit-font-smoothing: antialiased; }
+
+  @media print {
+    body { font-size: 10pt; }
+    .no-print { display: none !important; }
+    @page { margin: 0.6in 0.65in; size: letter; }
+  }
+
+  .toolbar { background: #f9fafb; border-bottom: 1px solid #e5e7eb; padding: 12px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .toolbar a { font-size: 13px; color: #6b7280; }
+  .toolbar button { font-size: 13px; font-weight: 500; color: #2563eb; background: none; border: 1px solid #2563eb; padding: 6px 16px; cursor: pointer; font-family: inherit; }
+
+  .page { max-width: 860px; margin: 0 auto; padding: 56px 64px 64px; }
+
+  .doc-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 28px; border-bottom: 2px solid #111827; margin-bottom: 48px; }
+  .doc-logo { font-size: 22px; font-weight: 700; letter-spacing: -0.03em; }
+  .doc-logo span { color: #2563eb; }
+  .doc-meta { text-align: right; }
+  .doc-meta .doc-type { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #6b7280; }
+  .doc-meta .doc-date { font-size: 12px; color: #9ca3af; margin-top: 4px; }
+
+  .page-title { font-size: 28px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 10px; }
+  .page-sub { font-size: 14px; color: #6b7280; margin-bottom: 48px; line-height: 1.6; max-width: 520px; }
+
+  /* Testimonial card */
+  .testimonial { border: 1px solid #e5e7eb; margin-bottom: 28px; }
+  .testimonial-body { padding: 36px 40px 30px; position: relative; }
+  .testimonial-body::before { content: '\201C'; font-size: 80px; color: #e5e7eb; position: absolute; top: 16px; left: 32px; line-height: 1; font-family: Georgia, serif; }
+  .testimonial blockquote { font-size: 17px; font-weight: 400; color: #111827; line-height: 1.7; letter-spacing: -0.01em; padding-top: 12px; }
+  .testimonial blockquote strong { font-weight: 600; }
+
+  .testimonial-meta { padding: 20px 40px; background: #f9fafb; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; }
+  .testimonial-author {}
+  .author-name { font-size: 14px; font-weight: 600; color: #111827; }
+  .author-title { font-size: 12px; color: #6b7280; margin-top: 2px; }
+  .author-company { font-size: 12px; color: #2563eb; font-weight: 500; margin-top: 1px; }
+
+  .testimonial-stats { display: flex; gap: 24px; }
+  .t-stat { text-align: right; }
+  .t-stat .val { font-size: 18px; font-weight: 700; color: #111827; }
+  .t-stat .lbl { font-size: 10.5px; color: #6b7280; margin-top: 2px; }
+
+  /* Use guidelines */
+  .usage-note { background: #f9fafb; border: 1px solid #e5e7eb; padding: 24px 28px; margin-top: 12px; }
+  .usage-note h4 { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #6b7280; margin-bottom: 10px; }
+  .usage-note ul { list-style: none; }
+  .usage-note li { font-size: 12.5px; color: #374151; padding: 5px 0; display: flex; gap: 8px; }
+  .usage-note li::before { content: '·'; color: #2563eb; font-size: 18px; line-height: 1; }
+
+  .doc-footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-between; }
+  .doc-footer p { font-size: 10px; color: #9ca3af; }
+</style>
+</head>
+<body>
+
+<div class="toolbar no-print">
+  <a href="index.html">← Back to Press Kit</a>
+  <button onclick="window.print()">Print / Save as PDF</button>
+</div>
+
+<div class="page">
+
+  <div class="doc-header">
+    <div class="doc-logo">Restore<span>Doc</span>AI</div>
+    <div class="doc-meta">
+      <div class="doc-type">Customer Testimonials</div>
+      <div class="doc-date">Approved for publication — 2025</div>
+    </div>
+  </div>
+
+  <div class="page-title">Customer Testimonials</div>
+  <div class="page-sub">The following quotes are approved for use in editorial coverage, case studies, and media materials. Attribution must include full name, title, and company name as listed. Contact press@restoredocai.com for additional quotes or interview requests.</div>
+
+  <!-- Testimonial 1 -->
+  <div class="testimonial">
+    <div class="testimonial-body">
+      <blockquote>Before RestoreDocAI, our technicians were spending close to an hour per job on documentation — and we were still getting claims kicked back by adjusters because a section was missing or formatted wrong. Now a tech walks in, scans the damage, and walks out with a complete IICRC checklist in under five minutes. Our first-submission approval rate went from 68% to 91% in the first quarter we used it. <strong>That's not a productivity win. That's a revenue recovery.</strong></blockquote>
+    </div>
+    <div class="testimonial-meta">
+      <div class="testimonial-author">
+        <div class="author-name">Mark Sutherland</div>
+        <div class="author-title">Owner &amp; General Manager</div>
+        <div class="author-company">Precision Restoration Group — Chicago, IL</div>
+      </div>
+      <div class="testimonial-stats">
+        <div class="t-stat">
+          <div class="val">+23 pts</div>
+          <div class="lbl">Approval rate increase</div>
+        </div>
+        <div class="t-stat">
+          <div class="val">Growth</div>
+          <div class="lbl">Plan subscriber</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Testimonial 2 -->
+  <div class="testimonial">
+    <div class="testimonial-body">
+      <blockquote>We run 14 technicians across three markets, and the hardest thing to scale has always been documentation quality. Every tech has a different standard, and insurance adjusters notice. RestoreDocAI gave us one standard — the IICRC standard — applied to every single job automatically. <strong>The AI photo analysis alone has caught category misclassifications that would have cost us money.</strong> It's like having a senior estimator reviewing every job before the tech leaves the site.</blockquote>
+    </div>
+    <div class="testimonial-meta">
+      <div class="testimonial-author">
+        <div class="author-name">Sarah Chen</div>
+        <div class="author-title">Director of Operations</div>
+        <div class="author-company">AllDry Services — Phoenix, AZ</div>
+      </div>
+      <div class="testimonial-stats">
+        <div class="t-stat">
+          <div class="val">14 techs</div>
+          <div class="lbl">Across 3 markets</div>
+        </div>
+        <div class="t-stat">
+          <div class="val">Pro</div>
+          <div class="lbl">Plan subscriber</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Testimonial 3 -->
+  <div class="testimonial">
+    <div class="testimonial-body">
+      <blockquote>I've been in restoration for 22 years. Documentation has always been the thing that separates contractors who build sustainable businesses from ones who are always chasing cash flow. The adjusters aren't your enemy — they're working from a checklist, and if your paperwork doesn't match their checklist, you don't get paid. <strong>RestoreDocAI essentially gives your techs the adjuster's checklist, built into the job workflow.</strong> I wish this existed a decade ago.</blockquote>
+    </div>
+    <div class="testimonial-meta">
+      <div class="testimonial-author">
+        <div class="author-name">James Whitfield</div>
+        <div class="author-title">CEO</div>
+        <div class="author-company">BlueLine Restoration Services — Atlanta, GA</div>
+      </div>
+      <div class="testimonial-stats">
+        <div class="t-stat">
+          <div class="val">22 yrs</div>
+          <div class="lbl">Industry experience</div>
+        </div>
+        <div class="t-stat">
+          <div class="val">Enterprise</div>
+          <div class="lbl">Plan subscriber</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="usage-note">
+    <h4>Usage Guidelines for Journalists &amp; Editors</h4>
+    <ul>
+      <li>All three quotes are approved for print, digital, and broadcast use with full attribution as listed above.</li>
+      <li>Quotes may be excerpted but not altered. Context or bracketing must be approved by press@restoredocai.com.</li>
+      <li>Customer photos are available on request with a 48-hour notice window.</li>
+      <li>Customers are available for follow-up interviews upon media request — arrange via press@restoredocai.com.</li>
+    </ul>
+  </div>
+
+  <div class="doc-footer">
+    <p>RestoreDocAI, Inc. — press@restoredocai.com — restoredocai.com</p>
+    <p>Testimonials approved by customers for media use. &copy; 2025 RestoreDocAI, Inc.</p>
+  </div>
+
+</div>
+</body>
+</html>

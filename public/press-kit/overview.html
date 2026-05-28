@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RestoreDocAI — Company Overview</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: #fff; color: #111827; -webkit-font-smoothing: antialiased; }
+
+  @media print {
+    body { font-size: 10pt; }
+    .no-print { display: none !important; }
+    @page { margin: 0.6in 0.65in; size: letter; }
+  }
+
+  .toolbar { background: #f9fafb; border-bottom: 1px solid #e5e7eb; padding: 12px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .toolbar a { font-size: 13px; color: #6b7280; }
+  .toolbar button { font-size: 13px; font-weight: 500; color: #2563eb; background: none; border: 1px solid #2563eb; padding: 6px 16px; cursor: pointer; font-family: inherit; }
+
+  .page { max-width: 860px; margin: 0 auto; padding: 56px 64px 64px; }
+
+  /* Header */
+  .doc-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 28px; border-bottom: 2px solid #111827; margin-bottom: 40px; }
+  .doc-logo { font-size: 22px; font-weight: 700; letter-spacing: -0.03em; color: #111827; }
+  .doc-logo span { color: #2563eb; }
+  .doc-meta { text-align: right; }
+  .doc-meta .doc-type { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #6b7280; }
+  .doc-meta .doc-date { font-size: 12px; color: #9ca3af; margin-top: 4px; }
+
+  /* Hero block */
+  .overview-hero { background: #111827; color: #fff; padding: 36px 40px; margin-bottom: 36px; }
+  .overview-hero h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.2; margin-bottom: 14px; }
+  .overview-hero h1 em { color: #2563eb; font-style: normal; }
+  .overview-hero p { font-size: 13.5px; color: #9ca3af; line-height: 1.65; max-width: 520px; }
+
+  /* Stat row */
+  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid #e5e7eb; margin-bottom: 36px; }
+  .stat-cell { padding: 20px 22px; border-right: 1px solid #e5e7eb; }
+  .stat-cell:last-child { border-right: none; }
+  .stat-cell .val { font-size: 24px; font-weight: 700; color: #111827; letter-spacing: -0.02em; }
+  .stat-cell .lbl { font-size: 11px; color: #6b7280; margin-top: 4px; line-height: 1.4; }
+
+  /* Two column layout */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 36px; }
+
+  /* Section */
+  .section h2 { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #6b7280; margin-bottom: 16px; }
+  .section p { font-size: 13px; color: #374151; line-height: 1.7; margin-bottom: 12px; }
+  .section p:last-child { margin-bottom: 0; }
+
+  /* Feature list */
+  .feature-list { list-style: none; }
+  .feature-list li { font-size: 13px; color: #374151; padding: 8px 0; border-bottom: 1px solid #f3f4f6; display: flex; align-items: flex-start; gap: 10px; line-height: 1.5; }
+  .feature-list li:last-child { border-bottom: none; padding-bottom: 0; }
+  .feature-list li::before { content: ''; display: block; width: 6px; height: 6px; background: #2563eb; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+
+  /* Timeline */
+  .timeline { list-style: none; }
+  .timeline li { display: flex; gap: 16px; padding: 10px 0; border-bottom: 1px solid #f3f4f6; font-size: 12.5px; }
+  .timeline li:last-child { border-bottom: none; padding-bottom: 0; }
+  .timeline .year { font-weight: 600; color: #2563eb; min-width: 42px; }
+  .timeline .event { color: #374151; line-height: 1.5; }
+
+  /* Investors */
+  .investors { display: flex; gap: 16px; }
+  .investor-chip { border: 1px solid #e5e7eb; padding: 10px 16px; }
+  .investor-chip .inv-name { font-size: 13px; font-weight: 600; color: #111827; }
+  .investor-chip .inv-type { font-size: 11px; color: #6b7280; margin-top: 2px; }
+
+  /* Footer */
+  .doc-footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; }
+  .doc-footer p { font-size: 10px; color: #9ca3af; }
+</style>
+</head>
+<body>
+
+<div class="toolbar no-print">
+  <a href="index.html">← Back to Press Kit</a>
+  <button onclick="window.print()">Print / Save as PDF</button>
+</div>
+
+<div class="page">
+
+  <div class="doc-header">
+    <div class="doc-logo">Restore<span>Doc</span>AI</div>
+    <div class="doc-meta">
+      <div class="doc-type">Company Overview</div>
+      <div class="doc-date">Fiscal Year 2025 — Confidential</div>
+    </div>
+  </div>
+
+  <div class="overview-hero">
+    <h1>Eliminating documentation failure<br>from the <em>$210B restoration industry</em></h1>
+    <p>RestoreDocAI is the AI-powered documentation platform that enables restoration contractors to generate IICRC-compliant insurance checklists in minutes — reducing denied claims, accelerating reimbursements, and building defensible job records at scale.</p>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-cell">
+      <div class="val">1,200+</div>
+      <div class="lbl">Restoration companies on platform</div>
+    </div>
+    <div class="stat-cell">
+      <div class="val">94%</div>
+      <div class="lbl">First-submission claim approval rate</div>
+    </div>
+    <div class="stat-cell">
+      <div class="val">4.2 min</div>
+      <div class="lbl">Avg. documentation time per job</div>
+    </div>
+    <div class="stat-cell">
+      <div class="val">$8.2M</div>
+      <div class="lbl">Series A raised, 2024</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+
+    <div class="section">
+      <h2>The Problem</h2>
+      <p>Insurance claim denials cost the US restoration industry an estimated $4.2B annually. The leading cause is inadequate or non-compliant documentation — field technicians are expected to produce IICRC-standard reports under time pressure, often on mobile devices, without standardized tools.</p>
+      <p>The average restoration company spends 52 minutes per job on documentation and still sees 23% of claims denied or delayed on first submission.</p>
+    </div>
+
+    <div class="section">
+      <h2>The Solution</h2>
+      <p>RestoreDocAI gives field technicians a mobile-first, PIN-protected tool to document any restoration job in minutes. The AI analyzes site photos, identifies damage materials, and generates a complete 8-section IICRC-compliant checklist — formatted exactly the way insurance adjusters require it.</p>
+      <p>No app download. No training required. Share a link, enter a PIN, start documenting.</p>
+    </div>
+
+  </div>
+
+  <div class="two-col">
+
+    <div class="section">
+      <h2>Core Capabilities</h2>
+      <ul class="feature-list">
+        <li>AI photo analysis — identifies damage type, severity, and affected materials from job site photos</li>
+        <li>Auto-generated IICRC checklists covering all 8 required sections (S500, S520, S700 standards)</li>
+        <li>Xactimate-ready scope of work export for direct adjuster submission</li>
+        <li>PIN-protected team links — no app download required for field techs</li>
+        <li>Real-time dashboard with usage analytics and claim approval tracking</li>
+        <li>PDF export with full chain of custody documentation</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Company Milestones</h2>
+      <ul class="timeline">
+        <li><span class="year">Q1 '23</span><span class="event">Company founded. First IICRC-compliant checklist engine built.</span></li>
+        <li><span class="year">Q3 '23</span><span class="event">Seed round closed. First 50 paying customers onboarded.</span></li>
+        <li><span class="year">Q1 '24</span><span class="event">AI photo identification launched. 300+ companies on platform.</span></li>
+        <li><span class="year">Q3 '24</span><span class="event">$8.2M Series A led by Apex Venture Partners. Team grows to 23.</span></li>
+        <li><span class="year">Q1 '25</span><span class="event">Xactimate scope export launched. 1,200 companies, 40K+ checklists.</span></li>
+        <li><span class="year">Q3 '25</span><span class="event">Enterprise tier launched. Partnership with national franchise groups.</span></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="section" style="margin-bottom: 28px;">
+    <h2>Investors &amp; Backers</h2>
+    <div class="investors">
+      <div class="investor-chip">
+        <div class="inv-name">Apex Venture Partners</div>
+        <div class="inv-type">Series A Lead — $6.0M</div>
+      </div>
+      <div class="investor-chip">
+        <div class="inv-name">Keystone Growth Capital</div>
+        <div class="inv-type">Series A — $2.2M</div>
+      </div>
+      <div class="investor-chip">
+        <div class="inv-name">Strategic Angels</div>
+        <div class="inv-type">Industry operators & adjusters</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Market Context</h2>
+    <p style="font-size:13px;color:#374151;line-height:1.7;">The US property restoration market is a $210B industry with over 45,000 active contractors. It is largely un-digitized at the field documentation layer — most teams still rely on handwritten notes, personal photos, and email chains to submit claims. RestoreDocAI addresses the last mile of the insurance claims process: the 72 hours after a job begins, when documentation quality determines whether a contractor gets paid in full, and on time.</p>
+  </div>
+
+  <div class="doc-footer">
+    <p>RestoreDocAI, Inc. — Denver, CO — press@restoredocai.com — restoredocai.com</p>
+    <p>Confidential. For media use with attribution only. &copy; 2025 RestoreDocAI, Inc.</p>
+  </div>
+
+</div>
+</body>
+</html>

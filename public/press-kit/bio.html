@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RestoreDocAI — Oliver Ford, Founder &amp; CEO</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: #fff; color: #111827; -webkit-font-smoothing: antialiased; }
+
+  @media print {
+    body { font-size: 10pt; }
+    .no-print { display: none !important; }
+    @page { margin: 0.6in 0.65in; size: letter; }
+  }
+
+  .toolbar { background: #f9fafb; border-bottom: 1px solid #e5e7eb; padding: 12px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .toolbar a { font-size: 13px; color: #6b7280; }
+  .toolbar button { font-size: 13px; font-weight: 500; color: #2563eb; background: none; border: 1px solid #2563eb; padding: 6px 16px; cursor: pointer; font-family: inherit; }
+
+  .page { max-width: 860px; margin: 0 auto; padding: 56px 64px 64px; }
+
+  .doc-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 28px; border-bottom: 2px solid #111827; margin-bottom: 48px; }
+  .doc-logo { font-size: 22px; font-weight: 700; letter-spacing: -0.03em; color: #111827; }
+  .doc-logo span { color: #2563eb; }
+  .doc-meta { text-align: right; }
+  .doc-meta .doc-type { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #6b7280; }
+  .doc-meta .doc-date { font-size: 12px; color: #9ca3af; margin-top: 4px; }
+
+  /* Profile block */
+  .profile { display: grid; grid-template-columns: 200px 1fr; gap: 48px; margin-bottom: 48px; align-items: start; }
+  .profile-photo { width: 200px; height: 240px; background: #1a2332; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 20px; }
+  .profile-photo-placeholder { width: 90px; height: 90px; background: #ffffff18; border-radius: 50%; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; }
+  .profile-photo-placeholder svg { width: 44px; height: 44px; color: #6b7280; }
+  .profile-photo p { font-size: 10px; color: #6b7280; text-align: center; line-height: 1.5; }
+
+  .profile-info {}
+  .profile-name { font-size: 32px; font-weight: 700; letter-spacing: -0.03em; color: #111827; margin-bottom: 6px; }
+  .profile-title { font-size: 14px; color: #2563eb; font-weight: 500; margin-bottom: 4px; }
+  .profile-company { font-size: 13px; color: #6b7280; margin-bottom: 24px; }
+
+  .profile-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+  .tag { font-size: 11px; font-weight: 500; color: #374151; border: 1px solid #e5e7eb; padding: 5px 12px; }
+
+  .profile-bio p { font-size: 14px; color: #374151; line-height: 1.75; margin-bottom: 16px; }
+  .profile-bio p:last-child { margin-bottom: 0; }
+
+  /* Quote callout */
+  .pull-quote { border-left: 3px solid #2563eb; padding: 20px 24px; background: #f9fafb; margin: 36px 0; }
+  .pull-quote blockquote { font-size: 17px; font-weight: 500; color: #111827; line-height: 1.6; letter-spacing: -0.01em; font-style: italic; }
+  .pull-quote cite { display: block; font-size: 12px; color: #6b7280; margin-top: 12px; font-style: normal; }
+
+  /* Credentials */
+  .cred-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 36px; }
+  .cred-card { border: 1px solid #e5e7eb; padding: 18px 20px; }
+  .cred-card h4 { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #6b7280; margin-bottom: 10px; }
+  .cred-item { font-size: 13px; color: #374151; padding: 6px 0; border-bottom: 1px solid #f3f4f6; display: flex; gap: 8px; align-items: flex-start; line-height: 1.4; }
+  .cred-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .cred-item::before { content: ''; display: block; width: 4px; height: 4px; background: #2563eb; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+
+  /* Media */
+  .media-section h3 { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #6b7280; margin-bottom: 16px; }
+  .media-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .media-item { border: 1px solid #e5e7eb; padding: 14px 16px; }
+  .media-item .outlet { font-size: 11px; font-weight: 600; color: #111827; }
+  .media-item .topic { font-size: 11px; color: #6b7280; margin-top: 3px; }
+
+  .doc-footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; }
+  .doc-footer p { font-size: 10px; color: #9ca3af; }
+</style>
+</head>
+<body>
+
+<div class="toolbar no-print">
+  <a href="index.html">← Back to Press Kit</a>
+  <button onclick="window.print()">Print / Save as PDF</button>
+</div>
+
+<div class="page">
+
+  <div class="doc-header">
+    <div class="doc-logo">Restore<span>Doc</span>AI</div>
+    <div class="doc-meta">
+      <div class="doc-type">Founder Biography</div>
+      <div class="doc-date">Approved for media use — 2025</div>
+    </div>
+  </div>
+
+  <div class="profile">
+    <div>
+      <div class="profile-photo">
+        <div class="profile-photo-placeholder">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        </div>
+        <p>High-res photo available<br>on request via<br>press@restoredocai.com</p>
+      </div>
+    </div>
+
+    <div class="profile-info">
+      <div class="profile-name">Oliver Ford</div>
+      <div class="profile-title">CEO &amp; Co-Founder</div>
+      <div class="profile-company">RestoreDocAI — Denver, CO</div>
+
+      <div class="profile-tags">
+        <span class="tag">IICRC WRT Certified</span>
+        <span class="tag">12 Yrs Restoration Industry</span>
+        <span class="tag">Series A CEO</span>
+        <span class="tag">AI &amp; Insurance Tech</span>
+      </div>
+
+      <div class="profile-bio">
+        <p>Oliver Ford spent twelve years on the operations side of the restoration industry before founding RestoreDocAI in 2023. As Vice President of Operations at a multi-state water and fire restoration company, he oversaw more than 400 jobs per year and watched firsthand as documentation failures — not poor workmanship — became the leading cause of delayed and denied insurance claims.</p>
+
+        <p>"We were doing excellent work in the field and getting paid 70 cents on the dollar because a moisture reading was in the wrong column or a photo didn't show the right angle," Ford said. "The IICRC standards exist exactly to prevent that. The problem was giving technicians a way to follow them under pressure."</p>
+
+        <p>Ford built the first version of RestoreDocAI as an internal tool for his team — a structured checklist generator that embedded IICRC S500 requirements directly into the field workflow. Within three months, claim approval rates at his former employer increased from 71% to over 90%. He left to found RestoreDocAI full-time in early 2023, closing a seed round within six months and a $8.2M Series A in late 2024.</p>
+
+        <p>Today RestoreDocAI serves more than 1,200 restoration companies across all 50 states. Ford serves as an advisor to the Restoration Industry Association (RIA) and speaks regularly on AI's role in property insurance claims modernization.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pull-quote">
+    <blockquote>"The insurance system was not built for speed. But it was built for documentation. Every denial I ever saw came down to one thing: the paperwork didn't prove what the field tech actually did."</blockquote>
+    <cite>— Oliver Ford, CEO &amp; Co-Founder, RestoreDocAI</cite>
+  </div>
+
+  <div class="cred-grid">
+    <div class="cred-card">
+      <h4>Professional Background</h4>
+      <div class="cred-item">VP of Operations — regional multi-state restoration company (2011–2023)</div>
+      <div class="cred-item">IICRC Water Restoration Technician (WRT) certified</div>
+      <div class="cred-item">Member, Restoration Industry Association (RIA)</div>
+      <div class="cred-item">Industry Advisor, Property Insurance Claims Council</div>
+    </div>
+    <div class="cred-card">
+      <h4>Areas of Expertise</h4>
+      <div class="cred-item">IICRC S500, S520, S700 documentation standards</div>
+      <div class="cred-item">Property insurance claims and adjuster relations</div>
+      <div class="cred-item">AI-assisted field workflow automation</div>
+      <div class="cred-item">Xactimate estimating and scope of work documentation</div>
+    </div>
+  </div>
+
+  <div class="media-section">
+    <h3>Available for</h3>
+    <div class="media-grid">
+      <div class="media-item">
+        <div class="outlet">Podcast &amp; Radio</div>
+        <div class="topic">AI in property insurance, restoration industry trends</div>
+      </div>
+      <div class="media-item">
+        <div class="outlet">Print &amp; Online</div>
+        <div class="topic">Startup interviews, PropTech coverage, insurance reform</div>
+      </div>
+      <div class="media-item">
+        <div class="outlet">Conference &amp; Panel</div>
+        <div class="topic">AI, insurtech, restoration industry events</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-footer">
+    <p>RestoreDocAI, Inc. — Denver, CO — press@restoredocai.com</p>
+    <p>Bio approved for publication. High-res photo available on request. &copy; 2025</p>
+  </div>
+
+</div>
+</body>
+</html>

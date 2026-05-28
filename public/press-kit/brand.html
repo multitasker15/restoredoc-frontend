@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RestoreDocAI — Brand &amp; Logo Guidelines</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: #fff; color: #111827; -webkit-font-smoothing: antialiased; }
+
+  @media print {
+    body { font-size: 9.5pt; }
+    .no-print { display: none !important; }
+    @page { margin: 0.5in 0.6in; size: letter; }
+  }
+
+  .toolbar { background: #f9fafb; border-bottom: 1px solid #e5e7eb; padding: 12px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .toolbar a { font-size: 13px; color: #6b7280; }
+  .toolbar button { font-size: 13px; font-weight: 500; color: #2563eb; background: none; border: 1px solid #2563eb; padding: 6px 16px; cursor: pointer; font-family: inherit; }
+
+  .page { max-width: 860px; margin: 0 auto; padding: 48px 64px 56px; }
+
+  .doc-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 24px; border-bottom: 2px solid #111827; margin-bottom: 40px; }
+  .doc-logo { font-size: 22px; font-weight: 700; letter-spacing: -0.03em; }
+  .doc-logo span { color: #2563eb; }
+  .doc-meta { text-align: right; }
+  .doc-meta .doc-type { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #6b7280; }
+  .doc-meta .doc-date { font-size: 12px; color: #9ca3af; margin-top: 4px; }
+
+  .sec-title { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #6b7280; margin-bottom: 20px; padding-bottom: 8px; border-bottom: 1px solid #f3f4f6; }
+  .section { margin-bottom: 44px; }
+  .section p { font-size: 13px; color: #374151; line-height: 1.65; margin-bottom: 16px; }
+
+  /* Logo display */
+  .logo-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 28px; }
+  .logo-box { border: 1px solid #e5e7eb; padding: 32px 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; }
+  .logo-box.dark { background: #111827; border-color: #111827; }
+  .logo-box.blue { background: #2563eb; border-color: #2563eb; }
+  .logo-lockup { font-size: 20px; font-weight: 700; letter-spacing: -0.03em; color: #111827; }
+  .logo-lockup.light { color: #fff; }
+  .logo-lockup span { color: #2563eb; }
+  .logo-lockup.light span { color: #60a5fa; }
+  .logo-lockup.on-blue { color: #fff; }
+  .logo-lockup.on-blue span { color: #fff; opacity: 0.7; }
+  .logo-label { font-size: 10px; color: #9ca3af; letter-spacing: 0.05em; text-transform: uppercase; }
+  .logo-label.dark { color: #6b7280; }
+
+  /* Colors */
+  .color-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
+  .color-swatch {}
+  .swatch-block { height: 80px; margin-bottom: 10px; }
+  .swatch-name { font-size: 11px; font-weight: 600; color: #111827; }
+  .swatch-hex { font-size: 10.5px; color: #6b7280; margin-top: 2px; font-family: 'Courier New', monospace; }
+  .swatch-use { font-size: 10px; color: #9ca3af; margin-top: 3px; line-height: 1.4; }
+
+  /* Typography */
+  .type-row { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 20px; }
+  .type-sample { border: 1px solid #e5e7eb; padding: 24px 28px; }
+  .type-sample .sample-text { font-size: 22px; font-weight: 700; color: #111827; letter-spacing: -0.03em; margin-bottom: 8px; }
+  .type-sample .sample-label { font-size: 10px; color: #6b7280; letter-spacing: 0.08em; text-transform: uppercase; }
+  .type-sample .sample-spec { font-size: 12px; color: #374151; margin-top: 6px; }
+
+  /* Don'ts */
+  .donts { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .dont-card { border: 1px solid #fecaca; background: #fff5f5; padding: 18px 20px; }
+  .dont-preview { font-size: 16px; font-weight: 700; margin-bottom: 10px; letter-spacing: -0.02em; }
+  .dont-rule { font-size: 11px; color: #dc2626; font-weight: 500; margin-bottom: 6px; }
+  .dont-desc { font-size: 11px; color: #6b7280; line-height: 1.4; }
+
+  /* Usage rights */
+  .rights-list { list-style: none; }
+  .rights-list li { font-size: 13px; color: #374151; padding: 8px 0; border-bottom: 1px solid #f3f4f6; display: flex; gap: 10px; line-height: 1.5; }
+  .rights-list li:last-child { border-bottom: none; }
+  .rights-list li .icon { font-size: 13px; flex-shrink: 0; }
+
+  .doc-footer { margin-top: 40px; padding-top: 18px; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-between; }
+  .doc-footer p { font-size: 10px; color: #9ca3af; }
+</style>
+</head>
+<body>
+
+<div class="toolbar no-print">
+  <a href="index.html">← Back to Press Kit</a>
+  <button onclick="window.print()">Print / Save as PDF</button>
+</div>
+
+<div class="page">
+
+  <div class="doc-header">
+    <div class="doc-logo">Restore<span>Doc</span>AI</div>
+    <div class="doc-meta">
+      <div class="doc-type">Brand &amp; Logo Guidelines</div>
+      <div class="doc-date">Version 1.2 — January 2025</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">Logo Usage</div>
+    <p>The RestoreDocAI wordmark is our primary brand identifier. The word "Doc" appears in Restoration Blue (#2563eb) against the full company name in Charcoal (#111827). Always use approved lockups — never recreate the logo manually.</p>
+
+    <div class="logo-grid">
+      <div class="logo-box">
+        <div class="logo-lockup">Restore<span>Doc</span>AI</div>
+        <div class="logo-label">Primary — Light Background</div>
+      </div>
+      <div class="logo-box dark">
+        <div class="logo-lockup light">Restore<span>Doc</span>AI</div>
+        <div class="logo-label dark">Reversed — Dark Background</div>
+      </div>
+      <div class="logo-box blue">
+        <div class="logo-lockup on-blue">Restore<span>Doc</span>AI</div>
+        <div class="logo-label dark">Single Color — Brand Background</div>
+      </div>
+    </div>
+
+    <p style="font-size:12px;color:#6b7280;">Minimum logo size: 120px wide (digital) or 1.4 inches (print). Maintain clear space equal to the height of the capital "R" on all sides. High-resolution files available at press@restoredocai.com.</p>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">Color Palette</div>
+    <div class="color-row">
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#2563eb;"></div>
+        <div class="swatch-name">Restoration Blue</div>
+        <div class="swatch-hex">#2563EB</div>
+        <div class="swatch-use">Primary brand, CTAs, links, accents</div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#111827;"></div>
+        <div class="swatch-name">Charcoal</div>
+        <div class="swatch-hex">#111827</div>
+        <div class="swatch-use">Headings, body text, dark backgrounds</div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#6b7280;"></div>
+        <div class="swatch-name">Stone Gray</div>
+        <div class="swatch-hex">#6B7280</div>
+        <div class="swatch-use">Secondary text, captions, labels</div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#f9fafb; border:1px solid #e5e7eb;"></div>
+        <div class="swatch-name">Fog</div>
+        <div class="swatch-hex">#F9FAFB</div>
+        <div class="swatch-use">Backgrounds, table rows, cards</div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#eff6ff;"></div>
+        <div class="swatch-name">Blueprint</div>
+        <div class="swatch-hex">#EFF6FF</div>
+        <div class="swatch-use">Highlighted states, callouts</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">Typography</div>
+    <div class="type-row">
+      <div class="type-sample">
+        <div class="sample-text">Inter Bold</div>
+        <div class="sample-label">Headlines &amp; Display</div>
+        <div class="sample-spec">Weight 700 · Letter-spacing −0.03em · Line-height 1.15</div>
+      </div>
+      <div class="type-sample">
+        <div class="sample-text" style="font-weight:400;font-size:18px;letter-spacing:0;">Body copy reads like this, clean and clear.</div>
+        <div class="sample-label">Body Text</div>
+        <div class="sample-spec">Weight 400 · 14–16px · Line-height 1.65</div>
+      </div>
+    </div>
+    <p style="font-size:12.5px;color:#6b7280;">Primary typeface: Inter (Google Fonts). Fallback: system-ui, -apple-system, Helvetica Neue. Never use decorative or serif fonts in official communications.</p>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">Prohibited Logo Usage</div>
+    <div class="donts">
+      <div class="dont-card">
+        <div class="dont-preview" style="color:#ef4444;">Restore<span>Doc</span>AI</div>
+        <div class="dont-rule">Do not alter brand colors</div>
+        <div class="dont-desc">Do not change "Doc" to any color other than #2563eb on approved backgrounds.</div>
+      </div>
+      <div class="dont-card">
+        <div class="dont-preview" style="font-style:italic;color:#111827;">Restore<em>Doc</em>AI</div>
+        <div class="dont-rule">Do not italicize</div>
+        <div class="dont-desc">The logo wordmark is always set upright. No oblique, italic, or condensed variants.</div>
+      </div>
+      <div class="dont-card">
+        <div class="dont-preview" style="font-weight:300;color:#111827;letter-spacing:0.08em;">RestoreDocAI</div>
+        <div class="dont-rule">Do not alter weight or spacing</div>
+        <div class="dont-desc">Always use the approved font weight (700) and letter-spacing. No tracking modifications.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">Media Usage Rights</div>
+    <ul class="rights-list">
+      <li><span class="icon">✓</span> Editorial and news coverage may reproduce the RestoreDocAI logo in articles referencing the company.</li>
+      <li><span class="icon">✓</span> Podcast cover art and video thumbnails may include the logo with prior written approval.</li>
+      <li><span class="icon">✓</span> The company name "RestoreDocAI" should always appear as one word with capital R, D, and AI.</li>
+      <li><span class="icon">✗</span> The logo may not be used in advertising, sponsored content, or paid placements without a written license agreement.</li>
+      <li><span class="icon">✗</span> Do not place the logo on photographic backgrounds without a solid-color buffer or approved badge variant.</li>
+      <li><span class="icon">✗</span> Do not use the logo to imply endorsement of third-party products or services.</li>
+    </ul>
+  </div>
+
+  <div class="doc-footer">
+    <p>RestoreDocAI, Inc. — press@restoredocai.com for high-res assets</p>
+    <p>Brand Guidelines v1.2 — January 2025. &copy; 2025 RestoreDocAI, Inc.</p>
+  </div>
+
+</div>
+</body>
+</html>

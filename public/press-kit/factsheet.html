@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RestoreDocAI — Product Fact Sheet</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: #fff; color: #111827; -webkit-font-smoothing: antialiased; }
+
+  @media print {
+    body { font-size: 9.5pt; }
+    .no-print { display: none !important; }
+    @page { margin: 0.5in 0.6in; size: letter; }
+  }
+
+  .toolbar { background: #f9fafb; border-bottom: 1px solid #e5e7eb; padding: 12px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .toolbar a { font-size: 13px; color: #6b7280; }
+  .toolbar button { font-size: 13px; font-weight: 500; color: #2563eb; background: none; border: 1px solid #2563eb; padding: 6px 16px; cursor: pointer; font-family: inherit; }
+
+  .page { max-width: 860px; margin: 0 auto; padding: 48px 64px 56px; }
+
+  .doc-header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 24px; border-bottom: 2px solid #111827; margin-bottom: 36px; }
+  .doc-logo { font-size: 22px; font-weight: 700; letter-spacing: -0.03em; }
+  .doc-logo span { color: #2563eb; }
+  .doc-meta { text-align: right; }
+  .doc-meta .doc-type { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #6b7280; }
+  .doc-meta .doc-date { font-size: 12px; color: #9ca3af; margin-top: 4px; }
+
+  .doc-title { font-size: 28px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 8px; }
+  .doc-sub { font-size: 14px; color: #6b7280; margin-bottom: 36px; line-height: 1.5; }
+
+  /* Stats grid */
+  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: #e5e7eb; border: 1px solid #e5e7eb; margin-bottom: 36px; }
+  .stats-cell { background: #fff; padding: 22px 24px; }
+  .stats-cell .val { font-size: 26px; font-weight: 700; color: #2563eb; letter-spacing: -0.02em; }
+  .stats-cell .lbl { font-size: 11.5px; color: #374151; margin-top: 5px; line-height: 1.4; font-weight: 500; }
+  .stats-cell .note { font-size: 10.5px; color: #9ca3af; margin-top: 3px; }
+
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-bottom: 36px; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 36px; }
+
+  .section h3 { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #6b7280; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid #f3f4f6; }
+
+  .feat-list { list-style: none; }
+  .feat-list li { font-size: 12.5px; color: #374151; padding: 7px 0; border-bottom: 1px solid #f3f4f6; line-height: 1.45; display: flex; gap: 8px; }
+  .feat-list li:last-child { border-bottom: none; padding-bottom: 0; }
+  .feat-list li::before { content: '✓'; color: #2563eb; font-weight: 700; font-size: 11px; flex-shrink: 0; padding-top: 1px; }
+
+  /* Pricing table */
+  .pricing-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 36px; }
+  .pricing-table th { text-align: left; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #6b7280; padding: 10px 12px; border-bottom: 2px solid #111827; }
+  .pricing-table td { padding: 10px 12px; border-bottom: 1px solid #f3f4f6; color: #374151; vertical-align: top; }
+  .pricing-table tr:last-child td { border-bottom: none; }
+  .pricing-table td:first-child { font-weight: 600; color: #111827; }
+  .pricing-table td.highlight { color: #2563eb; font-weight: 600; }
+  .popular-row td { background: #eff6ff; }
+
+  /* Job types */
+  .job-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .job-chip { font-size: 12px; font-weight: 500; color: #374151; border: 1px solid #e5e7eb; padding: 6px 14px; }
+  .job-chip.active { background: #111827; color: #fff; border-color: #111827; }
+
+  /* Compliance */
+  .comp-list { list-style: none; }
+  .comp-list li { font-size: 12.5px; color: #374151; padding: 7px 0; border-bottom: 1px solid #f3f4f6; line-height: 1.45; display: flex; gap: 8px; }
+  .comp-list li:last-child { border-bottom: none; padding-bottom: 0; }
+  .comp-list li strong { color: #111827; min-width: 80px; }
+
+  .doc-footer { margin-top: 40px; padding-top: 18px; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-between; }
+  .doc-footer p { font-size: 10px; color: #9ca3af; }
+</style>
+</head>
+<body>
+
+<div class="toolbar no-print">
+  <a href="index.html">← Back to Press Kit</a>
+  <button onclick="window.print()">Print / Save as PDF</button>
+</div>
+
+<div class="page">
+
+  <div class="doc-header">
+    <div class="doc-logo">Restore<span>Doc</span>AI</div>
+    <div class="doc-meta">
+      <div class="doc-type">Product Fact Sheet</div>
+      <div class="doc-date">Q2 2025 — For media use</div>
+    </div>
+  </div>
+
+  <div class="doc-title">Platform Overview &amp; Key Statistics</div>
+  <div class="doc-sub">RestoreDocAI is the AI documentation platform used by 1,200+ restoration companies to generate IICRC-compliant insurance checklists in minutes.</div>
+
+  <div class="stats-grid">
+    <div class="stats-cell">
+      <div class="val">1,200+</div>
+      <div class="lbl">Restoration companies on platform</div>
+      <div class="note">Across all 50 US states</div>
+    </div>
+    <div class="stats-cell">
+      <div class="val">94%</div>
+      <div class="lbl">First-submission claim approval rate</div>
+      <div class="note">vs 77% industry average</div>
+    </div>
+    <div class="stats-cell">
+      <div class="val">4.2 min</div>
+      <div class="lbl">Average documentation time per job</div>
+      <div class="note">vs 52 min industry average</div>
+    </div>
+    <div class="stats-cell">
+      <div class="val">40,000+</div>
+      <div class="lbl">Checklists generated to date</div>
+      <div class="note">Growing 38% month-over-month</div>
+    </div>
+    <div class="stats-cell">
+      <div class="val">8</div>
+      <div class="lbl">IICRC-required sections in every report</div>
+      <div class="note">Automatically generated, zero missing</div>
+    </div>
+    <div class="stats-cell">
+      <div class="val">$180K</div>
+      <div class="lbl">Avg. annual savings per company</div>
+      <div class="note">From avoided claim denials</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="section">
+      <h3>Core Features</h3>
+      <ul class="feat-list">
+        <li>AI photo damage analysis — identifies materials, severity, IICRC category &amp; class</li>
+        <li>Full 8-section IICRC checklist auto-generation (S500, S520, S700)</li>
+        <li>Xactimate-ready scope of work export</li>
+        <li>Mobile-first PIN-protected tech access — no app download</li>
+        <li>Real-time completion tracking with progress bar</li>
+        <li>PDF &amp; plain-text export for adjuster submission</li>
+        <li>Owner dashboard with analytics and usage tracking</li>
+        <li>Shareable team links with session logging</li>
+        <li>Monthly checklist usage tracking and limits by plan</li>
+        <li>Billing portal via Stripe for self-serve subscription management</li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="section" style="margin-bottom: 24px;">
+        <h3>Supported Job Types</h3>
+        <div class="job-chips">
+          <span class="job-chip active">Water Damage</span>
+          <span class="job-chip active">Fire &amp; Smoke</span>
+          <span class="job-chip active">Mold Remediation</span>
+          <span class="job-chip active">Storm Damage</span>
+          <span class="job-chip active">Biohazard</span>
+        </div>
+        <p style="font-size:11.5px;color:#6b7280;margin-top:12px;line-height:1.5;">Water damage includes full IICRC Category (1–3) and Class (1–4) classification with tailored checklists for each combination.</p>
+      </div>
+
+      <div class="section">
+        <h3>Compliance Standards</h3>
+        <ul class="comp-list">
+          <li><strong>IICRC S500</strong> Standard for Professional Water Damage Restoration</li>
+          <li><strong>IICRC S520</strong> Standard for Professional Mold Remediation</li>
+          <li><strong>IICRC S700</strong> Standard for Professional Fire &amp; Smoke Damage Restoration</li>
+          <li><strong>Xactimate</strong> Scope of work formatted for direct estimator entry</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" style="margin-bottom: 16px;">
+    <h3>Pricing Plans</h3>
+  </div>
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Plan</th>
+        <th>Price</th>
+        <th>Checklists / Month</th>
+        <th>Field Technicians</th>
+        <th>Analytics</th>
+        <th>API Access</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Starter</td>
+        <td>$79/mo</td>
+        <td>300</td>
+        <td>3</td>
+        <td>—</td>
+        <td>—</td>
+      </tr>
+      <tr class="popular-row">
+        <td>Growth ★</td>
+        <td class="highlight">$149/mo</td>
+        <td>800</td>
+        <td>10</td>
+        <td>✓</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td>Pro</td>
+        <td>$299/mo</td>
+        <td>2,000</td>
+        <td>20</td>
+        <td>✓</td>
+        <td>✓</td>
+      </tr>
+      <tr>
+        <td>Enterprise</td>
+        <td>Custom</td>
+        <td>Unlimited</td>
+        <td>Unlimited</td>
+        <td>✓</td>
+        <td>✓ + White-label</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="doc-footer">
+    <p>RestoreDocAI, Inc. — Denver, CO — press@restoredocai.com — restoredocai.com</p>
+    <p>Statistics as of Q2 2025. &copy; 2025 RestoreDocAI, Inc. All rights reserved.</p>
+  </div>
+
+</div>
+</body>
+</html>
