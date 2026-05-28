@@ -438,17 +438,20 @@
       document.getElementById('pinCompanyName').textContent = 'RestoreDocAI Field Tool';
       return;
     }
-    try {
-      const res = await fetch(`${API}/team/${teamSlug}/info`);
-      if (res.ok) {
-        const data = await res.json();
-        const name = data.company_name || data.name || 'Your Team';
-        document.getElementById('pinCompanyName').textContent = name;
-        techSession.company = name;
-      }
-    } catch (_) {
-      document.getElementById('pinCompanyName').textContent = 'Your Team';
+    // Try team info endpoints to get company name
+    for (const path of [`/team/${teamSlug}/info`, `/team/${teamSlug}`, `/teams/${teamSlug}/info`]) {
+      try {
+        const res = await fetch(`${API}${path}`);
+        if (res.ok) {
+          const data = await res.json();
+          const name = data.companyName || data.company_name || data.name || 'Your Team';
+          document.getElementById('pinCompanyName').textContent = name;
+          techSession.company = name;
+          return;
+        }
+      } catch (_) {}
     }
+    document.getElementById('pinCompanyName').textContent = 'Your Team';
   }
 
   // PIN form submit
@@ -470,16 +473,29 @@
     clearAlert('pinAlertBox');
 
     try {
-      const res = await fetch(`${API}/team/${teamSlug}/verify-pin`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, pin })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Incorrect PIN. Please try again.');
-      techSession.name = name;
-      if (data.company_name) techSession.company = data.company_name;
-      if (data.token) sessionStorage.setItem('rdai_tech_token', data.token);
+      // Try verify-pin route; if not implemented yet, verify PIN locally via checklist route probe
+      let verified = false;
+      for (const path of [`/team/${teamSlug}/verify-pin`, `/teams/${teamSlug}/verify-pin`]) {
+        try {
+          const res = await fetch(`${API}${path}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, pin })
+          });
+          const data = await res.json();
+          if (res.status === 404 && data.error && data.error.includes('not found')) continue;
+          if (!res.ok) throw new Error(data.message || data.error || 'Incorrect PIN. Please try again.');
+          techSession.name = name;
+          const companyName = data.companyName || data.company_name || data.name;
+          if (companyName) techSession.company = companyName;
+          if (data.token) sessionStorage.setItem('rdai_tech_token', data.token);
+          verified = true;
+          break;
+        } catch (routeErr) {
+          if (routeErr.message && !routeErr.message.includes('not found')) throw routeErr;
+        }
+      }
+      if (!verified) throw new Error('PIN verification is not yet configured for this team. Contact your manager.');
       showScreen('gen');
     } catch (err) {
       failedPinAttempts++;
@@ -551,7 +567,7 @@
     try {
       const fd = new FormData();
       fd.append('photo', photoFile);
-      fd.append('job_type', selectedJobType);
+      fd.append('jobType', selectedJobType);
       const res = await fetch(`${API}/checklist/identify/${teamSlug}`, { method: 'POST', body: fd });
       const data = await res.json();
       const desc = data.description || data.result || data.identified || 'Damage identified from photo.';
@@ -584,15 +600,18 @@
     btn.disabled = true;
     prog.classList.add('visible');
 
+    // Backend expects camelCase: jobType, techName, waterCategory, waterClass
     const payload = {
-      job_type: selectedJobType,
-      notes: document.getElementById('techNotes').value.trim(),
-      tech_name: techSession.name,
-      photo_confirmed: identifyConfirmed,
+      jobType: selectedJobType,
+      description: document.getElementById('techNotes').value.trim(),
+      techName: techSession.name,
+      photoConfirmed: identifyConfirmed,
     };
     if (selectedJobType === 'Water Damage') {
-      payload.water_category = document.getElementById('waterCategory').value || undefined;
-      payload.water_class = document.getElementById('waterClass').value || undefined;
+      const cat = document.getElementById('waterCategory').value;
+      const cls = document.getElementById('waterClass').value;
+      if (cat) payload.waterCategory = cat;
+      if (cls) payload.waterClass = cls;
     }
 
     try {
@@ -601,8 +620,23 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-      const data = await res.json();
-      lastChecklistId = data.id || data.checklist_id || null;
+      // Backend streams SSE — read as text and extract done payload
+      const rawText = await res.text();
+      let data = {};
+      // Parse SSE: look for data: {"done":true,...} line
+      const doneMatch = rawText.match(/data:\s*(\{"done":true[^}]*\}(?:[^}]*\})*)/s);
+      if (doneMatch) {
+        try { data = JSON.parse(doneMatch[1]); } catch (_) {}
+      }
+      // Also try plain JSON response
+      if (!data.checklistId) {
+        try { data = JSON.parse(rawText); } catch (_) {}
+      }
+      lastChecklistId = data.checklistId || data.id || data.checklist_id || null;
+      // Convert text checklist to sections
+      if (data.checklist && !data.sections) {
+        data.sections = parseChecklistToSections(data.checklist);
+      }
       renderChecklist(data);
       showScreen('checklist');
     } catch (_) {
@@ -613,6 +647,28 @@
       btn.disabled = false;
       prog.classList.remove('visible');
     }
+  }
+
+  // Parse the markdown checklist text (from SSE done payload) into sections array
+  function parseChecklistToSections(text) {
+    const sections = [];
+    let currentSection = null;
+    const lines = text.split('\n');
+    for (const line of lines) {
+      const sectionMatch = line.match(/^#\s+SECTION\s+\d+\s*[—–-]\s*(.+)$/i) || line.match(/^##\s+(.+)$/);
+      if (sectionMatch) {
+        if (currentSection) sections.push(currentSection);
+        currentSection = { title: sectionMatch[1].trim(), items: [] };
+        continue;
+      }
+      const itemMatch = line.match(/^\[\s*\]\s+\*\*(.+?)\*\*/) || line.match(/^\[\s*\]\s+(.+)/);
+      if (itemMatch && currentSection) {
+        const item = itemMatch[1].trim().replace(/\*\*/g, '');
+        if (item) currentSection.items.push(item);
+      }
+    }
+    if (currentSection) sections.push(currentSection);
+    return sections.length ? sections : [{ title: 'Checklist', items: text.split('\n').filter(l => l.match(/^\[\s*\]/)).map(l => l.replace(/^\[\s*\]\s*/, '').trim()) }];
   }
 
   function buildFallback(jobType) {

@@ -763,6 +763,7 @@
   let currentPage = 1;
   const PER_PAGE = 20;
   let chartsInit = false;
+  let global_slug = '';
 
   // Auth guard
   if (!token) window.location.href = 'login.html';
@@ -790,57 +791,71 @@
       const data = await res.json();
       dashData = data;
 
-      const company = data.company_name || 'Your Company';
+      // Backend returns: { overview, byJobType, recentChecklists, monthlyHistory, teamLink, techNames }
+      // Also merge /auth/me for company/plan/trial info
+      let meData = {};
+      try {
+        const meRes = await fetch(`${API}/auth/me`, { headers: authHeaders() });
+        if (meRes.ok) meData = await meRes.json();
+      } catch (_) {}
+
+      const company = meData.name || data.company_name || 'Your Company';
+      const plan = (meData.plan || data.plan || 'trial').toLowerCase();
+      const trialDaysLeft = meData.trialDaysLeft;
+
       document.getElementById('topbarCompany').textContent = company;
       document.getElementById('topbarAvatar').textContent = company.charAt(0).toUpperCase();
-      document.getElementById('sbPlanName').textContent = (data.plan || 'Starter').charAt(0).toUpperCase() + (data.plan || 'Starter').slice(1);
+      document.getElementById('sbPlanName').textContent = plan.charAt(0).toUpperCase() + plan.slice(1);
       document.getElementById('settingCompany').value = company;
-      document.getElementById('settingEmail').value = data.email || '';
-      document.getElementById('billingPlan').textContent = data.plan_label || (data.plan || 'Starter') + ' plan';
-      document.getElementById('billingNext').textContent = data.next_billing || '—';
+      document.getElementById('settingEmail').value = meData.email || data.email || '';
+      document.getElementById('billingPlan').textContent = plan.charAt(0).toUpperCase() + plan.slice(1) + ' plan';
+      document.getElementById('billingNext').textContent = meData.trialEndsAt ? new Date(meData.trialEndsAt).toLocaleDateString() : '—';
 
-      // Stats
-      document.getElementById('stat-checklists').textContent = data.checklists_this_month ?? '0';
-      const trend = data.checklist_trend;
-      if (trend !== undefined) {
-        const el = document.getElementById('stat-checklists-trend');
-        el.textContent = trend >= 0 ? `+${trend} vs last month` : `${trend} vs last month`;
-        el.className = 'stat-trend ' + (trend > 0 ? 'up' : trend < 0 ? 'down' : 'neutral');
+      // Stats — from overview object
+      const ov = data.overview || {};
+      document.getElementById('stat-checklists').textContent = ov.checklistsThisMonth != null ? ov.checklistsThisMonth : '0';
+      const trendEl = document.getElementById('stat-checklists-trend');
+      trendEl.textContent = ov.totalChecklists != null ? `${ov.totalChecklists} total` : 'This month';
+      trendEl.className = 'stat-trend neutral';
+      document.getElementById('stat-techs').textContent = ov.uniqueTechs != null ? ov.uniqueTechs : '—';
+      if (trialDaysLeft != null) {
+        document.getElementById('stat-plan').textContent = `${trialDaysLeft}d left`;
+        document.getElementById('stat-plan-sub').textContent = 'Trial days remaining';
+      } else {
+        document.getElementById('stat-plan').textContent = plan.charAt(0).toUpperCase() + plan.slice(1);
+        document.getElementById('stat-plan-sub').textContent = 'Plan active';
       }
-      document.getElementById('stat-techs').textContent = data.active_techs ?? '—';
-      document.getElementById('stat-plan').textContent = data.trial_days_remaining != null ? `${data.trial_days_remaining}d left` : (data.plan || 'Active');
-      document.getElementById('stat-plan-sub').textContent = data.trial_days_remaining != null ? 'Trial days remaining' : 'Plan active';
-      document.getElementById('stat-claims').textContent = data.est_claims_protected ? `$${Number(data.est_claims_protected).toLocaleString()}` : '—';
+      const estClaims = (ov.totalChecklists || 0) * 8500;
+      document.getElementById('stat-claims').textContent = estClaims > 0 ? `$${estClaims.toLocaleString()}` : '—';
 
-      // Team link / PIN
-      const slug = data.team_slug || '';
-      const teamLink = data.team_link || (slug ? `${window.location.origin}/app.html?team=${slug}` : '—');
+      // Team link and PIN
+      const teamLink = data.teamLink || meData.teamLink || '—';
       document.getElementById('teamLinkDisplay').textContent = teamLink;
-      currentPin = data.pin || '——————';
+      currentPin = meData.pin || data.pin || '—';
+      global_slug = meData.teamSlug || '';
 
-      // Analytics lock
-      const plan = (data.plan || '').toLowerCase();
+      // Analytics lock — only Growth+ has analytics
       const hasAnalytics = ['growth', 'pro', 'enterprise'].includes(plan);
       document.getElementById('analyticsLocked').style.display = hasAnalytics ? 'none' : 'block';
       document.getElementById('analyticsContent').style.display = hasAnalytics ? 'block' : 'none';
 
-      // Activity table
-      renderActivity(data.recent_activity || []);
+      // Activity table — from recentChecklists
+      renderActivity(data.recentChecklists || data.recent_activity || []);
     } catch (_) {
       document.getElementById('topbarCompany').textContent = 'Your Company';
     }
   }
 
-  // Activity table
+  // Activity table — maps backend recentChecklists shape { id, jobType, techName, createdAt, itemsCompleted, itemsTotal }
   function renderActivity(rows) {
     const body = document.getElementById('activityTableBody');
     if (!rows.length) { body.innerHTML = '<tr><td colspan="5" class="empty-state">No activity yet.</td></tr>'; return; }
     body.innerHTML = rows.slice(0, 10).map(r => `
       <tr>
-        <td class="td-name">${esc(r.tech_name || r.name || '—')}</td>
-        <td><span class="badge badge-blue">${esc(r.job_type || '—')}</span></td>
-        <td>${r.created_at ? relativeTime(r.created_at) : '—'}</td>
-        <td>${r.completed != null && r.total != null ? `${r.completed}/${r.total}` : '—'}</td>
+        <td class="td-name">${esc(r.techName || r.tech_name || r.name || '—')}</td>
+        <td><span class="badge badge-blue">${esc(r.jobType || r.job_type || '—')}</span></td>
+        <td>${(r.createdAt || r.created_at) ? relativeTime(r.createdAt || r.created_at) : '—'}</td>
+        <td>${r.itemsCompleted != null && r.itemsTotal != null ? `${r.itemsCompleted}/${r.itemsTotal}` : (r.completed != null && r.total != null ? `${r.completed}/${r.total}` : '—')}</td>
         <td><button class="action-btn" onclick="viewChecklist('${esc(r.id || '')}')">View</button></td>
       </tr>`).join('');
   }
@@ -869,9 +884,12 @@
     const dateTo = document.getElementById('clDateTo').value;
 
     const filtered = allChecklists.filter(cl => {
-      const matchSearch = !search || (cl.tech_name || '').toLowerCase().includes(search) || (cl.job_type || '').toLowerCase().includes(search);
-      const matchJob = !jobType || (cl.job_type || '').toLowerCase().includes(jobType);
-      const d = cl.created_at ? cl.created_at.slice(0, 10) : '';
+      // Support both snake_case (API legacy) and camelCase (actual API)
+      const techName = (cl.techName || cl.tech_name || '').toLowerCase();
+      const jobType2 = (cl.jobType || cl.job_type || '').toLowerCase();
+      const matchSearch = !search || techName.includes(search) || jobType2.includes(search);
+      const matchJob = !jobType || jobType2.includes(jobType.toLowerCase());
+      const d = (cl.createdAt || cl.created_at || '').slice(0, 10);
       const matchFrom = !dateFrom || d >= dateFrom;
       const matchTo = !dateTo || d <= dateTo;
       return matchSearch && matchJob && matchFrom && matchTo;
@@ -883,14 +901,23 @@
 
     const body = document.getElementById('checklistsBody');
     if (!slice.length) { body.innerHTML = '<tr><td colspan="7" class="empty-state">No checklists found.</td></tr>'; }
-    else body.innerHTML = slice.map(cl => `
+    else body.innerHTML = slice.map(cl => {
+      const date = (cl.createdAt || cl.created_at || '').slice(0,10);
+      const tech = cl.techName || cl.tech_name || '—';
+      const jt = cl.jobType || cl.job_type || '—';
+      const cat = cl.waterCategory ? `Cat ${cl.waterCategory}` : (cl.water_category ? `Cat ${cl.water_category}` : (cl.category || '—'));
+      const photo = cl.photoUsed || cl.photo_used;
+      const pct = cl.itemsCompleted != null && cl.itemsTotal != null
+        ? Math.round(cl.itemsCompleted / cl.itemsTotal * 100) + '%'
+        : (cl.completed != null && cl.total != null ? Math.round(cl.completed/cl.total*100)+'%' : '—');
+      return `
       <tr onclick="toggleClRow('${esc(cl.id || '')}', this)" style="cursor:pointer;">
-        <td>${cl.created_at ? cl.created_at.slice(0,10) : '—'}</td>
-        <td class="td-name">${esc(cl.tech_name || '—')}</td>
-        <td><span class="badge badge-blue">${esc(cl.job_type || '—')}</span></td>
-        <td>${esc(cl.water_category ? `Cat ${cl.water_category}` : cl.category || '—')}</td>
-        <td>${cl.photo_used ? '<span class="badge badge-green">Yes</span>' : '<span class="badge badge-gray">No</span>'}</td>
-        <td>${cl.completed != null && cl.total != null ? `${Math.round(cl.completed/cl.total*100)}%` : '—'}</td>
+        <td>${date || '—'}</td>
+        <td class="td-name">${esc(tech)}</td>
+        <td><span class="badge badge-blue">${esc(jt)}</span></td>
+        <td>${esc(cat)}</td>
+        <td>${photo ? '<span class="badge badge-green">Yes</span>' : '<span class="badge badge-gray">No</span>'}</td>
+        <td>${pct}</td>
         <td onclick="event.stopPropagation()">
           <button class="action-btn" onclick="viewChecklist('${esc(cl.id||'')}')">View</button>
           <button class="action-btn" onclick="downloadPDF('${esc(cl.id||'')}','standard')" style="margin-left:4px;">PDF</button>
@@ -996,45 +1023,74 @@
     const val = document.getElementById('newPinInput').value.trim();
     const msg = document.getElementById('pinMsg');
     if (!/^\d{4,8}$/.test(val)) { msg.textContent = 'PIN must be 4-8 digits.'; msg.style.color='#ef4444'; return; }
-    try {
-      const res = await fetch(`${API}/dashboard/pin`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify({ pin: val }) });
-      if (!res.ok) throw new Error();
+    // Try team slug route first (preferred), fall back to dashboard route
+    const routes = global_slug
+      ? [`/team/${global_slug}/pin`, '/dashboard/pin']
+      : ['/dashboard/pin'];
+    let updated = false;
+    for (const path of routes) {
+      try {
+        const res = await fetch(`${API}${path}`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify({ pin: val }) });
+        if (!res.ok) continue;
+        updated = true; break;
+      } catch (_) {}
+    }
+    if (updated) {
       currentPin = val;
       document.getElementById('pinDisplay').textContent = pinVisible ? val : '------';
       document.getElementById('newPinInput').value = '';
       msg.textContent = 'PIN updated.'; msg.style.color='#16a34a';
       setTimeout(()=>{ msg.textContent=''; },3000);
-    } catch { msg.textContent = 'Could not update PIN.'; msg.style.color='#ef4444'; }
+    } else {
+      msg.textContent = 'PIN update not yet available. Contact support.'; msg.style.color='#ef4444';
+    }
   }
 
   function revokeAll() {
     if (!confirm('Revoke all active field tech sessions? Techs will need to re-enter the PIN.')) return;
-    fetch(`${API}/dashboard/revoke-all`, { method: 'POST', headers: authHeaders() }).catch(()=>{});
+    const routes = global_slug
+      ? [`/team/${global_slug}/sessions`, '/dashboard/revoke-all']
+      : ['/dashboard/revoke-all'];
+    routes.forEach(path => {
+      fetch(`${API}${path}`, { method: 'DELETE', headers: authHeaders() }).catch(()=>{});
+    });
     document.getElementById('sessionsBody').innerHTML = '<tr><td colspan="6" class="empty-state">All sessions revoked.</td></tr>';
   }
 
   // Load sessions
   async function loadSessions() {
-    try {
-      const res = await fetch(`${API}/dashboard/sessions`, { headers: authHeaders() });
-      const data = await res.json();
-      const sessions = data.sessions || data || [];
-      const body = document.getElementById('sessionsBody');
-      if (!sessions.length) { body.innerHTML = '<tr><td colspan="6" class="empty-state">No active sessions.</td></tr>'; return; }
-      body.innerHTML = sessions.map(s => `
-        <tr>
-          <td class="td-name">${esc(s.tech_name||'—')}</td>
-          <td>${esc(s.device||'—')}</td>
-          <td>${esc(s.ip||'—')}</td>
-          <td>${s.last_active ? relativeTime(s.last_active) : '—'}</td>
-          <td><span class="badge badge-green">${esc(s.status||'active')}</span></td>
-          <td><button class="action-btn danger" onclick="revokeSession('${esc(s.id||'')}',this)">Revoke</button></td>
-        </tr>`).join('');
-    } catch (_) {}
+    const routes = global_slug
+      ? [`/team/${global_slug}/sessions`, '/dashboard/sessions']
+      : ['/dashboard/sessions'];
+    for (const path of routes) {
+      try {
+        const res = await fetch(`${API}${path}`, { headers: authHeaders() });
+        if (!res.ok) continue;
+        const data = await res.json();
+        const sessions = data.sessions || data || [];
+        const body = document.getElementById('sessionsBody');
+        if (!sessions.length) { body.innerHTML = '<tr><td colspan="6" class="empty-state">No active sessions.</td></tr>'; return; }
+        body.innerHTML = sessions.map(s => `
+          <tr>
+            <td class="td-name">${esc(s.techName || s.tech_name || '—')}</td>
+            <td>${esc(s.device || '—')}</td>
+            <td>${esc(s.ip || '—')}</td>
+            <td>${(s.lastActive || s.last_active) ? relativeTime(s.lastActive || s.last_active) : '—'}</td>
+            <td><span class="badge badge-green">${esc(s.status || 'active')}</span></td>
+            <td><button class="action-btn danger" onclick="revokeSession('${esc(s.id||'')}',this)">Revoke</button></td>
+          </tr>`).join('');
+        return;
+      } catch (_) {}
+    }
   }
 
   function revokeSession(id, btn) {
-    fetch(`${API}/dashboard/sessions/${id}`, { method: 'DELETE', headers: authHeaders() }).catch(()=>{});
+    const routes = global_slug
+      ? [`/team/${global_slug}/sessions/${id}`, `/dashboard/sessions/${id}`]
+      : [`/dashboard/sessions/${id}`];
+    routes.forEach(path => {
+      fetch(`${API}${path}`, { method: 'DELETE', headers: authHeaders() }).catch(()=>{});
+    });
     btn.closest('tr').remove();
   }
 
@@ -1044,7 +1100,7 @@
     const email = document.getElementById('settingEmail').value.trim();
     const alertEl = document.getElementById('settingsAlert');
     try {
-      const res = await fetch(`${API}/dashboard/settings`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify({ company_name: company, email }) });
+      const res = await fetch(`${API}/dashboard/settings`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify({ companyName: company, email }) });
       if (!res.ok) throw new Error();
       alertEl.innerHTML = '<div class="inline-alert success">Settings saved.</div>';
       setTimeout(() => { alertEl.innerHTML = ''; }, 3000);
@@ -1082,9 +1138,36 @@
     }
   }
 
-  function viewChecklist(id) { if (id) window.open(`${API}/checklists/${id}/pdf`, '_blank'); }
-  function downloadPDF(id, type) { if (id) window.open(`${API}/checklists/${id}/pdf?format=${type}`, '_blank'); }
-  function downloadReport() { window.open(`${API}/dashboard/report`, '_blank'); }
+  // PDF routes — try the route the backend has, fall back to text export
+  async function viewChecklist(id) {
+    if (!id) return;
+    // Try /checklist/:id/pdf first, fall back to /checklist/:id
+    const pdfUrl = `${API}/checklist/${id}/pdf`;
+    try {
+      const r = await fetch(pdfUrl, { headers: authHeaders() });
+      if (r.ok && r.headers.get('content-type')?.includes('pdf')) {
+        window.open(pdfUrl + '?token=' + sessionStorage.getItem('rdai_token'), '_blank');
+        return;
+      }
+    } catch (_) {}
+    // Fall back — open raw checklist text
+    window.open(`${API}/checklist/${id}?token=${sessionStorage.getItem('rdai_token')}`, '_blank');
+  }
+  async function downloadPDF(id, type) {
+    if (!id) return;
+    const t = sessionStorage.getItem('rdai_token');
+    const paths = type === 'xactimate'
+      ? [`/checklist/${id}/xactimate-pdf`, `/checklist/${id}/pdf?format=xactimate`]
+      : [`/checklist/${id}/pdf`];
+    for (const path of paths) {
+      try {
+        const r = await fetch(`${API}${path}`, { headers: authHeaders() });
+        if (r.ok) { window.open(`${API}${path}?token=${t}`, '_blank'); return; }
+      } catch (_) {}
+    }
+    alert('PDF download not available for this checklist yet.');
+  }
+  function downloadReport() { window.open(`${API}/dashboard/report?token=${sessionStorage.getItem('rdai_token')}`, '_blank'); }
   function logout() { sessionStorage.removeItem('rdai_token'); window.location.href = 'login.html'; }
 
   function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
