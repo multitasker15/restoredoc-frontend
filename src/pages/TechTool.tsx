@@ -1,7 +1,8 @@
 import { useState, useRef } from 'react'
 import { useParams } from 'react-router-dom'
-import { Upload, Copy, Download, CheckSquare, Square, ChevronDown } from 'lucide-react'
-import api from '../lib/api'
+import { Upload, Copy, Download, CheckSquare, Square, ChevronDown, X } from 'lucide-react'
+import { BASE_URL } from '../lib/api'
+import { getToken } from '../lib/auth'
 
 type Stage = 'pin' | 'configure' | 'result'
 
@@ -20,6 +21,19 @@ const WATER_CLASSES = [
   { value: '4', label: 'Class 4 — Specialty drying' },
 ]
 
+const DEMO_ITEMS = [
+  'Document affected area with photos before any extraction',
+  'Record moisture readings at all affected surfaces',
+  'Note water category and class in job file',
+  'Extract standing water and document extraction volume',
+  'Place air movers at affected walls and flooring',
+  'Set dehumidifiers per IICRC S500 drying ratios',
+  'Log equipment placement with serial numbers',
+  'Record ambient temperature and humidity readings',
+  'Photograph all equipment placement',
+  'Schedule follow-up moisture check within 24 hours',
+]
+
 interface ChecklistItem {
   id: string
   text: string
@@ -27,40 +41,85 @@ interface ChecklistItem {
   category?: string
 }
 
+function parseChecklistText(text: string): ChecklistItem[] {
+  const lines = text.split('\n')
+  const items: ChecklistItem[] = []
+  let currentCategory = ''
+
+  for (const line of lines) {
+    const trimmed = line.trim()
+    if (!trimmed) continue
+
+    // Detect section headers (ALL CAPS or ends with colon)
+    if (/^[A-Z][A-Z\s&\/—\-–:]+$/.test(trimmed) && trimmed.length > 3 && !trimmed.startsWith('[')) {
+      currentCategory = trimmed.replace(/:$/, '')
+      continue
+    }
+
+    // Parse [ ] checklist items
+    const match = trimmed.match(/^\[\s*\]\s*(.+)/)
+    if (match) {
+      items.push({
+        id: String(items.length),
+        text: match[1].trim(),
+        completed: false,
+        category: currentCategory || undefined,
+      })
+    }
+  }
+
+  return items.length > 0 ? items : DEMO_ITEMS.map((text, i) => ({ id: String(i), text, completed: false }))
+}
+
 export default function TechTool() {
   const { teamSlug } = useParams<{ teamSlug: string }>()
   const [stage, setStage] = useState<Stage>('pin')
 
-  // PIN state
+  // PIN stage
+  const [techName, setTechName] = useState('')
   const [pin, setPin] = useState('')
   const [pinError, setPinError] = useState('')
   const [pinLoading, setPinLoading] = useState(false)
   const [teamName, setTeamName] = useState('')
 
-  // Configure state
+  // Configure stage
   const [jobType, setJobType] = useState('water')
   const [waterCategory, setWaterCategory] = useState('1')
   const [waterClass, setWaterClass] = useState('1')
   const [photos, setPhotos] = useState<File[]>([])
-  const [photoLabels, setPhotoLabels] = useState<string[]>([])
+  const [identification, setIdentification] = useState('')
   const [generating, setGenerating] = useState(false)
   const [identifyLoading, setIdentifyLoading] = useState(false)
+  const [streamText, setStreamText] = useState('')
   const fileRef = useRef<HTMLInputElement>(null)
 
-  // Result state
+  // Result stage
   const [checklist, setChecklist] = useState<ChecklistItem[]>([])
   const [copied, setCopied] = useState(false)
 
   async function handlePinSubmit(e: React.FormEvent) {
     e.preventDefault()
     setPinError('')
+    if (!techName.trim()) {
+      setPinError('Please enter your name.')
+      return
+    }
     setPinLoading(true)
     try {
-      const res = await api.post(`/team/${teamSlug}/verify-pin`, { pin })
-      setTeamName(res.data.team_name || res.data.teamName || teamSlug)
+      const res = await fetch(`${BASE_URL}/team/${teamSlug}/verify-pin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pin, name: techName.trim() }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setPinError(data.error || 'Invalid PIN. Please try again.')
+        return
+      }
+      setTeamName(data.companyName || teamSlug || '')
       setStage('configure')
     } catch {
-      setPinError('Invalid PIN. Please try again.')
+      setPinError('Connection error. Please try again.')
     } finally {
       setPinLoading(false)
     }
@@ -69,59 +128,102 @@ export default function TechTool() {
   async function handlePhotoUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files || [])
     if (!files.length) return
+
+    // Only send the first selected file for identification
+    const file = files[0]
     setPhotos((prev) => [...prev, ...files])
     setIdentifyLoading(true)
+
     try {
       const fd = new FormData()
-      files.forEach((f) => fd.append('photos', f))
+      fd.append('photo', file)
       fd.append('job_type', jobType)
-      const res = await api.post(`/checklist/identify/${teamSlug}`, fd, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+
+      const res = await fetch(`${BASE_URL}/checklist/identify/${teamSlug}`, {
+        method: 'POST',
+        body: fd,
       })
-      const labels: string[] = res.data.labels || res.data.identified_materials || []
-      setPhotoLabels((prev) => [...prev, ...labels])
+      if (res.ok) {
+        const data = await res.json()
+        const text: string = data.identification || ''
+        if (text) setIdentification((prev) => prev ? `${prev}\n${text}` : text)
+      }
     } catch {
-      // silently continue — photos still added locally
+      // silently continue — photos still shown locally
     } finally {
       setIdentifyLoading(false)
     }
   }
 
+  function removePhoto(index: number) {
+    setPhotos((prev) => prev.filter((_, i) => i !== index))
+  }
+
   async function handleGenerate() {
     setGenerating(true)
+    setStreamText('')
+
     try {
-      const res = await api.post(`/checklist/generate/${teamSlug}`, {
-        job_type: jobType,
-        water_category: jobType === 'water' ? waterCategory : undefined,
-        water_class: jobType === 'water' ? waterClass : undefined,
-        photo_labels: photoLabels,
+      const token = getToken()
+      const response = await fetch(`${BASE_URL}/checklist/generate/${teamSlug}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          jobType,
+          waterCategory: jobType === 'water' ? waterCategory : undefined,
+          waterClass: jobType === 'water' ? waterClass : undefined,
+          aiIdentification: identification || undefined,
+          techName: techName || 'Field Tech',
+        }),
       })
-      const items: string[] = res.data.checklist || res.data.items || []
-      setChecklist(
-        items.map((text, i) => ({
-          id: String(i),
-          text,
-          completed: false,
-          category: res.data.categories?.[i] || undefined,
-        }))
-      )
-      setStage('result')
+
+      if (!response.ok || !response.body) {
+        throw new Error('Generation failed')
+      }
+
+      const reader = response.body.getReader()
+      const decoder = new TextDecoder()
+      let buffer = ''
+      let fullText = ''
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        buffer = lines.pop() ?? ''
+
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue
+          try {
+            const payload = JSON.parse(line.slice(6))
+            if (payload.chunk) {
+              fullText += payload.chunk
+              setStreamText(fullText)
+            }
+            if (payload.done) {
+              const text = payload.checklist || fullText
+              setChecklist(parseChecklistText(text))
+              setStage('result')
+            }
+            if (payload.error) throw new Error(payload.error)
+          } catch {
+            // skip malformed events
+          }
+        }
+      }
+
+      // If we got here without hitting done event, parse what we have
+      if (fullText && stage !== 'result') {
+        setChecklist(parseChecklistText(fullText))
+        setStage('result')
+      }
     } catch {
-      // fallback demo checklist
-      setChecklist(
-        [
-          'Document affected area with photos before any extraction',
-          'Record moisture readings at all affected surfaces',
-          'Note water category and class in job file',
-          'Extract standing water and document extraction volume',
-          'Place air movers at affected walls and flooring',
-          'Set dehumidifiers per IICRC S500 drying ratios',
-          'Log equipment placement with serial numbers',
-          'Record ambient temperature and humidity readings',
-          'Photograph all equipment placement',
-          'Schedule follow-up moisture check within 24 hours',
-        ].map((text, i) => ({ id: String(i), text, completed: false }))
-      )
+      setChecklist(DEMO_ITEMS.map((text, i) => ({ id: String(i), text, completed: false })))
       setStage('result')
     } finally {
       setGenerating(false)
@@ -147,7 +249,8 @@ export default function TechTool() {
   function handleDownload() {
     const lines = [
       `RestoreDocAI Checklist`,
-      `Team: ${teamName}`,
+      `Company: ${teamName}`,
+      `Technician: ${techName}`,
       `Job type: ${jobType}`,
       `Generated: ${new Date().toLocaleString()}`,
       '',
@@ -170,7 +273,7 @@ export default function TechTool() {
           <div className="mb-8 text-center">
             <div className="text-[#111827] font-semibold text-lg mb-1">RestoreDocAI</div>
             <h1 className="text-xl font-semibold text-[#111827] tracking-tight mt-4">Field access</h1>
-            <p className="text-sm text-[#6b7280] mt-1">Enter your team PIN to continue.</p>
+            <p className="text-sm text-[#6b7280] mt-1">Enter your name and team PIN to continue.</p>
           </div>
 
           {pinError && (
@@ -180,6 +283,18 @@ export default function TechTool() {
           )}
 
           <form onSubmit={handlePinSubmit} className="space-y-4">
+            <div>
+              <label className="block text-xs font-medium text-[#374151] mb-1.5">Your name</label>
+              <input
+                type="text"
+                value={techName}
+                onChange={(e) => setTechName(e.target.value)}
+                required
+                maxLength={100}
+                placeholder="John Smith"
+                className="w-full border border-[#e5e7eb] px-3 py-2 text-sm text-[#111827] placeholder-[#9ca3af] focus:outline-none focus:border-[#2563eb]"
+              />
+            </div>
             <div>
               <label className="block text-xs font-medium text-[#374151] mb-1.5">Team PIN</label>
               <input
@@ -279,14 +394,14 @@ export default function TechTool() {
 
           {/* Photo upload */}
           <div className="mb-8">
-            <label className="block text-xs font-medium text-[#374151] mb-2">Site photos</label>
+            <label className="block text-xs font-medium text-[#374151] mb-2">Site photos (optional)</label>
             <div
               onClick={() => fileRef.current?.click()}
               className="border border-dashed border-[#e5e7eb] p-8 text-center cursor-pointer hover:border-[#2563eb] transition-colors"
             >
               <Upload size={20} className="text-[#9ca3af] mx-auto mb-2" />
               <p className="text-sm text-[#6b7280]">Click to upload site photos</p>
-              <p className="text-xs text-[#9ca3af] mt-1">JPG, PNG — AI will identify materials</p>
+              <p className="text-xs text-[#9ca3af] mt-1">JPG, PNG — AI will identify damage materials</p>
               <input
                 ref={fileRef}
                 type="file"
@@ -300,30 +415,39 @@ export default function TechTool() {
             {photos.length > 0 && (
               <div className="mt-3 flex flex-wrap gap-2">
                 {photos.map((f, i) => (
-                  <div key={i} className="border border-[#e5e7eb] px-3 py-1.5 text-xs text-[#374151]">
+                  <div key={i} className="flex items-center gap-1.5 border border-[#e5e7eb] px-3 py-1.5 text-xs text-[#374151]">
                     {f.name}
+                    <button
+                      type="button"
+                      onClick={() => removePhoto(i)}
+                      className="text-[#9ca3af] hover:text-[#374151]"
+                    >
+                      <X size={12} />
+                    </button>
                   </div>
                 ))}
               </div>
             )}
 
             {identifyLoading && (
-              <p className="text-xs text-[#6b7280] mt-2">Analyzing photos...</p>
+              <p className="text-xs text-[#6b7280] mt-2">Analyzing photo...</p>
             )}
 
-            {photoLabels.length > 0 && (
-              <div className="mt-3">
-                <p className="text-xs font-medium text-[#374151] mb-1.5">Identified materials</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {photoLabels.map((label, i) => (
-                    <span key={i} className="border border-[#e5e7eb] px-2 py-1 text-xs text-[#374151] bg-[#f9fafb]">
-                      {label}
-                    </span>
-                  ))}
-                </div>
+            {identification && (
+              <div className="mt-3 border border-[#e5e7eb] px-4 py-3 bg-[#f9fafb]">
+                <p className="text-xs font-medium text-[#374151] mb-1">AI analysis</p>
+                <p className="text-xs text-[#6b7280] leading-relaxed">{identification}</p>
               </div>
             )}
           </div>
+
+          {/* Generating state: show streaming text */}
+          {generating && streamText && (
+            <div className="mb-6 border border-[#e5e7eb] p-4 bg-[#f9fafb] max-h-48 overflow-y-auto">
+              <p className="text-xs font-medium text-[#374151] mb-2">Generating checklist...</p>
+              <pre className="text-xs text-[#6b7280] whitespace-pre-wrap font-mono">{streamText}</pre>
+            </div>
+          )}
 
           <button
             onClick={handleGenerate}
@@ -344,7 +468,7 @@ export default function TechTool() {
         <div className="max-w-2xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="text-sm font-semibold text-[#111827]">RestoreDocAI</div>
           <button
-            onClick={() => { setStage('configure'); setChecklist([]) }}
+            onClick={() => { setStage('configure'); setChecklist([]); setStreamText('') }}
             className="text-xs text-[#6b7280] hover:text-[#111827]"
           >
             New checklist
@@ -367,23 +491,40 @@ export default function TechTool() {
           </div>
         </div>
 
-        {/* Checklist items */}
-        <div className="space-y-2 mb-8">
-          {checklist.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => toggleItem(item.id)}
-              className="w-full flex items-start gap-3 p-4 border border-[#e5e7eb] text-left hover:bg-[#f9fafb] transition-colors"
-            >
-              {item.completed ? (
-                <CheckSquare size={18} className="text-[#2563eb] mt-0.5 shrink-0" />
-              ) : (
-                <Square size={18} className="text-[#d1d5db] mt-0.5 shrink-0" />
+        {/* Checklist items grouped by category */}
+        <div className="space-y-1 mb-8">
+          {checklist.reduce<{ category: string | undefined; items: ChecklistItem[] }[]>((groups, item) => {
+            const last = groups[groups.length - 1]
+            if (last && last.category === item.category) {
+              last.items.push(item)
+            } else {
+              groups.push({ category: item.category, items: [item] })
+            }
+            return groups
+          }, []).map((group, gi) => (
+            <div key={gi}>
+              {group.category && (
+                <div className="text-xs font-semibold text-[#6b7280] uppercase tracking-wide px-4 py-2 mt-4 first:mt-0">
+                  {group.category}
+                </div>
               )}
-              <span className={`text-sm ${item.completed ? 'line-through text-[#9ca3af]' : 'text-[#111827]'}`}>
-                {item.text}
-              </span>
-            </button>
+              {group.items.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => toggleItem(item.id)}
+                  className="w-full flex items-start gap-3 p-4 border border-[#e5e7eb] text-left hover:bg-[#f9fafb] transition-colors mb-1"
+                >
+                  {item.completed ? (
+                    <CheckSquare size={18} className="text-[#2563eb] mt-0.5 shrink-0" />
+                  ) : (
+                    <Square size={18} className="text-[#d1d5db] mt-0.5 shrink-0" />
+                  )}
+                  <span className={`text-sm ${item.completed ? 'line-through text-[#9ca3af]' : 'text-[#111827]'}`}>
+                    {item.text}
+                  </span>
+                </button>
+              ))}
+            </div>
           ))}
         </div>
 

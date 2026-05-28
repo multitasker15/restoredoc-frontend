@@ -2,14 +2,14 @@ import { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import {
   LayoutDashboard, FileText, Users, BarChart2, Settings,
-  Copy, Download, RefreshCw, Lock, LogOut, Eye, EyeOff,
+  Copy, Download, RefreshCw, Lock, LogOut, Eye, EyeOff, AlertTriangle,
 } from 'lucide-react'
 import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer,
 } from 'recharts'
-import api from '../lib/api'
-import { clearToken } from '../lib/auth'
+import api, { BASE_URL } from '../lib/api'
+import { clearToken, getToken } from '../lib/auth'
 
 type Tab = 'overview' | 'checklists' | 'team' | 'analytics' | 'settings'
 
@@ -22,6 +22,11 @@ interface Stats {
   team_link?: string
   pin?: string
   plan?: string
+  team_slug?: string
+  trial_days_left?: number | null
+  subscription_status?: string
+  checklists_this_month?: number
+  checklist_limit?: number
 }
 
 interface Checklist {
@@ -100,6 +105,25 @@ export default function Dashboard() {
   useEffect(() => {
     Promise.all([fetchStats(), fetchChecklists()]).finally(() => setLoading(false))
   }, [fetchStats, fetchChecklists])
+
+  async function downloadXactimatePdf(checklistId: string) {
+    try {
+      const token = getToken()
+      const res = await fetch(`${BASE_URL}/checklist/${checklistId}/xactimate-pdf`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      })
+      if (!res.ok) return
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `xactimate-${checklistId.slice(0, 8)}.pdf`
+      a.click()
+      URL.revokeObjectURL(url)
+    } catch {
+      // silently fail
+    }
+  }
 
   function handleLogout() {
     clearToken()
@@ -203,6 +227,24 @@ export default function Dashboard() {
       {/* Main content */}
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-5xl mx-auto px-8 py-8">
+
+          {/* Trial expiry banner */}
+          {stats.plan === 'trial' && stats.trial_days_left !== null && stats.trial_days_left !== undefined && (
+            <div className="mb-6 flex items-center gap-3 border border-amber-200 bg-amber-50 px-4 py-3">
+              <AlertTriangle size={16} className="text-amber-500 shrink-0" />
+              <span className="text-sm text-amber-800">
+                {stats.trial_days_left > 0
+                  ? `Your free trial ends in ${stats.trial_days_left} day${stats.trial_days_left === 1 ? '' : 's'}.`
+                  : 'Your free trial has ended.'}
+              </span>
+              <Link
+                to="/pricing"
+                className="ml-auto text-xs font-medium text-amber-800 underline hover:no-underline shrink-0"
+              >
+                Upgrade now
+              </Link>
+            </div>
+          )}
 
           {/* Overview */}
           {activeTab === 'overview' && (
@@ -310,19 +352,13 @@ export default function Dashboard() {
                             </span>
                           </td>
                           <td className="px-4 py-3">
-                            {cl.pdf_url ? (
-                              <a
-                                href={cl.pdf_url}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="inline-flex items-center gap-1 text-xs text-[#2563eb] hover:underline"
-                              >
-                                <Download size={12} />
-                                Download
-                              </a>
-                            ) : (
-                              <span className="text-xs text-[#9ca3af]">—</span>
-                            )}
+                            <button
+                              onClick={() => downloadXactimatePdf(cl.id)}
+                              className="inline-flex items-center gap-1 text-xs text-[#2563eb] hover:underline"
+                            >
+                              <Download size={12} />
+                              Xactimate PDF
+                            </button>
                           </td>
                         </tr>
                       ))

@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const BASE_URL = 'https://restoredoc-backend-production.up.railway.app'
+export const BASE_URL = 'https://restoredoc-backend-production.up.railway.app'
 
 export const api = axios.create({ baseURL: BASE_URL })
 

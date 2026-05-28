@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import api from '../lib/api'
-import { setToken } from '../lib/auth'
+import { setToken, setTeamSlug } from '../lib/auth'
 
 const PLANS = ['Individual', 'Starter', 'Growth']
 
@@ -28,13 +28,12 @@ export default function Signup() {
     setLoading(true)
     try {
       const res = await api.post('/auth/signup', {
-        company_name: form.companyName,
-        name: form.name,
+        companyName: form.companyName,
         email: form.email,
         password: form.password,
-        plan: form.plan,
       })
       setToken(res.data.token || res.data.access_token)
+      if (res.data.company?.teamSlug) setTeamSlug(res.data.company.teamSlug)
       navigate('/dashboard')
     } catch (err: unknown) {
       const e = err as { response?: { data?: { message?: string } } }

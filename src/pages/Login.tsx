@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import api from '../lib/api'
-import { setToken } from '../lib/auth'
+import { setToken, setTeamSlug } from '../lib/auth'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -23,6 +23,7 @@ export default function Login() {
         password: form.password,
       })
       setToken(res.data.token || res.data.access_token)
+      if (res.data.company?.teamSlug) setTeamSlug(res.data.company.teamSlug)
       navigate('/dashboard')
     } catch (err: unknown) {
       const e = err as { response?: { data?: { message?: string } } }
