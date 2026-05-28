@@ -4,718 +4,853 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pricing — RestoreDocAI</title>
-  <meta name="description" content="Simple pricing for restoration teams of every size. From independent contractors to enterprise operations." />
+  <meta name="description" content="Pricing built for restoration teams of every size. From independent contractors to enterprise operations." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
+    /* ── Reset ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg: #ffffff;
-      --bg-secondary: #f9fafb;
-      --text: #111827;
-      --text-secondary: #6b7280;
-      --border: #e5e7eb;
-      --blue: #2563eb;
-      --blue-dark: #1d4ed8;
-      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    html { font-size: 16px; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #ffffff;
+      color: #111827;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
-
-    html { font-family: var(--font); color: var(--text); background: var(--bg); -webkit-font-smoothing: antialiased; }
-    body { min-height: 100vh; }
     a { color: inherit; text-decoration: none; }
-    .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+    ul { list-style: none; }
 
-    /* BUTTONS */
+    /* ── Layout ── */
+    .wrap { max-width: 1160px; margin: 0 auto; padding: 0 32px; }
+
+    /* ── Buttons ── */
     .btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      gap: 8px; font-family: var(--font); font-size: 14px; font-weight: 500;
-      padding: 10px 20px; border: 1px solid transparent; cursor: pointer;
-      transition: background 0.15s, color 0.15s, border-color 0.15s;
-      white-space: nowrap; line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1;
+      padding: 0 18px;
+      height: 38px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 120ms, border-color 120ms, color 120ms;
+      letter-spacing: -0.01em;
     }
-    .btn-primary { background: var(--blue); color: #fff; border-color: var(--blue); }
-    .btn-primary:hover { background: var(--blue-dark); border-color: var(--blue-dark); }
-    .btn-outline { background: transparent; color: var(--text); border-color: var(--border); }
-    .btn-outline:hover { border-color: #9ca3af; }
+    .btn-sm { height: 34px; font-size: 13px; padding: 0 14px; }
+    .btn-solid { background: #2563eb; color: #fff; border-color: #2563eb; }
+    .btn-solid:hover { background: #1d4ed8; border-color: #1d4ed8; }
+    .btn-ghost { background: transparent; color: #374151; border-color: #e5e7eb; }
+    .btn-ghost:hover { border-color: #9ca3af; color: #111827; }
 
-    /* NAV */
-    .nav { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--border); }
-    .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
-    .nav-logo { font-size: 17px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
-    .nav-links { display: flex; align-items: center; gap: 32px; }
-    .nav-links a { font-size: 14px; color: var(--text-secondary); transition: color 0.15s; }
-    .nav-links a:hover { color: var(--text); }
-    .nav-links a.active { color: var(--text); }
-    .nav-actions { display: flex; align-items: center; gap: 10px; }
-    .nav-hamburger { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
-    .nav-hamburger span { display: block; width: 20px; height: 1.5px; background: var(--text); margin: 4px 0; }
-
-    /* PAGE HEADER */
-    .page-header { padding: 72px 0 56px; text-align: center; border-bottom: 1px solid var(--border); }
-    .page-headline { font-size: 44px; font-weight: 700; color: var(--text); letter-spacing: -1.2px; line-height: 1.15; max-width: 620px; margin: 0 auto 16px; }
-    .page-sub { font-size: 18px; color: var(--text-secondary); max-width: 440px; margin: 0 auto 36px; line-height: 1.6; }
-
-    /* BILLING TOGGLE */
-    .billing-toggle { display: inline-flex; align-items: center; gap: 0; border: 1px solid var(--border); }
-    .toggle-btn {
-      padding: 8px 20px; font-size: 13px; font-weight: 500; cursor: pointer;
-      border: none; background: transparent; color: var(--text-secondary); font-family: var(--font);
-      transition: background 0.15s, color 0.15s;
+    /* ── Nav ── */
+    .nav {
+      position: sticky; top: 0; z-index: 200;
+      background: #fff; border-bottom: 1px solid #e5e7eb;
     }
-    .toggle-btn.active { background: var(--blue); color: #fff; }
-    .toggle-btn:not(.active):hover { color: var(--text); }
-    .annual-badge {
-      font-size: 11px; font-weight: 600; background: #dcfce7; color: #166534;
-      padding: 2px 7px; margin-left: 8px;
+    .nav .wrap {
+      display: flex; align-items: center; justify-content: space-between; height: 60px;
+    }
+    .nav-logo { font-size: 16px; font-weight: 700; color: #111827; letter-spacing: -0.3px; }
+    .nav-center { display: flex; align-items: center; gap: 36px; }
+    .nav-center a { font-size: 14px; color: #6b7280; transition: color 120ms; }
+    .nav-center a:hover, .nav-center a.active { color: #111827; }
+    .nav-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .nav-hamburger {
+      display: none; flex-direction: column; justify-content: center; gap: 5px;
+      width: 36px; height: 36px; background: none; border: none; cursor: pointer; padding: 4px;
+    }
+    .nav-hamburger span { display: block; height: 1.5px; width: 100%; background: #374151; }
+
+    /* ── Page header ── */
+    .page-header {
+      padding: 72px 0 60px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: center;
+    }
+    .page-headline {
+      font-size: 44px; font-weight: 700; color: #111827;
+      letter-spacing: -1.4px; line-height: 1.12;
+      max-width: 600px; margin: 0 auto 16px;
+    }
+    .page-sub {
+      font-size: 17px; color: #6b7280; line-height: 1.65;
+      max-width: 420px; margin: 0 auto 36px;
     }
 
-    /* PLAN CARDS */
-    .plans-section { padding: 56px 0; }
-    .plans-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
-    .plan {
-      border: 1px solid var(--border); padding: 28px 20px;
-      display: flex; flex-direction: column; background: var(--bg); position: relative;
+    /* Billing toggle */
+    .billing-toggle {
+      display: inline-flex;
+      border: 1px solid #e5e7eb;
+      overflow: hidden;
     }
-    .plan.popular { background: var(--bg); }
-    .popular-badge {
-      position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
-      background: var(--blue); color: #fff; font-size: 10px; font-weight: 600;
-      padding: 4px 12px; text-transform: uppercase; letter-spacing: 0.06em;
+    .toggle-opt {
+      padding: 9px 22px;
+      font-size: 13px; font-weight: 500;
+      color: #6b7280; background: transparent;
+      border: none; cursor: pointer;
+      font-family: inherit;
+      transition: background 120ms, color 120ms;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .toggle-opt:first-child { border-right: 1px solid #e5e7eb; }
+    .toggle-opt.active { background: #2563eb; color: #fff; }
+    .toggle-opt:not(.active):hover { color: #111827; }
+    .save-badge {
+      font-size: 10px; font-weight: 600;
+      background: #dcfce7; color: #15803d;
+      padding: 2px 7px; letter-spacing: 0.02em;
+    }
+    .toggle-opt.active .save-badge { background: rgba(255,255,255,0.2); color: #fff; }
+
+    /* ── Plan cards ── */
+    .plans-section { padding: 56px 0 48px; }
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+    .plan-card {
+      border: 1px solid #e5e7eb;
+      background: #fff;
+      padding: 28px 20px 24px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .popular-label {
+      position: absolute;
+      top: -1px; left: 50%;
+      transform: translateX(-50%);
+      background: #111827;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      padding: 4px 14px;
       white-space: nowrap;
     }
-    .plan-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-    .plan-tagline { font-size: 12px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.4; }
-    .plan-price-wrap { margin-bottom: 6px; }
-    .plan-price { font-size: 32px; font-weight: 700; color: var(--text); letter-spacing: -0.8px; line-height: 1; }
-    .plan-per { font-size: 13px; color: var(--text-secondary); font-weight: 400; }
-    .plan-annual-note { font-size: 11px; color: var(--text-secondary); margin-bottom: 24px; min-height: 16px; }
-    .plan-features-head { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 10px; }
-    .plan-features { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 28px; flex: 1; }
-    .plan-feature { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: var(--text); line-height: 1.4; }
-    .plan-feature-chk {
-      width: 14px; height: 14px; background: var(--blue); flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center; margin-top: 0.5px;
+    .plan-name {
+      font-size: 14px; font-weight: 600; color: #111827;
+      margin-bottom: 4px;
     }
-    .plan-feature-chk::after {
-      content: ''; display: block; width: 5px; height: 3px;
-      border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff;
+    .plan-tagline {
+      font-size: 12px; color: #6b7280; line-height: 1.5;
+      margin-bottom: 22px;
+    }
+    .plan-price {
+      font-size: 34px; font-weight: 700; color: #111827;
+      letter-spacing: -1px; line-height: 1; margin-bottom: 2px;
+    }
+    .plan-per { font-size: 14px; color: #6b7280; font-weight: 400; }
+    .plan-annual-note {
+      font-size: 11px; color: #6b7280;
+      min-height: 18px; margin-bottom: 22px;
+    }
+    .plan-features-label {
+      font-size: 10px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      color: #9ca3af; margin-bottom: 12px;
+    }
+    .plan-features {
+      display: flex; flex-direction: column; gap: 9px;
+      margin-bottom: 24px; flex: 1;
+    }
+    .pf {
+      display: flex; align-items: flex-start; gap: 8px;
+      font-size: 12px; color: #374151; line-height: 1.4;
+    }
+    .pf-chk {
+      flex-shrink: 0; width: 14px; height: 14px;
+      background: #2563eb; margin-top: 0.5px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .pf-chk::after {
+      content: '';
+      display: block;
+      width: 5px; height: 3px;
+      border-left: 1.5px solid #fff;
+      border-bottom: 1.5px solid #fff;
       transform: rotate(-45deg) translateY(-0.5px);
     }
-    .plan-cta { display: block; text-align: center; padding: 10px; font-size: 13px; font-weight: 500; border: 1px solid var(--border); color: var(--text); transition: all 0.15s; }
-    .plan-cta:hover { border-color: #9ca3af; }
-    .plan-cta.primary { background: var(--blue); color: #fff; border-color: var(--blue); }
-    .plan-cta.primary:hover { background: var(--blue-dark); border-color: var(--blue-dark); }
-
-    /* COMPARISON TABLE */
-    .comparison-section { padding: 0 0 96px; }
-    .comparison-title { font-size: 24px; font-weight: 700; color: var(--text); letter-spacing: -0.4px; margin-bottom: 32px; padding-top: 24px; }
-
-    .comparison-table { width: 100%; border-collapse: collapse; }
-    .comparison-table th, .comparison-table td { border-bottom: 1px solid var(--border); }
-
-    /* Header row */
-    .comparison-table thead th {
-      padding: 14px 16px; text-align: left; font-size: 13px; font-weight: 600;
-      color: var(--text); background: var(--bg-secondary); position: sticky; top: 64px;
-      border-bottom: 1px solid var(--border);
+    .plan-cta {
+      display: block;
+      text-align: center;
+      padding: 10px 12px;
+      font-size: 13px; font-weight: 500;
+      border: 1px solid #e5e7eb;
+      color: #374151;
+      transition: border-color 120ms, color 120ms, background 120ms;
+      font-family: inherit;
     }
-    .comparison-table thead th:first-child { width: 260px; }
-    .comparison-table thead th:not(:first-child) { text-align: center; }
-    .comparison-table thead th.col-popular { color: var(--blue); }
+    .plan-cta:hover { border-color: #9ca3af; color: #111827; }
+    .plan-cta.primary { background: #2563eb; color: #fff; border-color: #2563eb; }
+    .plan-cta.primary:hover { background: #1d4ed8; border-color: #1d4ed8; }
 
-    /* Category rows */
-    .cat-row td {
-      padding: 10px 16px; font-size: 11px; font-weight: 600;
+    /* ── Comparison table ── */
+    .comparison-wrap { padding: 0 0 96px; }
+    .comparison-heading {
+      font-size: 22px; font-weight: 700; color: #111827;
+      letter-spacing: -0.4px; margin-bottom: 28px;
+      padding-top: 8px;
+    }
+    .table-scroll { overflow-x: auto; }
+    .comparison-table {
+      width: 100%; min-width: 680px;
+      border-collapse: collapse;
+    }
+
+    /* Sticky header */
+    .comparison-table thead th {
+      position: sticky; top: 60px;
+      padding: 14px 18px;
+      font-size: 13px; font-weight: 600; color: #111827;
+      background: #f9fafb;
+      border-bottom: 1px solid #e5e7eb;
+      border-top: 1px solid #e5e7eb;
+      text-align: left;
+    }
+    .comparison-table thead th:not(:first-child) { text-align: center; }
+    .comparison-table thead th.col-popular { color: #2563eb; }
+    .th-feat { width: 280px; }
+
+    /* Category separator rows */
+    .row-category td {
+      background: #f9fafb;
+      padding: 10px 18px;
+      font-size: 11px; font-weight: 600;
       text-transform: uppercase; letter-spacing: 0.07em;
-      color: var(--text-secondary); background: var(--bg-secondary);
-      border-top: 1px solid var(--border);
+      color: #6b7280;
+      border-top: 1px solid #e5e7eb;
+      border-bottom: 1px solid #e5e7eb;
     }
 
     /* Feature rows */
-    .comparison-table tbody tr:not(.cat-row) td {
-      padding: 13px 16px; font-size: 13px; color: var(--text);
+    .comparison-table tbody tr:not(.row-category) td {
+      padding: 13px 18px;
+      border-bottom: 1px solid #f3f4f6;
+      vertical-align: middle;
     }
-    .comparison-table tbody tr:not(.cat-row) td:not(:first-child) { text-align: center; }
-    .comparison-table tbody tr:not(.cat-row):hover td { background: var(--bg-secondary); }
+    .comparison-table tbody tr:not(.row-category) td:not(:first-child) { text-align: center; }
+    .comparison-table tbody tr:not(.row-category):hover td { background: #fafafa; }
 
-    .feat-label { font-size: 13px; color: var(--text); }
-    .feat-note { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+    .feat-name { font-size: 13px; color: #111827; }
+    .feat-note { font-size: 11px; color: #9ca3af; margin-top: 2px; }
 
-    /* Check / dash / text cells */
-    .chk {
-      display: inline-flex; width: 16px; height: 16px; background: var(--blue);
+    /* Cell values */
+    .cell-check {
+      display: inline-flex;
+      width: 16px; height: 16px;
+      background: #2563eb;
       align-items: center; justify-content: center;
     }
-    .chk::after {
-      content: ''; display: block; width: 6px; height: 3.5px;
-      border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff;
+    .cell-check::after {
+      content: '';
+      display: block;
+      width: 6px; height: 3.5px;
+      border-left: 1.5px solid #fff;
+      border-bottom: 1.5px solid #fff;
       transform: rotate(-45deg) translateY(-0.5px);
     }
-    .dash { color: #d1d5db; font-size: 16px; line-height: 1; }
-    .limit-text { font-size: 12px; color: var(--text); font-weight: 500; }
+    .cell-dash { color: #d1d5db; font-size: 18px; line-height: 1; }
+    .cell-text { font-size: 12px; font-weight: 500; color: #374151; }
 
-    /* FAQ / note */
-    .pricing-note { text-align: center; padding: 40px 0 64px; }
-    .pricing-note p { font-size: 14px; color: var(--text-secondary); }
-    .pricing-note a { color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
+    /* ── Note ── */
+    .pricing-note {
+      text-align: center;
+      padding: 0 0 64px;
+    }
+    .pricing-note p { font-size: 14px; color: #6b7280; }
+    .pricing-note a { color: #2563eb; text-decoration: underline; text-underline-offset: 3px; }
 
-    /* FOOTER */
-    .footer { padding: 64px 0 0; border-top: 1px solid var(--border); }
-    .footer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; padding-bottom: 48px; }
-    .footer-head { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text); margin-bottom: 16px; }
-    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .footer-links a { font-size: 14px; color: var(--text-secondary); transition: color 0.15s; }
-    .footer-links a:hover { color: var(--text); }
-    .footer-bottom { border-top: 1px solid var(--border); padding: 20px 0; }
-    .footer-copy { font-size: 13px; color: var(--text-secondary); }
+    /* ── Footer ── */
+    .footer { padding: 64px 0 0; border-top: 1px solid #e5e7eb; }
+    .footer-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 32px; padding-bottom: 52px;
+    }
+    .footer-col-head {
+      font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.07em;
+      color: #374151; margin-bottom: 16px;
+    }
+    .footer-links { display: flex; flex-direction: column; gap: 11px; }
+    .footer-links a { font-size: 14px; color: #6b7280; transition: color 120ms; }
+    .footer-links a:hover { color: #111827; }
+    .footer-bottom {
+      border-top: 1px solid #e5e7eb; padding: 20px 0;
+    }
+    .footer-copy { font-size: 13px; color: #9ca3af; }
 
-    /* RESPONSIVE */
+    /* ── Responsive ── */
     @media (max-width: 1100px) {
       .plans-grid { grid-template-columns: repeat(3, 1fr); }
     }
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .nav-hamburger { display: block; }
-      .nav-links.open {
-        display: flex; flex-direction: column;
-        position: fixed; top: 64px; left: 0; right: 0;
-        background: var(--bg); border-bottom: 1px solid var(--border);
-        padding: 16px 24px 24px; gap: 16px; z-index: 99;
+    @media (max-width: 900px) {
+      .nav-center { display: none; }
+      .nav-hamburger { display: flex; }
+      .nav-center.open {
+        display: flex; flex-direction: column; align-items: flex-start; gap: 0;
+        position: fixed; top: 60px; left: 0; right: 0;
+        background: #fff; border-bottom: 1px solid #e5e7eb;
+        padding: 8px 0; z-index: 199;
       }
-      .page-headline { font-size: 32px; }
-      .plans-grid { grid-template-columns: 1fr 1fr; }
-      .footer-grid { grid-template-columns: 1fr 1fr; }
-      .comparison-table { font-size: 12px; }
+      .nav-center.open a { display: block; width: 100%; padding: 14px 32px; border-bottom: 1px solid #f3f4f6; }
+      .nav-center.open a:last-child { border-bottom: none; }
+      .plans-grid { grid-template-columns: repeat(2, 1fr); }
+      .page-headline { font-size: 34px; }
+      .footer-grid { grid-template-columns: repeat(2, 1fr); gap: 36px 32px; }
     }
-    @media (max-width: 540px) {
+    @media (max-width: 600px) {
+      .wrap { padding: 0 20px; }
       .plans-grid { grid-template-columns: 1fr; }
+      .nav-right .btn-ghost { display: none; }
+      .page-headline { font-size: 28px; }
     }
-
-    /* Scrollable comparison table wrapper */
-    .table-scroll { overflow-x: auto; }
-    .comparison-table { min-width: 700px; }
   </style>
 </head>
 <body>
 
-  <!-- NAVIGATION -->
-  <nav class="nav">
-    <div class="container nav-inner">
-      <a href="index.html" class="nav-logo">RestoreDocAI</a>
-      <div class="nav-links" id="navLinks">
-        <a href="index.html#features">Product</a>
-        <a href="pricing.html" class="active">Pricing</a>
-        <a href="index.html#demo">Demo</a>
-        <a href="index.html#contact">Contact</a>
-      </div>
-      <div class="nav-actions">
-        <a href="login.html" class="btn btn-outline">Login</a>
-        <a href="signup.html" class="btn btn-primary">Start Free Trial</a>
-      </div>
-      <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
+<!-- ═══════════════════════════════════
+     NAVIGATION
+═══════════════════════════════════ -->
+<nav class="nav">
+  <div class="wrap">
+    <a href="index.html" class="nav-logo">RestoreDocAI</a>
+    <div class="nav-center" id="navCenter">
+      <a href="index.html#features">Product</a>
+      <a href="pricing.html" class="active">Pricing</a>
+      <a href="index.html#demo">Demo</a>
+      <a href="index.html#contact">Contact</a>
+    </div>
+    <div class="nav-right">
+      <a href="login.html" class="btn btn-ghost btn-sm">Login</a>
+      <a href="signup.html" class="btn btn-solid btn-sm">Start Free Trial</a>
+      <button class="nav-hamburger" id="hamburger" aria-label="Toggle navigation">
         <span></span><span></span><span></span>
       </button>
     </div>
-  </nav>
+  </div>
+</nav>
 
-  <!-- PAGE HEADER -->
-  <div class="page-header">
-    <div class="container">
-      <h1 class="page-headline">Pricing built for restoration teams of every size</h1>
-      <p class="page-sub">From independent contractors to enterprise operations</p>
-      <div class="billing-toggle">
-        <button class="toggle-btn active" id="btnMonthly" onclick="setBilling('monthly')">Monthly</button>
-        <button class="toggle-btn" id="btnAnnual" onclick="setBilling('annual')">
-          Annual <span class="annual-badge">Save 20%</span>
-        </button>
-      </div>
+
+<!-- ═══════════════════════════════════
+     PAGE HEADER
+═══════════════════════════════════ -->
+<header class="page-header">
+  <div class="wrap">
+    <h1 class="page-headline">Pricing built for restoration teams of every size</h1>
+    <p class="page-sub">From independent contractors to enterprise operations</p>
+    <div class="billing-toggle">
+      <button class="toggle-opt active" id="btnMonthly" onclick="setBilling('monthly')">Monthly</button>
+      <button class="toggle-opt" id="btnAnnual" onclick="setBilling('annual')">
+        Annual <span class="save-badge">Save 20%</span>
+      </button>
     </div>
   </div>
+</header>
 
-  <!-- PLAN CARDS -->
-  <section class="plans-section">
-    <div class="container">
-      <div class="plans-grid">
 
-        <!-- Individual -->
-        <div class="plan">
-          <div class="plan-name">Individual</div>
-          <div class="plan-tagline">Solo techs and independent estimators</div>
-          <div class="plan-price-wrap">
-            <div class="plan-price">
-              <span class="price-val" data-monthly="$47" data-annual="$38">$47</span><span class="plan-per">/mo</span>
-            </div>
-          </div>
-          <div class="plan-annual-note annual-note" style="display:none;">Billed $456/year</div>
-          <div class="plan-features-head">What's included</div>
-          <ul class="plan-features">
-            <li class="plan-feature"><div class="plan-feature-chk"></div>15 checklists per month</li>
-            <li class="plan-feature"><div class="plan-feature-chk"></div>All 5 damage categories</li>
-            <li class="plan-feature"><div class="plan-feature-chk"></div>IICRC S500 and S520 compliance</li>
-            <li class="plan-feature"><div class="plan-feature-chk"></div>PDF download</li>
-            <li class="plan-feature"><div class="plan-feature-chk"></div>Xactimate-ready scope of work</li>
-          </ul>
-          <a href="signup.html?plan=individual" class="plan-cta">Get Started</a>
+<!-- ═══════════════════════════════════
+     PLAN CARDS
+═══════════════════════════════════ -->
+<section class="plans-section">
+  <div class="wrap">
+    <div class="plans-grid">
+
+      <!-- Individual -->
+      <div class="plan-card">
+        <div class="plan-name">Individual</div>
+        <div class="plan-tagline">Solo techs and independent estimators</div>
+        <div class="plan-price">
+          <span class="price-val" data-monthly="$47" data-annual="$38">$47</span><span class="plan-per">/mo</span>
         </div>
-
-        <!-- Starter -->
-        <div class="plan">
-          <div class="plan-name">Starter</div>
-          <div class="plan-tagline">Small crews, up to 3 team members</div>
-          <div class="plan-price-wrap">
-            <div class="plan-price">
-              <span class="price-val" data-monthly="$147" data-annual="$118">$147</span><span class="plan-per">/mo</span>
-            </div>
-          </div>
-          <div class="plan-annual-note annual-note" style="display:none;">Billed $1,411/year</div>
-          <div class="plan-features-head">What's included</div>
-          <ul class="plan-features">
-            <li class="plan-feature"><div class="plan-feature-chk"></div>50 checklists per month</li>
-            <li class="plan-feature"><div class="plan-feature-chk"></div>3 team members</li>
-            <li class="plan-feature"><div class="plan-feature-chk"></div>PIN-protected field tech links</li>
-            <li class="plan-feature"><div class="plan-feature-chk"></div>Photo AI identification</li>
-            <li class="plan-feature"><div class="plan-feature-chk"></div>Email support</li>
-          </ul>
-          <a href="signup.html?plan=starter" class="plan-cta">Start Free Trial</a>
-        </div>
-
-        <!-- Growth (Most Popular) -->
-        <div class="plan popular">
-          <div class="popular-badge">Most Popular</div>
-          <div class="plan-name" style="margin-top: 16px;">Growth</div>
-          <div class="plan-tagline">Growing operations with analytics and branding</div>
-          <div class="plan-price-wrap">
-            <div class="plan-price">
-              <span class="price-val" data-monthly="$297" data-annual="$238">$297</span><span class="plan-per">/mo</span>
-            </div>
-          </div>
-          <div class="plan-annual-note annual-note" style="display:none;">Billed $2,851/year</div>
-          <div class="plan-features-head">What's included</div>
-          <ul class="plan-features">
-            <li class="plan-feature"><div class="plan-feature-chk"></div>200 checklists per month</li>
-            <li class="plan-feature"><div class="plan-feature-chk"></div>10 team members</li>
-            <li class="plan-feature"><div class="plan-feature-chk"></div>Claim analytics dashboard</li>
-            <li class="plan-feature"><div class="plan-feature-chk"></div>Company branding on PDFs</li>
-            <li class="plan-feature"><div class="plan-feature-chk"></div>Priority support</li>
-          </ul>
-          <a href="signup.html?plan=growth" class="plan-cta primary">Start Free Trial</a>
-        </div>
-
-        <!-- Pro -->
-        <div class="plan">
-          <div class="plan-name">Pro</div>
-          <div class="plan-tagline">Large restoration companies, full API access</div>
-          <div class="plan-price-wrap">
-            <div class="plan-price">
-              <span class="price-val" data-monthly="$597" data-annual="$478">$597</span><span class="plan-per">/mo</span>
-            </div>
-          </div>
-          <div class="plan-annual-note annual-note" style="display:none;">Billed $5,731/year</div>
-          <div class="plan-features-head">What's included</div>
-          <ul class="plan-features">
-            <li class="plan-feature"><div class="plan-feature-chk"></div>Unlimited checklists</li>
-            <li class="plan-feature"><div class="plan-feature-chk"></div>25 team members</li>
-            <li class="plan-feature"><div class="plan-feature-chk"></div>Full API access</li>
-            <li class="plan-feature"><div class="plan-feature-chk"></div>Bulk export</li>
-            <li class="plan-feature"><div class="plan-feature-chk"></div>Phone support</li>
-          </ul>
-          <a href="demo.html" class="plan-cta">Book a Demo</a>
-        </div>
-
-        <!-- Enterprise -->
-        <div class="plan">
-          <div class="plan-name">Enterprise</div>
-          <div class="plan-tagline">Multi-location franchises and enterprise teams</div>
-          <div class="plan-price-wrap">
-            <div class="plan-price">
-              <span class="price-val" data-monthly="$1,200" data-annual="$960">$1,200</span><span class="plan-per">/mo</span>
-            </div>
-          </div>
-          <div class="plan-annual-note annual-note" style="display:none;">Billed $11,520/year</div>
-          <div class="plan-features-head">What's included</div>
-          <ul class="plan-features">
-            <li class="plan-feature"><div class="plan-feature-chk"></div>Unlimited checklists</li>
-            <li class="plan-feature"><div class="plan-feature-chk"></div>Unlimited team members</li>
-            <li class="plan-feature"><div class="plan-feature-chk"></div>SSO / SAML</li>
-            <li class="plan-feature"><div class="plan-feature-chk"></div>Dedicated account manager</li>
-            <li class="plan-feature"><div class="plan-feature-chk"></div>Custom integrations</li>
-          </ul>
-          <a href="sales.html" class="plan-cta">Contact Sales</a>
-        </div>
-
+        <div class="plan-annual-note annual-note">&nbsp;</div>
+        <div class="plan-features-label">What's included</div>
+        <ul class="plan-features">
+          <li class="pf"><div class="pf-chk"></div>15 checklists per month</li>
+          <li class="pf"><div class="pf-chk"></div>All 5 damage categories</li>
+          <li class="pf"><div class="pf-chk"></div>IICRC S500 and S520 compliance</li>
+          <li class="pf"><div class="pf-chk"></div>PDF download</li>
+          <li class="pf"><div class="pf-chk"></div>Xactimate-ready scope of work</li>
+        </ul>
+        <a href="signup.html?plan=individual" class="plan-cta">Get Started</a>
       </div>
-    </div>
-  </section>
 
-  <!-- FEATURE COMPARISON TABLE -->
-  <section class="comparison-section">
-    <div class="container">
-      <div class="comparison-title">Full feature comparison</div>
-      <div class="table-scroll">
-        <table class="comparison-table">
-          <thead>
-            <tr>
-              <th>Feature</th>
-              <th>Individual</th>
-              <th>Starter</th>
-              <th class="col-popular">Growth</th>
-              <th>Pro</th>
-              <th>Enterprise</th>
-            </tr>
-          </thead>
-          <tbody>
-
-            <!-- CHECKLISTS -->
-            <tr class="cat-row"><td colspan="6">Checklists</td></tr>
-            <tr>
-              <td><div class="feat-label">Monthly checklists</div></td>
-              <td><span class="limit-text">15</span></td>
-              <td><span class="limit-text">50</span></td>
-              <td><span class="limit-text">200</span></td>
-              <td><span class="limit-text">Unlimited</span></td>
-              <td><span class="limit-text">Unlimited</span></td>
-            </tr>
-            <tr>
-              <td><div class="feat-label">Damage categories</div><div class="feat-note">Water, Fire, Mold, Storm, Biohazard</div></td>
-              <td><span class="limit-text">All 5</span></td>
-              <td><span class="limit-text">All 5</span></td>
-              <td><span class="limit-text">All 5</span></td>
-              <td><span class="limit-text">All 5</span></td>
-              <td><span class="limit-text">All 5</span></td>
-            </tr>
-            <tr>
-              <td><div class="feat-label">IICRC S500 and S520 compliance</div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-            </tr>
-            <tr>
-              <td><div class="feat-label">Xactimate-ready scope of work</div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-            </tr>
-            <tr>
-              <td><div class="feat-label">Photo AI identification</div></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-            </tr>
-            <tr>
-              <td><div class="feat-label">Custom checklist templates</div></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-            </tr>
-            <tr>
-              <td><div class="feat-label">Auto-populate from previous jobs</div></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-            </tr>
-
-            <!-- TEAM ACCESS -->
-            <tr class="cat-row"><td colspan="6">Team Access</td></tr>
-            <tr>
-              <td><div class="feat-label">Team members</div></td>
-              <td><span class="limit-text">1</span></td>
-              <td><span class="limit-text">3</span></td>
-              <td><span class="limit-text">10</span></td>
-              <td><span class="limit-text">25</span></td>
-              <td><span class="limit-text">Unlimited</span></td>
-            </tr>
-            <tr>
-              <td><div class="feat-label">6-digit PIN field tech access</div></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-            </tr>
-            <tr>
-              <td><div class="feat-label">Role-based permissions</div></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-            </tr>
-            <tr>
-              <td><div class="feat-label">Team usage audit log</div></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-            </tr>
-
-            <!-- ANALYTICS -->
-            <tr class="cat-row"><td colspan="6">Analytics</td></tr>
-            <tr>
-              <td><div class="feat-label">Job history</div></td>
-              <td><span class="limit-text">30 days</span></td>
-              <td><span class="limit-text">90 days</span></td>
-              <td><span class="limit-text">1 year</span></td>
-              <td><span class="limit-text">Unlimited</span></td>
-              <td><span class="limit-text">Unlimited</span></td>
-            </tr>
-            <tr>
-              <td><div class="feat-label">Usage dashboard</div></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-            </tr>
-            <tr>
-              <td><div class="feat-label">Claim approval tracking</div></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-            </tr>
-            <tr>
-              <td><div class="feat-label">Custom reports</div></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-            </tr>
-
-            <!-- EXPORTS -->
-            <tr class="cat-row"><td colspan="6">Exports</td></tr>
-            <tr>
-              <td><div class="feat-label">PDF download</div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-            </tr>
-            <tr>
-              <td><div class="feat-label">Company branding on PDFs</div></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-            </tr>
-            <tr>
-              <td><div class="feat-label">Bulk export</div></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-            </tr>
-            <tr>
-              <td><div class="feat-label">API export</div></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-            </tr>
-
-            <!-- SUPPORT -->
-            <tr class="cat-row"><td colspan="6">Support</td></tr>
-            <tr>
-              <td><div class="feat-label">Email support</div></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-            </tr>
-            <tr>
-              <td><div class="feat-label">Priority support</div></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-            </tr>
-            <tr>
-              <td><div class="feat-label">Phone support</div></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-            </tr>
-            <tr>
-              <td><div class="feat-label">Onboarding assistance</div></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-            </tr>
-            <tr>
-              <td><div class="feat-label">Dedicated account manager</div></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><div class="chk"></div></td>
-            </tr>
-
-            <!-- SECURITY -->
-            <tr class="cat-row"><td colspan="6">Security</td></tr>
-            <tr>
-              <td><div class="feat-label">6-digit PIN field access</div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-            </tr>
-            <tr>
-              <td><div class="feat-label">Data encryption at rest</div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-            </tr>
-            <tr>
-              <td><div class="feat-label">Custom data retention</div></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-            </tr>
-            <tr>
-              <td><div class="feat-label">SSO / SAML</div></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><div class="chk"></div></td>
-            </tr>
-
-            <!-- API -->
-            <tr class="cat-row"><td colspan="6">API</td></tr>
-            <tr>
-              <td><div class="feat-label">API access</div></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-            </tr>
-            <tr>
-              <td><div class="feat-label">Webhook integrations</div></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><div class="chk"></div></td>
-              <td><div class="chk"></div></td>
-            </tr>
-            <tr>
-              <td><div class="feat-label">Custom integrations</div></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><span class="dash">&mdash;</span></td>
-              <td><div class="chk"></div></td>
-            </tr>
-
-          </tbody>
-        </table>
+      <!-- Starter -->
+      <div class="plan-card">
+        <div class="plan-name">Starter</div>
+        <div class="plan-tagline">Small crews, up to 3 team members</div>
+        <div class="plan-price">
+          <span class="price-val" data-monthly="$147" data-annual="$118">$147</span><span class="plan-per">/mo</span>
+        </div>
+        <div class="plan-annual-note annual-note">&nbsp;</div>
+        <div class="plan-features-label">What's included</div>
+        <ul class="plan-features">
+          <li class="pf"><div class="pf-chk"></div>50 checklists per month</li>
+          <li class="pf"><div class="pf-chk"></div>3 team members</li>
+          <li class="pf"><div class="pf-chk"></div>PIN-protected field tech links</li>
+          <li class="pf"><div class="pf-chk"></div>Photo AI identification</li>
+          <li class="pf"><div class="pf-chk"></div>Email support</li>
+        </ul>
+        <a href="signup.html?plan=starter" class="plan-cta">Start Free Trial</a>
       </div>
-    </div>
-  </section>
 
-  <!-- NOTE -->
-  <div class="pricing-note">
-    <div class="container">
-      <p>All plans include a 14-day free trial on Starter. Enterprise plans include custom onboarding. &nbsp;<a href="signup.html">Start free today.</a></p>
+      <!-- Growth (Most Popular) -->
+      <div class="plan-card">
+        <div class="popular-label">Most Popular</div>
+        <div class="plan-name" style="margin-top: 18px;">Growth</div>
+        <div class="plan-tagline">Growing operations with analytics and branding</div>
+        <div class="plan-price">
+          <span class="price-val" data-monthly="$297" data-annual="$238">$297</span><span class="plan-per">/mo</span>
+        </div>
+        <div class="plan-annual-note annual-note">&nbsp;</div>
+        <div class="plan-features-label">What's included</div>
+        <ul class="plan-features">
+          <li class="pf"><div class="pf-chk"></div>200 checklists per month</li>
+          <li class="pf"><div class="pf-chk"></div>10 team members</li>
+          <li class="pf"><div class="pf-chk"></div>Claim analytics dashboard</li>
+          <li class="pf"><div class="pf-chk"></div>Company branding on PDFs</li>
+          <li class="pf"><div class="pf-chk"></div>Priority support</li>
+        </ul>
+        <a href="signup.html?plan=growth" class="plan-cta primary">Start Free Trial</a>
+      </div>
+
+      <!-- Pro -->
+      <div class="plan-card">
+        <div class="plan-name">Pro</div>
+        <div class="plan-tagline">Large companies with API and custom exports</div>
+        <div class="plan-price">
+          <span class="price-val" data-monthly="$597" data-annual="$478">$597</span><span class="plan-per">/mo</span>
+        </div>
+        <div class="plan-annual-note annual-note">&nbsp;</div>
+        <div class="plan-features-label">What's included</div>
+        <ul class="plan-features">
+          <li class="pf"><div class="pf-chk"></div>Unlimited checklists</li>
+          <li class="pf"><div class="pf-chk"></div>25 team members</li>
+          <li class="pf"><div class="pf-chk"></div>Full API access</li>
+          <li class="pf"><div class="pf-chk"></div>Bulk export</li>
+          <li class="pf"><div class="pf-chk"></div>Phone and priority support</li>
+        </ul>
+        <a href="demo.html" class="plan-cta">Book a Demo</a>
+      </div>
+
+      <!-- Enterprise -->
+      <div class="plan-card">
+        <div class="plan-name">Enterprise</div>
+        <div class="plan-tagline">Multi-location franchises and enterprise teams</div>
+        <div class="plan-price">
+          <span class="price-val" data-monthly="$1,200" data-annual="$960">$1,200</span><span class="plan-per">/mo</span>
+        </div>
+        <div class="plan-annual-note annual-note">&nbsp;</div>
+        <div class="plan-features-label">What's included</div>
+        <ul class="plan-features">
+          <li class="pf"><div class="pf-chk"></div>Unlimited checklists</li>
+          <li class="pf"><div class="pf-chk"></div>Unlimited team members</li>
+          <li class="pf"><div class="pf-chk"></div>SSO / SAML</li>
+          <li class="pf"><div class="pf-chk"></div>Dedicated account manager</li>
+          <li class="pf"><div class="pf-chk"></div>Custom integrations</li>
+        </ul>
+        <a href="sales.html" class="plan-cta">Contact Sales</a>
+      </div>
+
     </div>
   </div>
+</section>
 
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div>
-          <div class="footer-head">Product</div>
-          <ul class="footer-links">
-            <li><a href="index.html#features">Features</a></li>
-            <li><a href="pricing.html">Pricing</a></li>
-            <li><a href="index.html#demo">Demo</a></li>
-            <li><a href="#">API</a></li>
-          </ul>
-        </div>
-        <div>
-          <div class="footer-head">Company</div>
-          <ul class="footer-links">
-            <li><a href="#">About</a></li>
-            <li><a href="#">Blog</a></li>
-            <li><a href="#">Careers</a></li>
-          </ul>
-        </div>
-        <div>
-          <div class="footer-head">Legal</div>
-          <ul class="footer-links">
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms of Service</a></li>
-            <li><a href="#">Security</a></li>
-          </ul>
-        </div>
-        <div>
-          <div class="footer-head">Contact</div>
-          <ul class="footer-links">
-            <li><a href="mailto:support@restoredocai.com">support@restoredocai.com</a></li>
-          </ul>
-        </div>
+
+<!-- ═══════════════════════════════════
+     FEATURE COMPARISON TABLE
+═══════════════════════════════════ -->
+<section class="comparison-wrap">
+  <div class="wrap">
+    <div class="comparison-heading">Full feature comparison</div>
+    <div class="table-scroll">
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th class="th-feat">Feature</th>
+            <th>Individual</th>
+            <th>Starter</th>
+            <th class="col-popular">Growth</th>
+            <th>Pro</th>
+            <th>Enterprise</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <!-- CHECKLISTS -->
+          <tr class="row-category"><td colspan="6">Checklists</td></tr>
+          <tr>
+            <td><div class="feat-name">Monthly checklists</div></td>
+            <td><span class="cell-text">15</span></td>
+            <td><span class="cell-text">50</span></td>
+            <td><span class="cell-text">200</span></td>
+            <td><span class="cell-text">Unlimited</span></td>
+            <td><span class="cell-text">Unlimited</span></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="feat-name">Damage categories</div>
+              <div class="feat-note">Water, Fire, Mold, Storm, Biohazard</div>
+            </td>
+            <td><span class="cell-text">All 5</span></td>
+            <td><span class="cell-text">All 5</span></td>
+            <td><span class="cell-text">All 5</span></td>
+            <td><span class="cell-text">All 5</span></td>
+            <td><span class="cell-text">All 5</span></td>
+          </tr>
+          <tr>
+            <td><div class="feat-name">IICRC S500 and S520 compliance</div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+          <tr>
+            <td><div class="feat-name">Xactimate-ready scope of work</div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+          <tr>
+            <td><div class="feat-name">Photo AI identification</div></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+          <tr>
+            <td><div class="feat-name">Custom checklist templates</div></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+          <tr>
+            <td><div class="feat-name">Auto-populate from previous jobs</div></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+
+          <!-- TEAM ACCESS -->
+          <tr class="row-category"><td colspan="6">Team Access</td></tr>
+          <tr>
+            <td><div class="feat-name">Team members</div></td>
+            <td><span class="cell-text">1</span></td>
+            <td><span class="cell-text">3</span></td>
+            <td><span class="cell-text">10</span></td>
+            <td><span class="cell-text">25</span></td>
+            <td><span class="cell-text">Unlimited</span></td>
+          </tr>
+          <tr>
+            <td><div class="feat-name">6-digit PIN field tech access</div></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+          <tr>
+            <td><div class="feat-name">Role-based permissions</div></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+          <tr>
+            <td><div class="feat-name">Team usage audit log</div></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+
+          <!-- ANALYTICS -->
+          <tr class="row-category"><td colspan="6">Analytics</td></tr>
+          <tr>
+            <td><div class="feat-name">Job history</div></td>
+            <td><span class="cell-text">30 days</span></td>
+            <td><span class="cell-text">90 days</span></td>
+            <td><span class="cell-text">1 year</span></td>
+            <td><span class="cell-text">Unlimited</span></td>
+            <td><span class="cell-text">Unlimited</span></td>
+          </tr>
+          <tr>
+            <td><div class="feat-name">Usage dashboard</div></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+          <tr>
+            <td><div class="feat-name">Claim approval tracking</div></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+          <tr>
+            <td><div class="feat-name">Custom reports</div></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+
+          <!-- EXPORTS -->
+          <tr class="row-category"><td colspan="6">Exports</td></tr>
+          <tr>
+            <td><div class="feat-name">PDF download</div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+          <tr>
+            <td><div class="feat-name">Company branding on PDFs</div></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+          <tr>
+            <td><div class="feat-name">Bulk export</div></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+          <tr>
+            <td><div class="feat-name">API export</div></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+
+          <!-- SUPPORT -->
+          <tr class="row-category"><td colspan="6">Support</td></tr>
+          <tr>
+            <td><div class="feat-name">Email support</div></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+          <tr>
+            <td><div class="feat-name">Priority support</div></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+          <tr>
+            <td><div class="feat-name">Phone support</div></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+          <tr>
+            <td><div class="feat-name">Onboarding assistance</div></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+          <tr>
+            <td><div class="feat-name">Dedicated account manager</div></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+
+          <!-- SECURITY -->
+          <tr class="row-category"><td colspan="6">Security</td></tr>
+          <tr>
+            <td><div class="feat-name">6-digit PIN field access</div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+          <tr>
+            <td><div class="feat-name">Data encryption at rest</div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+          <tr>
+            <td><div class="feat-name">Custom data retention</div></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+          <tr>
+            <td><div class="feat-name">SSO / SAML</div></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+
+          <!-- API -->
+          <tr class="row-category"><td colspan="6">API</td></tr>
+          <tr>
+            <td><div class="feat-name">API access</div></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+          <tr>
+            <td><div class="feat-name">Webhook integrations</div></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><div class="cell-check"></div></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+          <tr>
+            <td><div class="feat-name">Custom integrations</div></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><span class="cell-dash">&mdash;</span></td>
+            <td><div class="cell-check"></div></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="pricing-note">
+  <div class="wrap">
+    <p>All plans include a 14-day free trial on Starter. Enterprise plans include custom onboarding. <a href="signup.html">Start free today.</a></p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════
+     FOOTER
+═══════════════════════════════════ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-col-head">Product</div>
+        <ul class="footer-links">
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="index.html#demo">Demo</a></li>
+          <li><a href="#">API</a></li>
+        </ul>
       </div>
-      <div class="footer-bottom">
-        <span class="footer-copy">Copyright 2025 RestoreDocAI. All rights reserved.</span>
+      <div>
+        <div class="footer-col-head">Company</div>
+        <ul class="footer-links">
+          <li><a href="#">About</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-head">Legal</div>
+        <ul class="footer-links">
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Security</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-head">Contact</div>
+        <ul class="footer-links">
+          <li><a href="mailto:support@restoredocai.com">support@restoredocai.com</a></li>
+        </ul>
       </div>
     </div>
-  </footer>
+    <div class="footer-bottom">
+      <span class="footer-copy">Copyright 2025 RestoreDocAI. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
 
-  <script>
-    // Mobile nav
-    const hamburger = document.getElementById('hamburger');
-    const navLinks = document.getElementById('navLinks');
-    hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
-    document.addEventListener('click', (e) => {
-      if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
-        navLinks.classList.remove('open');
-      }
+<script>
+  // Mobile nav
+  const hamburger = document.getElementById('hamburger');
+  const navCenter = document.getElementById('navCenter');
+  hamburger.addEventListener('click', () => navCenter.classList.toggle('open'));
+  document.addEventListener('click', (e) => {
+    if (!hamburger.contains(e.target) && !navCenter.contains(e.target)) {
+      navCenter.classList.remove('open');
+    }
+  });
+
+  // Billing toggle
+  function setBilling(mode) {
+    const annual = mode === 'annual';
+
+    document.getElementById('btnMonthly').classList.toggle('active', !annual);
+    document.getElementById('btnAnnual').classList.toggle('active', annual);
+
+    document.querySelectorAll('.price-val').forEach(el => {
+      el.textContent = annual ? el.dataset.annual : el.dataset.monthly;
     });
 
-    // Billing toggle
-    function setBilling(mode) {
-      const isAnnual = mode === 'annual';
-      document.getElementById('btnMonthly').classList.toggle('active', !isAnnual);
-      document.getElementById('btnAnnual').classList.toggle('active', isAnnual);
-
-      document.querySelectorAll('.price-val').forEach(el => {
-        el.textContent = isAnnual ? el.dataset.annual : el.dataset.monthly;
-      });
-
-      document.querySelectorAll('.annual-note').forEach(el => {
-        el.style.display = isAnnual ? 'block' : 'none';
-      });
-    }
-  </script>
+    document.querySelectorAll('.annual-note').forEach(el => {
+      const card = el.closest('.plan-card');
+      const price = card.querySelector('.price-val');
+      const annualMonthly = price ? price.dataset.annual : '';
+      // Show billed-annually amount
+      const annualTotals = {
+        '$38': '$456', '$118': '$1,411', '$238': '$2,851', '$478': '$5,734', '$960': '$11,520'
+      };
+      if (annual && annualMonthly && annualTotals[annualMonthly]) {
+        el.textContent = 'Billed ' + annualTotals[annualMonthly] + ' per year';
+      } else {
+        el.innerHTML = '&nbsp;';
+      }
+    });
+  }
+</script>
 </body>
 </html>

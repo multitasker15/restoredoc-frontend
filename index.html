@@ -7,662 +7,1171 @@
   <meta name="description" content="IICRC-standard checklists generated in seconds. Built for restoration professionals who can't afford denied claims." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
   <style>
+    /* ── Reset ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg: #ffffff;
-      --bg-secondary: #f9fafb;
-      --text: #111827;
-      --text-secondary: #6b7280;
-      --border: #e5e7eb;
-      --blue: #2563eb;
-      --blue-dark: #1d4ed8;
-      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    html { font-size: 16px; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #ffffff;
+      color: #111827;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
-
-    html { font-family: var(--font); color: var(--text); background: var(--bg); -webkit-font-smoothing: antialiased; }
-    body { min-height: 100vh; }
     a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+    img { display: block; max-width: 100%; }
 
-    .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+    /* ── Layout ── */
+    .wrap {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
 
-    /* BUTTONS */
+    /* ── Buttons ── */
     .btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      gap: 8px; font-family: var(--font); font-size: 14px; font-weight: 500;
-      padding: 10px 20px; border: 1px solid transparent; cursor: pointer;
-      transition: background 0.15s, color 0.15s, border-color 0.15s;
-      white-space: nowrap; line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1;
+      padding: 0 18px;
+      height: 38px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+      letter-spacing: -0.01em;
     }
-    .btn-primary { background: var(--blue); color: #fff; border-color: var(--blue); }
-    .btn-primary:hover { background: var(--blue-dark); border-color: var(--blue-dark); }
-    .btn-outline { background: transparent; color: var(--text); border-color: var(--border); }
-    .btn-outline:hover { border-color: #9ca3af; }
-    .btn-lg { padding: 13px 28px; font-size: 15px; }
+    .btn-sm  { height: 34px; font-size: 13px; padding: 0 14px; }
+    .btn-lg  { height: 44px; font-size: 15px; padding: 0 24px; }
 
-    /* NAV */
+    .btn-solid {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #2563eb;
+    }
+    .btn-solid:hover { background: #1d4ed8; border-color: #1d4ed8; }
+
+    .btn-ghost {
+      background: transparent;
+      color: #374151;
+      border-color: #e5e7eb;
+    }
+    .btn-ghost:hover { border-color: #9ca3af; color: #111827; }
+
+    /* ── Navigation ── */
     .nav {
-      position: sticky; top: 0; z-index: 100;
-      background: var(--bg); border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
     }
-    .nav-inner {
-      display: flex; align-items: center; justify-content: space-between; height: 64px;
+    .nav .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
     }
-    .nav-logo { font-size: 17px; font-weight: 700; color: var(--text); letter-spacing: -0.3px; }
-    .nav-links { display: flex; align-items: center; gap: 32px; }
-    .nav-links a { font-size: 14px; color: var(--text-secondary); transition: color 0.15s; }
-    .nav-links a:hover { color: var(--text); }
-    .nav-actions { display: flex; align-items: center; gap: 10px; }
-    .nav-hamburger { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
-    .nav-hamburger span { display: block; width: 20px; height: 1.5px; background: var(--text); margin: 4px 0; }
+    .nav-logo {
+      font-size: 16px;
+      font-weight: 700;
+      color: #111827;
+      letter-spacing: -0.3px;
+      flex-shrink: 0;
+    }
+    .nav-center {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+    }
+    .nav-center a {
+      font-size: 14px;
+      color: #6b7280;
+      transition: color 120ms;
+    }
+    .nav-center a:hover { color: #111827; }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 36px;
+      height: 36px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .nav-hamburger span {
+      display: block;
+      height: 1.5px;
+      width: 100%;
+      background: #374151;
+      transition: 0.2s;
+    }
 
-    /* HERO */
-    .hero { padding: 96px 0 80px; }
-    .hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
-    .hero-tag {
-      display: inline-block; font-size: 12px; font-weight: 500; color: var(--blue);
-      letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 20px;
+    /* ── Hero ── */
+    .hero {
+      padding: 88px 0 80px;
+    }
+    .hero .wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 72px;
+      align-items: center;
+    }
+    .hero-eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #2563eb;
+      margin-bottom: 20px;
     }
     .hero-headline {
-      font-size: 52px; font-weight: 700; color: var(--text);
-      line-height: 1.1; letter-spacing: -1.5px; max-width: 600px; margin-bottom: 24px;
+      font-size: 56px;
+      font-weight: 700;
+      color: #111827;
+      line-height: 1.07;
+      letter-spacing: -2px;
+      max-width: 560px;
+      margin-bottom: 24px;
     }
     .hero-sub {
-      font-size: 18px; color: var(--text-secondary); line-height: 1.7;
-      max-width: 520px; margin-bottom: 36px;
+      font-size: 18px;
+      color: #6b7280;
+      line-height: 1.72;
+      max-width: 480px;
+      margin-bottom: 36px;
     }
-    .hero-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
-    .hero-note { font-size: 12px; color: var(--text-secondary); }
+    .hero-ctas {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .hero-note {
+      font-size: 12px;
+      color: #9ca3af;
+      letter-spacing: -0.01em;
+    }
 
-    /* Hero mockup */
-    .hero-mockup {
-      border: 1px solid var(--border);
-      box-shadow: 0 4px 24px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
+    /* Hero UI mockup */
+    .mockup-shell {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 32px rgba(0,0,0,.06);
+      overflow: hidden;
     }
-    .mockup-bar {
-      background: var(--bg-secondary); border-bottom: 1px solid var(--border);
-      padding: 10px 14px; display: flex; align-items: center; gap: 6px;
+    .mockup-topbar {
+      background: #f9fafb;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-    .mockup-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
-    .mockup-url {
-      flex: 1; background: var(--bg); border: 1px solid var(--border);
-      padding: 3px 10px; font-size: 11px; color: var(--text-secondary); margin-left: 8px;
+    .mockup-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #e5e7eb;
     }
-    .mockup-body { padding: 18px; }
-    .mockup-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
-    .mockup-meta { font-size: 11px; color: var(--text-secondary); margin-bottom: 14px; }
-    .mockup-progress-wrap { margin-bottom: 14px; }
-    .mockup-progress-bar { width: 100%; height: 4px; background: var(--border); margin-bottom: 5px; }
-    .mockup-progress-fill { height: 100%; background: var(--blue); width: 70%; }
-    .mockup-progress-label { font-size: 10px; color: var(--text-secondary); }
-    .mockup-cat {
-      font-size: 10px; font-weight: 600; text-transform: uppercase;
-      letter-spacing: 0.06em; color: var(--text-secondary); padding: 10px 0 4px;
+    .mockup-addr {
+      flex: 1;
+      margin-left: 8px;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      padding: 3px 10px;
+      font-size: 11px;
+      color: #9ca3af;
+      letter-spacing: 0;
     }
-    .mockup-item { display: flex; align-items: flex-start; gap: 9px; padding: 7px 0; border-bottom: 1px solid var(--border); }
-    .mockup-item:last-of-type { border-bottom: none; }
-    .mockup-chk {
-      width: 13px; height: 13px; border: 1px solid var(--border);
-      flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center;
+    .mockup-content { padding: 20px; }
+
+    .mk-job-header { margin-bottom: 16px; }
+    .mk-job-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 3px;
     }
-    .mockup-chk.on { background: var(--blue); border-color: var(--blue); }
-    .mockup-chk.on::after {
-      content: ''; display: block; width: 5px; height: 2.5px;
-      border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff;
+    .mk-job-meta {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    .mk-progress-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .mk-progress-label { font-size: 11px; color: #6b7280; }
+    .mk-progress-count { font-size: 11px; font-weight: 600; color: #111827; }
+    .mk-progress-track {
+      width: 100%;
+      height: 4px;
+      background: #f3f4f6;
+      margin-bottom: 18px;
+      overflow: hidden;
+    }
+    .mk-progress-fill { height: 100%; background: #2563eb; width: 70%; }
+
+    .mk-section-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #9ca3af;
+      padding: 8px 0 4px;
+    }
+    .mk-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      padding: 8px 0;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .mk-row:last-of-type { border-bottom: none; }
+    .mk-checkbox {
+      flex-shrink: 0;
+      width: 13px; height: 13px;
+      border: 1px solid #d1d5db;
+      margin-top: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .mk-checkbox.done {
+      background: #2563eb;
+      border-color: #2563eb;
+    }
+    .mk-checkbox.done::after {
+      content: '';
+      display: block;
+      width: 5px; height: 3px;
+      border-left: 1.5px solid #fff;
+      border-bottom: 1.5px solid #fff;
       transform: rotate(-45deg) translateY(-0.5px);
     }
-    .mockup-text { font-size: 11px; color: var(--text); line-height: 1.45; }
-    .mockup-text.done { color: #9ca3af; text-decoration: line-through; }
-    .mockup-actions {
-      margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border);
-      display: flex; gap: 8px;
+    .mk-item-text {
+      font-size: 11px;
+      color: #374151;
+      line-height: 1.45;
     }
-    .mockup-btn { font-size: 10px; font-weight: 500; padding: 5px 12px; border: 1px solid var(--border); color: var(--text); }
-    .mockup-btn.blue { background: var(--blue); color: #fff; border-color: var(--blue); }
+    .mk-item-text.crossed {
+      color: #9ca3af;
+      text-decoration: line-through;
+    }
+    .mk-actions {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      gap: 8px;
+    }
+    .mk-btn {
+      font-size: 10px;
+      font-weight: 500;
+      padding: 5px 12px;
+      border: 1px solid #e5e7eb;
+      color: #374151;
+    }
+    .mk-btn.primary {
+      background: #2563eb;
+      color: #fff;
+      border-color: #2563eb;
+    }
 
-    /* PROOF BAR */
-    .proof-bar { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--bg-secondary); }
-    .proof-inner { display: grid; grid-template-columns: repeat(3, 1fr); }
-    .proof-col { padding: 36px 32px; border-right: 1px solid var(--border); }
+    /* ── Proof bar ── */
+    .proof-bar {
+      border-top: 1px solid #e5e7eb;
+      border-bottom: 1px solid #e5e7eb;
+      background: #f9fafb;
+    }
+    .proof-bar .wrap {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .proof-col {
+      padding: 40px 36px;
+      border-right: 1px solid #e5e7eb;
+    }
     .proof-col:last-child { border-right: none; }
-    .proof-number { font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 4px; letter-spacing: -0.5px; }
-    .proof-label { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
-    .proof-sub { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
-
-    /* HOW IT WORKS */
-    .how-section { padding: 96px 0; }
-    .eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 12px; }
-    .section-head { font-size: 36px; font-weight: 700; color: var(--text); letter-spacing: -0.8px; line-height: 1.2; margin-bottom: 52px; max-width: 600px; }
-    .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
-    .step { padding: 32px; border-left: 1px solid var(--border); }
-    .step:first-child { border-left: none; padding-left: 0; }
-    .step-num { font-size: 13px; font-weight: 600; color: var(--blue); margin-bottom: 14px; }
-    .step-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 10px; line-height: 1.3; }
-    .step-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
-
-    /* FEATURES */
-    .features-section { padding: 96px 0; border-top: 1px solid var(--border); background: var(--bg-secondary); }
-    .features-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
-    .feature-list { list-style: none; }
-    .feature-item { display: flex; align-items: flex-start; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--border); }
-    .feature-item:first-child { border-top: 1px solid var(--border); }
-    .feature-chk {
-      width: 16px; height: 16px; background: var(--blue); flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center; margin-top: 1px;
+    .proof-stat {
+      font-size: 32px;
+      font-weight: 700;
+      color: #111827;
+      letter-spacing: -1px;
+      line-height: 1;
+      margin-bottom: 8px;
     }
-    .feature-chk::after {
-      content: ''; display: block; width: 6px; height: 3.5px;
-      border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff;
-      transform: rotate(-45deg) translateY(-1px);
+    .proof-heading {
+      font-size: 14px;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 6px;
     }
-    .feature-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
-    .feature-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+    .proof-body {
+      font-size: 13px;
+      color: #6b7280;
+      line-height: 1.6;
+    }
 
-    /* Sample checklist */
-    .sample-doc { border: 1px solid var(--border); background: var(--bg); }
-    .sample-hdr {
-      padding: 14px 18px; border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
+    /* ── Section scaffold ── */
+    .section { padding: 96px 0; }
+    .section-alt { background: #f9fafb; border-top: 1px solid #e5e7eb; }
+    .section-alt-bottom { border-bottom: 1px solid #e5e7eb; }
+
+    .eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #6b7280;
+      margin-bottom: 12px;
     }
-    .sample-hdr-title { font-size: 13px; font-weight: 600; color: var(--text); }
-    .sample-badge { font-size: 10px; font-weight: 600; background: #eff6ff; color: var(--blue); padding: 3px 8px; text-transform: uppercase; letter-spacing: 0.05em; }
-    .sample-cat { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); padding: 12px 18px 4px; }
-    .sample-row { display: flex; align-items: flex-start; gap: 10px; padding: 8px 18px; border-bottom: 1px solid var(--border); }
-    .sample-row:last-of-type { border-bottom: none; }
-    .sample-chk { width: 13px; height: 13px; border: 1px solid var(--border); flex-shrink: 0; margin-top: 1.5px; display: flex; align-items: center; justify-content: center; }
-    .sample-chk.on { background: var(--blue); border-color: var(--blue); }
-    .sample-chk.on::after {
-      content: ''; display: block; width: 5px; height: 2.5px;
-      border-left: 1.5px solid #fff; border-bottom: 1.5px solid #fff;
+    .section-headline {
+      font-size: 38px;
+      font-weight: 700;
+      color: #111827;
+      letter-spacing: -1px;
+      line-height: 1.17;
+      max-width: 560px;
+    }
+    .section-sub {
+      font-size: 16px;
+      color: #6b7280;
+      line-height: 1.7;
+      max-width: 480px;
+      margin-top: 16px;
+    }
+
+    /* ── How it works ── */
+    .how-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      margin-top: 56px;
+    }
+    .how-step {
+      padding: 0 40px 0 0;
+      border-right: 1px solid #e5e7eb;
+    }
+    .how-step:first-child { padding-left: 0; }
+    .how-step:last-child { border-right: none; padding-right: 0; padding-left: 40px; }
+    .how-step:nth-child(2) { padding-left: 40px; }
+    .how-number {
+      font-size: 13px;
+      font-weight: 700;
+      color: #2563eb;
+      letter-spacing: 0.02em;
+      margin-bottom: 18px;
+    }
+    .how-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #111827;
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+    .how-desc {
+      font-size: 14px;
+      color: #6b7280;
+      line-height: 1.72;
+    }
+
+    /* ── Features ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+      margin-top: 56px;
+    }
+    .feature-list { display: flex; flex-direction: column; }
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 18px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .feature-item:first-child { border-top: 1px solid #e5e7eb; }
+    .feature-icon {
+      flex-shrink: 0;
+      width: 16px; height: 16px;
+      background: #2563eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+    .feature-icon::after {
+      content: '';
+      display: block;
+      width: 6px; height: 3.5px;
+      border-left: 1.5px solid #fff;
+      border-bottom: 1.5px solid #fff;
       transform: rotate(-45deg) translateY(-0.5px);
     }
-    .sample-text { font-size: 12px; color: var(--text); line-height: 1.5; }
-    .sample-text.done { color: #9ca3af; text-decoration: line-through; }
-    .sample-ftr {
-      padding: 12px 18px; border-top: 1px solid var(--border);
-      background: var(--bg-secondary); display: flex; gap: 8px;
+    .feature-text { flex: 1; }
+    .feature-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 3px;
     }
-    .sample-ftr-btn { font-size: 10px; font-weight: 500; padding: 5px 12px; border: 1px solid var(--border); color: var(--text); }
-    .sample-ftr-btn.blue { background: var(--blue); color: #fff; border-color: var(--blue); }
-
-    /* TESTIMONIALS */
-    .testimonials-section { padding: 96px 0; border-top: 1px solid var(--border); }
-    .testimonials-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 48px; }
-    .testimonial { border: 1px solid var(--border); padding: 36px; }
-    .testimonial-quote { font-size: 16px; color: var(--text); line-height: 1.75; margin-bottom: 28px; }
-    .testimonial-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
-    .testimonial-role { font-size: 13px; color: var(--text-secondary); }
-
-    /* PRICING PREVIEW */
-    .pricing-section { padding: 96px 0; border-top: 1px solid var(--border); background: var(--bg-secondary); }
-    .plans-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin: 48px 0 32px; }
-    .plan-card { background: var(--bg); border: 1px solid var(--border); padding: 24px 18px; }
-    .plan-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
-    .plan-price { font-size: 26px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; }
-    .plan-per { font-size: 13px; color: var(--text-secondary); font-weight: 400; }
-    .plan-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin-top: 8px; }
-    .plans-cta { text-align: center; }
-    .plans-cta a { font-size: 14px; color: var(--blue); font-weight: 500; text-decoration: underline; text-underline-offset: 3px; }
-    .plans-cta a:hover { color: var(--blue-dark); }
-
-    /* CTA */
-    .cta-section {
-      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-      background: var(--bg-secondary); padding: 96px 0; text-align: center;
+    .feature-desc {
+      font-size: 13px;
+      color: #6b7280;
+      line-height: 1.65;
     }
-    .cta-headline { font-size: 40px; font-weight: 700; color: var(--text); letter-spacing: -1px; max-width: 600px; margin: 0 auto 16px; line-height: 1.15; }
-    .cta-sub { font-size: 16px; color: var(--text-secondary); margin-bottom: 36px; }
-    .cta-actions { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
 
-    /* FOOTER */
+    /* Sample checklist document */
+    .sample-doc {
+      border: 1px solid #e5e7eb;
+      background: #fff;
+      overflow: hidden;
+    }
+    .sample-doc-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .sample-doc-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #111827;
+    }
+    .sample-badge {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #2563eb;
+      background: #eff6ff;
+      padding: 3px 8px;
+    }
+    .sample-section-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #9ca3af;
+      padding: 12px 20px 6px;
+    }
+    .sample-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 9px 20px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .sample-row:last-of-type { border-bottom: none; }
+    .sample-cb {
+      flex-shrink: 0;
+      width: 13px; height: 13px;
+      border: 1px solid #d1d5db;
+      margin-top: 1.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .sample-cb.done { background: #2563eb; border-color: #2563eb; }
+    .sample-cb.done::after {
+      content: '';
+      display: block;
+      width: 5px; height: 3px;
+      border-left: 1.5px solid #fff;
+      border-bottom: 1.5px solid #fff;
+      transform: rotate(-45deg) translateY(-0.5px);
+    }
+    .sample-item-text {
+      font-size: 12px;
+      color: #374151;
+      line-height: 1.5;
+    }
+    .sample-item-text.done { color: #9ca3af; text-decoration: line-through; }
+    .sample-doc-footer {
+      padding: 12px 20px;
+      background: #f9fafb;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      gap: 8px;
+    }
+    .sample-action {
+      font-size: 10px;
+      font-weight: 500;
+      padding: 5px 12px;
+      border: 1px solid #e5e7eb;
+      color: #374151;
+    }
+    .sample-action.primary {
+      background: #2563eb;
+      color: #fff;
+      border-color: #2563eb;
+    }
+
+    /* ── Testimonials ── */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 52px;
+    }
+    .testimonial-card {
+      border: 1px solid #e5e7eb;
+      padding: 36px;
+      background: #fff;
+    }
+    .testimonial-quote {
+      font-size: 16px;
+      color: #111827;
+      line-height: 1.72;
+      margin-bottom: 28px;
+    }
+    .testimonial-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 2px;
+    }
+    .testimonial-role {
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    /* ── Pricing preview ── */
+    .pricing-preview-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1px;
+      background: #e5e7eb;
+      border: 1px solid #e5e7eb;
+      margin: 52px 0 36px;
+    }
+    .pricing-preview-card {
+      background: #fff;
+      padding: 28px 20px;
+    }
+    .pp-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 10px;
+    }
+    .pp-price {
+      font-size: 28px;
+      font-weight: 700;
+      color: #111827;
+      letter-spacing: -0.8px;
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+    .pp-per {
+      font-size: 13px;
+      color: #6b7280;
+      font-weight: 400;
+    }
+    .pp-desc {
+      font-size: 12px;
+      color: #6b7280;
+      line-height: 1.55;
+      margin-top: 10px;
+    }
+    .pricing-preview-cta {
+      text-align: center;
+    }
+    .pricing-preview-cta a {
+      font-size: 14px;
+      font-weight: 500;
+      color: #2563eb;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .pricing-preview-cta a:hover { color: #1d4ed8; }
+
+    /* ── Final CTA ── */
+    .final-cta {
+      background: #f9fafb;
+      border-top: 1px solid #e5e7eb;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 96px 0;
+      text-align: center;
+    }
+    .final-cta-headline {
+      font-size: 40px;
+      font-weight: 700;
+      color: #111827;
+      letter-spacing: -1.2px;
+      line-height: 1.15;
+      max-width: 560px;
+      margin: 0 auto 16px;
+    }
+    .final-cta-sub {
+      font-size: 16px;
+      color: #6b7280;
+      margin-bottom: 36px;
+    }
+    .final-cta-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* ── Footer ── */
     .footer { padding: 64px 0 0; }
-    .footer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; padding-bottom: 48px; }
-    .footer-head { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text); margin-bottom: 16px; }
-    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .footer-links a { font-size: 14px; color: var(--text-secondary); transition: color 0.15s; }
-    .footer-links a:hover { color: var(--text); }
-    .footer-bottom { border-top: 1px solid var(--border); padding: 20px 0; }
-    .footer-copy { font-size: 13px; color: var(--text-secondary); }
-
-    /* RESPONSIVE */
-    @media (max-width: 960px) {
-      .hero-inner { grid-template-columns: 1fr; gap: 48px; }
-      .hero-headline { font-size: 40px; }
-      .features-inner { grid-template-columns: 1fr; gap: 48px; }
-      .plans-row { grid-template-columns: repeat(3, 1fr); }
-      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      padding-bottom: 52px;
+    }
+    .footer-col-head {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #374151;
+      margin-bottom: 16px;
+    }
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+    .footer-links a {
+      font-size: 14px;
+      color: #6b7280;
+      transition: color 120ms;
+    }
+    .footer-links a:hover { color: #111827; }
+    .footer-bottom {
+      border-top: 1px solid #e5e7eb;
+      padding: 20px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-copy {
+      font-size: 13px;
+      color: #9ca3af;
     }
 
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .nav-hamburger { display: block; }
-      .nav-links.open {
-        display: flex; flex-direction: column;
-        position: fixed; top: 64px; left: 0; right: 0;
-        background: var(--bg); border-bottom: 1px solid var(--border);
-        padding: 16px 24px 24px; gap: 16px; z-index: 99;
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+      .hero-headline { font-size: 44px; }
+      .pricing-preview-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 900px) {
+      .nav-center { display: none; }
+      .nav-hamburger { display: flex; }
+      .nav-center.open {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        position: fixed;
+        top: 60px; left: 0; right: 0;
+        background: #fff;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 8px 0;
+        z-index: 199;
       }
-      .hero { padding: 64px 0 48px; }
-      .hero-headline { font-size: 34px; letter-spacing: -0.8px; }
-      .hero-sub { font-size: 16px; }
-      .proof-inner { grid-template-columns: 1fr; }
-      .proof-col { border-right: none; border-bottom: 1px solid var(--border); }
-      .proof-col:last-child { border-bottom: none; }
-      .how-section, .features-section, .testimonials-section, .pricing-section, .cta-section { padding: 64px 0; }
-      .section-head { font-size: 28px; margin-bottom: 36px; }
-      .steps-grid { grid-template-columns: 1fr; }
-      .step { border-left: none; border-bottom: 1px solid var(--border); padding: 24px 0; }
-      .step:last-child { border-bottom: none; }
-      .step:first-child { padding-left: 0; }
+      .nav-center.open a {
+        display: block;
+        width: 100%;
+        padding: 14px 32px;
+        border-bottom: 1px solid #f3f4f6;
+      }
+      .nav-center.open a:last-child { border-bottom: none; }
+      .hero .wrap { grid-template-columns: 1fr; gap: 52px; }
+      .hero-headline { font-size: 42px; }
+      .how-grid { grid-template-columns: 1fr; }
+      .how-step {
+        border-right: none;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 28px 0;
+      }
+      .how-step:first-child { padding-top: 0; }
+      .how-step:last-child { border-bottom: none; padding-left: 0; padding-right: 0; }
+      .how-step:nth-child(2) { padding-left: 0; }
+      .features-grid { grid-template-columns: 1fr; gap: 48px; }
       .testimonials-grid { grid-template-columns: 1fr; }
-      .plans-row { grid-template-columns: repeat(2, 1fr); }
-      .cta-headline { font-size: 30px; }
+      .footer-grid { grid-template-columns: repeat(2, 1fr); gap: 40px 32px; }
     }
 
-    @media (max-width: 480px) {
-      .plans-row { grid-template-columns: 1fr; }
-      .nav-actions .btn-outline { display: none; }
+    @media (max-width: 640px) {
+      .wrap { padding: 0 20px; }
+      .hero { padding: 56px 0 48px; }
+      .hero-headline { font-size: 34px; letter-spacing: -1px; }
+      .hero-sub { font-size: 16px; }
+      .proof-bar .wrap { grid-template-columns: 1fr; }
+      .proof-col { border-right: none; border-bottom: 1px solid #e5e7eb; padding: 28px 0; }
+      .proof-col:last-child { border-bottom: none; }
+      .section { padding: 64px 0; }
+      .section-headline { font-size: 30px; }
+      .pricing-preview-grid { grid-template-columns: repeat(2, 1fr); }
+      .final-cta-headline { font-size: 30px; }
+      .nav-right .btn-ghost { display: none; }
+    }
+
+    @media (max-width: 420px) {
+      .pricing-preview-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-  <!-- NAVIGATION -->
-  <nav class="nav">
-    <div class="container nav-inner">
-      <a href="index.html" class="nav-logo">RestoreDocAI</a>
-      <div class="nav-links" id="navLinks">
-        <a href="#features">Product</a>
-        <a href="pricing.html">Pricing</a>
-        <a href="#demo">Demo</a>
-        <a href="#contact">Contact</a>
-      </div>
-      <div class="nav-actions">
-        <a href="login.html" class="btn btn-outline">Login</a>
-        <a href="signup.html" class="btn btn-primary">Start Free Trial</a>
-      </div>
-      <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
+<!-- ═══════════════════════════════════
+     NAVIGATION
+═══════════════════════════════════ -->
+<nav class="nav">
+  <div class="wrap">
+    <a href="index.html" class="nav-logo">RestoreDocAI</a>
+
+    <div class="nav-center" id="navCenter">
+      <a href="#features">Product</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="#demo">Demo</a>
+      <a href="#contact">Contact</a>
+    </div>
+
+    <div class="nav-right">
+      <a href="login.html" class="btn btn-ghost btn-sm">Login</a>
+      <a href="signup.html" class="btn btn-solid btn-sm">Start Free Trial</a>
+      <button class="nav-hamburger" id="hamburger" aria-label="Toggle navigation">
         <span></span><span></span><span></span>
       </button>
     </div>
-  </nav>
+  </div>
+</nav>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="container">
-      <div class="hero-inner">
-        <div>
-          <div class="hero-tag">Restoration Documentation</div>
-          <h1 class="hero-headline">Documentation That Gets Claims Approved</h1>
-          <p class="hero-sub">IICRC-standard checklists generated in seconds. Built for restoration professionals who can't afford denied claims.</p>
-          <div class="hero-actions">
-            <a href="signup.html" class="btn btn-primary btn-lg">Start Free Trial</a>
-            <a href="#how-it-works" class="btn btn-outline btn-lg">See How It Works</a>
-          </div>
-          <p class="hero-note">No credit card required for Starter trial</p>
-        </div>
-        <div>
-          <div class="hero-mockup">
-            <div class="mockup-bar">
-              <div class="mockup-dot"></div>
-              <div class="mockup-dot"></div>
-              <div class="mockup-dot"></div>
-              <div class="mockup-url">app.restoredocai.com/checklist</div>
-            </div>
-            <div class="mockup-body">
-              <div class="mockup-title">Water Damage — Category 2, Class 3</div>
-              <div class="mockup-meta">Generated Nov 14, 2025 &nbsp;&middot;&nbsp; Claim #WD-2847</div>
-              <div class="mockup-progress-wrap">
-                <div class="mockup-progress-bar"><div class="mockup-progress-fill"></div></div>
-                <div class="mockup-progress-label">7 of 10 items complete</div>
-              </div>
 
-              <div class="mockup-cat">Section 1 — Initial Assessment</div>
-              <div class="mockup-item">
-                <div class="mockup-chk on"></div>
-                <div class="mockup-text done">Document source of loss with photos before extraction</div>
-              </div>
-              <div class="mockup-item">
-                <div class="mockup-chk on"></div>
-                <div class="mockup-text done">Record moisture readings at all affected surfaces (S500)</div>
-              </div>
-              <div class="mockup-item">
-                <div class="mockup-chk on"></div>
-                <div class="mockup-text done">Identify affected materials — drywall, subfloor, insulation</div>
-              </div>
-
-              <div class="mockup-cat">Section 2 — Extraction &amp; Drying</div>
-              <div class="mockup-item">
-                <div class="mockup-chk on"></div>
-                <div class="mockup-text done">Extract standing water, log volume and method</div>
-              </div>
-              <div class="mockup-item">
-                <div class="mockup-chk on"></div>
-                <div class="mockup-text done">Place air movers per IICRC S500 drying ratios</div>
-              </div>
-              <div class="mockup-item">
-                <div class="mockup-chk on"></div>
-                <div class="mockup-text done">Set dehumidifiers, log serial numbers and placement</div>
-              </div>
-              <div class="mockup-item">
-                <div class="mockup-chk on"></div>
-                <div class="mockup-text done">Record ambient temp, humidity, GPP readings</div>
-              </div>
-
-              <div class="mockup-cat">Section 3 — Scope of Work</div>
-              <div class="mockup-item">
-                <div class="mockup-chk"></div>
-                <div class="mockup-text">Generate Xactimate-ready scope narrative for adjuster</div>
-              </div>
-              <div class="mockup-item">
-                <div class="mockup-chk"></div>
-                <div class="mockup-text">Attach IICRC category and class documentation</div>
-              </div>
-              <div class="mockup-item">
-                <div class="mockup-chk"></div>
-                <div class="mockup-text">Export final PDF with company branding and claim reference</div>
-              </div>
-
-              <div class="mockup-actions">
-                <div class="mockup-btn blue">Download PDF</div>
-                <div class="mockup-btn">Share with Adjuster</div>
-              </div>
-            </div>
-          </div>
-        </div>
+<!-- ═══════════════════════════════════
+     HERO
+═══════════════════════════════════ -->
+<section class="hero">
+  <div class="wrap">
+    <!-- Left: copy -->
+    <div>
+      <div class="hero-eyebrow">Restoration documentation</div>
+      <h1 class="hero-headline">Documentation That Gets Claims Approved</h1>
+      <p class="hero-sub">IICRC-standard checklists generated in seconds. Built for restoration professionals who can't afford denied claims.</p>
+      <div class="hero-ctas">
+        <a href="signup.html" class="btn btn-solid btn-lg">Start Free Trial</a>
+        <a href="#how-it-works" class="btn btn-ghost btn-lg">See How It Works</a>
       </div>
+      <p class="hero-note">No credit card required for Starter trial</p>
     </div>
-  </section>
 
-  <!-- PROOF BAR -->
-  <div class="proof-bar">
-    <div class="container">
-      <div class="proof-inner">
-        <div class="proof-col">
-          <div class="proof-number">5</div>
-          <div class="proof-label">Damage Categories</div>
-          <div class="proof-sub">Water, Fire, Mold, Storm, Biohazard — every job type covered</div>
+    <!-- Right: tool UI mockup -->
+    <div>
+      <div class="mockup-shell">
+        <div class="mockup-topbar">
+          <div class="mockup-dot"></div>
+          <div class="mockup-dot"></div>
+          <div class="mockup-dot"></div>
+          <div class="mockup-addr">app.restoredocai.com &nbsp;/&nbsp; checklist #WD-3841</div>
         </div>
-        <div class="proof-col">
-          <div class="proof-number">8</div>
-          <div class="proof-label">Required Insurance Sections</div>
-          <div class="proof-sub">Every checklist, every time — no section missed, no claim pushed back</div>
-        </div>
-        <div class="proof-col">
-          <div class="proof-number">&nbsp;</div>
-          <div class="proof-label">Xactimate-Ready</div>
-          <div class="proof-sub">Scope of work formatted for adjusters — paste directly into Xactimate</div>
+        <div class="mockup-content">
+          <div class="mk-job-header">
+            <div class="mk-job-title">Water Damage — Category 2, Class 3</div>
+            <div class="mk-job-meta">Generated Nov 14, 2025 &nbsp;&middot;&nbsp; Atlas Restoration Group</div>
+          </div>
+
+          <div class="mk-progress-row">
+            <div class="mk-progress-label">Checklist progress</div>
+            <div class="mk-progress-count">7 / 10</div>
+          </div>
+          <div class="mk-progress-track">
+            <div class="mk-progress-fill"></div>
+          </div>
+
+          <div class="mk-section-label">Section 1 — Initial Assessment</div>
+          <div class="mk-row">
+            <div class="mk-checkbox done"></div>
+            <div class="mk-item-text crossed">Document source of loss with photos before extraction</div>
+          </div>
+          <div class="mk-row">
+            <div class="mk-checkbox done"></div>
+            <div class="mk-item-text crossed">Record moisture readings at all affected surfaces (S500)</div>
+          </div>
+          <div class="mk-row">
+            <div class="mk-checkbox done"></div>
+            <div class="mk-item-text crossed">Identify affected materials — drywall, subfloor, insulation</div>
+          </div>
+
+          <div class="mk-section-label">Section 2 — Extraction &amp; Drying</div>
+          <div class="mk-row">
+            <div class="mk-checkbox done"></div>
+            <div class="mk-item-text crossed">Extract standing water, log volume and method</div>
+          </div>
+          <div class="mk-row">
+            <div class="mk-checkbox done"></div>
+            <div class="mk-item-text crossed">Place air movers per IICRC S500 drying ratios</div>
+          </div>
+          <div class="mk-row">
+            <div class="mk-checkbox done"></div>
+            <div class="mk-item-text crossed">Set dehumidifiers — log brand, serial, placement</div>
+          </div>
+          <div class="mk-row">
+            <div class="mk-checkbox done"></div>
+            <div class="mk-item-text crossed">Psychrometric readings — temp, humidity, GPP</div>
+          </div>
+
+          <div class="mk-section-label">Section 3 — Scope of Work</div>
+          <div class="mk-row">
+            <div class="mk-checkbox"></div>
+            <div class="mk-item-text">Generate Xactimate-ready scope narrative for adjuster</div>
+          </div>
+          <div class="mk-row">
+            <div class="mk-checkbox"></div>
+            <div class="mk-item-text">Attach IICRC category and class documentation</div>
+          </div>
+          <div class="mk-row">
+            <div class="mk-checkbox"></div>
+            <div class="mk-item-text">Export branded PDF with company name and claim reference</div>
+          </div>
+
+          <div class="mk-actions">
+            <div class="mk-btn primary">Download PDF</div>
+            <div class="mk-btn">Share with Adjuster</div>
+            <div class="mk-btn">Copy Scope</div>
+          </div>
         </div>
       </div>
     </div>
   </div>
+</section>
 
-  <!-- HOW IT WORKS -->
-  <section class="how-section" id="how-it-works">
-    <div class="container">
-      <div class="eyebrow">How it works</div>
-      <h2 class="section-head">From job site to insurance-ready in seconds</h2>
-      <div class="steps-grid">
-        <div class="step">
-          <div class="step-num">Step 01</div>
-          <div class="step-title">Describe the damage or upload a photo</div>
-          <div class="step-desc">Select the job type, enter basic damage details, or upload a site photo. AI identifies damage category and class automatically.</div>
-        </div>
-        <div class="step">
-          <div class="step-num">Step 02</div>
-          <div class="step-title">AI generates a complete IICRC-standard checklist</div>
-          <div class="step-desc">RestoreDocAI cross-references IICRC S500, S520, and carrier documentation requirements to build a complete, section-by-section checklist.</div>
-        </div>
-        <div class="step">
-          <div class="step-num">Step 03</div>
-          <div class="step-title">Download as PDF or share with your team</div>
-          <div class="step-desc">Export a carrier-ready PDF with your company branding, or share a live link with your crew via a 6-digit PIN — no accounts needed for field techs.</div>
-        </div>
+
+<!-- ═══════════════════════════════════
+     PROOF BAR
+═══════════════════════════════════ -->
+<div class="proof-bar">
+  <div class="wrap">
+    <div class="proof-col">
+      <div class="proof-stat">5</div>
+      <div class="proof-heading">Damage Categories</div>
+      <div class="proof-body">Water, Fire, Mold, Storm, Biohazard — every job type covered out of the box</div>
+    </div>
+    <div class="proof-col">
+      <div class="proof-stat">8</div>
+      <div class="proof-heading">Required Insurance Sections</div>
+      <div class="proof-body">Every checklist, every time — no section missed, no claim pushed back</div>
+    </div>
+    <div class="proof-col">
+      <div class="proof-stat">&nbsp;</div>
+      <div class="proof-heading">Xactimate-Ready</div>
+      <div class="proof-body">Scope of work formatted for adjusters — paste directly into Xactimate</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════
+     HOW IT WORKS
+═══════════════════════════════════ -->
+<section class="section" id="how-it-works">
+  <div class="wrap">
+    <div class="eyebrow">How it works</div>
+    <h2 class="section-headline">From job site to insurance-ready in seconds</h2>
+    <div class="how-grid">
+      <div class="how-step">
+        <div class="how-number">Step 01</div>
+        <div class="how-title">Describe the damage or upload a photo</div>
+        <div class="how-desc">Select the job type, enter basic damage details, or upload a site photo. AI identifies damage category and class automatically from the image.</div>
+      </div>
+      <div class="how-step">
+        <div class="how-number">Step 02</div>
+        <div class="how-title">AI generates a complete IICRC-standard checklist</div>
+        <div class="how-desc">RestoreDocAI cross-references IICRC S500, S520, and carrier documentation requirements to build a complete, section-by-section checklist.</div>
+      </div>
+      <div class="how-step">
+        <div class="how-number">Step 03</div>
+        <div class="how-title">Download as PDF or share with your team</div>
+        <div class="how-desc">Export a carrier-ready PDF with your company branding, or share a live link with your crew via a 6-digit PIN — no accounts required for field techs.</div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- FEATURES -->
-  <section class="features-section" id="features">
-    <div class="container">
-      <div class="features-inner">
-        <div>
-          <div class="eyebrow">Features</div>
-          <h2 class="section-head">Built for restoration professionals</h2>
-          <ul class="feature-list">
-            <li class="feature-item">
-              <div class="feature-chk"></div>
-              <div>
-                <div class="feature-name">Photo identification</div>
-                <div class="feature-desc">AI identifies damage type, affected materials, and moisture extent from a single site photo</div>
-              </div>
-            </li>
-            <li class="feature-item">
-              <div class="feature-chk"></div>
-              <div>
-                <div class="feature-name">IICRC S500 and S520 compliant checklists</div>
-                <div class="feature-desc">Every checklist references current IICRC standards — water, mold, fire, storm, and biohazard protocols built in</div>
-              </div>
-            </li>
-            <li class="feature-item">
-              <div class="feature-chk"></div>
-              <div>
-                <div class="feature-name">Xactimate-ready scope of work on every job</div>
-                <div class="feature-desc">Scope narrative formatted for direct use in Xactimate — generated automatically, every time</div>
-              </div>
-            </li>
-            <li class="feature-item">
-              <div class="feature-chk"></div>
-              <div>
-                <div class="feature-name">Team access with 6-digit PIN security</div>
-                <div class="feature-desc">Share a secure link with field techs — no accounts required, full audit trail maintained</div>
-              </div>
-            </li>
-            <li class="feature-item">
-              <div class="feature-chk"></div>
-              <div>
-                <div class="feature-name">Owner dashboard with usage analytics</div>
-                <div class="feature-desc">Track team activity, checklist completion rates, and claim outcomes across every job</div>
-              </div>
-            </li>
-            <li class="feature-item">
-              <div class="feature-chk"></div>
-              <div>
-                <div class="feature-name">PDF download with company branding</div>
-                <div class="feature-desc">Every exported PDF includes your company name, logo, and claim reference — ready for the adjuster</div>
-              </div>
-            </li>
-          </ul>
-        </div>
-        <div>
-          <div class="sample-doc">
-            <div class="sample-hdr">
-              <div class="sample-hdr-title">Water Damage Report — Cat 2, Class 3</div>
-              <div class="sample-badge">IICRC S500</div>
+
+<!-- ═══════════════════════════════════
+     FEATURES
+═══════════════════════════════════ -->
+<section class="section section-alt section-alt-bottom" id="features">
+  <div class="wrap">
+    <div class="eyebrow">Features</div>
+    <h2 class="section-headline">Built for restoration professionals</h2>
+    <div class="features-grid">
+      <!-- Left: feature list -->
+      <div>
+        <ul class="feature-list">
+          <li class="feature-item">
+            <div class="feature-icon"></div>
+            <div class="feature-text">
+              <div class="feature-name">Photo identification</div>
+              <div class="feature-desc">AI identifies damage type, affected materials, and moisture extent from a single site photo</div>
             </div>
-            <div>
-              <div class="sample-cat">Section 1 — Initial Assessment</div>
-              <div class="sample-row">
-                <div class="sample-chk on"></div>
-                <div class="sample-text done">Source of loss identified and documented with photos</div>
-              </div>
-              <div class="sample-row">
-                <div class="sample-chk on"></div>
-                <div class="sample-text done">Affected area perimeter mapped and measured</div>
-              </div>
-              <div class="sample-row">
-                <div class="sample-chk on"></div>
-                <div class="sample-text done">Moisture readings recorded at all affected surfaces</div>
-              </div>
-              <div class="sample-row">
-                <div class="sample-chk on"></div>
-                <div class="sample-text done">Water category and class assigned per IICRC S500</div>
-              </div>
-
-              <div class="sample-cat">Section 2 — Extraction</div>
-              <div class="sample-row">
-                <div class="sample-chk on"></div>
-                <div class="sample-text done">Standing water extracted, volume logged</div>
-              </div>
-              <div class="sample-row">
-                <div class="sample-chk"></div>
-                <div class="sample-text">Contaminated materials identified and flagged for removal</div>
-              </div>
-
-              <div class="sample-cat">Section 3 — Drying Setup</div>
-              <div class="sample-row">
-                <div class="sample-chk"></div>
-                <div class="sample-text">Air movers placed per S500 drying ratios (1 per 50 sq ft)</div>
-              </div>
-              <div class="sample-row">
-                <div class="sample-chk"></div>
-                <div class="sample-text">Dehumidifiers placed, serial numbers logged</div>
-              </div>
-              <div class="sample-row">
-                <div class="sample-chk"></div>
-                <div class="sample-text">Psychrometric readings recorded — temp, humidity, GPP</div>
-              </div>
-
-              <div class="sample-cat">Section 4 — Scope of Work</div>
-              <div class="sample-row">
-                <div class="sample-chk"></div>
-                <div class="sample-text">Xactimate scope narrative generated and attached</div>
-              </div>
+          </li>
+          <li class="feature-item">
+            <div class="feature-icon"></div>
+            <div class="feature-text">
+              <div class="feature-name">IICRC S500 and S520 compliant checklists</div>
+              <div class="feature-desc">Every checklist references current IICRC standards — water, mold, fire, storm, and biohazard protocols included</div>
             </div>
-            <div class="sample-ftr">
-              <div class="sample-ftr-btn blue">Download PDF</div>
-              <div class="sample-ftr-btn">Copy Scope</div>
-              <div class="sample-ftr-btn">Share Link</div>
+          </li>
+          <li class="feature-item">
+            <div class="feature-icon"></div>
+            <div class="feature-text">
+              <div class="feature-name">Xactimate-ready scope of work on every job</div>
+              <div class="feature-desc">Scope narrative formatted for direct use in Xactimate — generated automatically, on every report</div>
             </div>
+          </li>
+          <li class="feature-item">
+            <div class="feature-icon"></div>
+            <div class="feature-text">
+              <div class="feature-name">Team access with 6-digit PIN security</div>
+              <div class="feature-desc">Share a secure link with field techs — no accounts required, full audit trail maintained in the owner dashboard</div>
+            </div>
+          </li>
+          <li class="feature-item">
+            <div class="feature-icon"></div>
+            <div class="feature-text">
+              <div class="feature-name">Owner dashboard with usage analytics</div>
+              <div class="feature-desc">Track team activity, checklist completion rates, and claim outcomes across every job in your portfolio</div>
+            </div>
+          </li>
+          <li class="feature-item">
+            <div class="feature-icon"></div>
+            <div class="feature-text">
+              <div class="feature-name">PDF download with company branding</div>
+              <div class="feature-desc">Every exported PDF includes your company name, logo, and claim reference number — ready for the adjuster</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Right: sample checklist -->
+      <div>
+        <div class="sample-doc">
+          <div class="sample-doc-header">
+            <div class="sample-doc-title">Water Damage Report — Cat 2, Class 3</div>
+            <div class="sample-badge">IICRC S500</div>
+          </div>
+
+          <div class="sample-section-label">Section 1 — Initial Assessment</div>
+          <div class="sample-row">
+            <div class="sample-cb done"></div>
+            <div class="sample-item-text done">Source of loss identified and documented with photos</div>
+          </div>
+          <div class="sample-row">
+            <div class="sample-cb done"></div>
+            <div class="sample-item-text done">Affected area perimeter mapped and measured in sq ft</div>
+          </div>
+          <div class="sample-row">
+            <div class="sample-cb done"></div>
+            <div class="sample-item-text done">Moisture readings recorded at all affected surfaces</div>
+          </div>
+          <div class="sample-row">
+            <div class="sample-cb done"></div>
+            <div class="sample-item-text done">Water category and class assigned per IICRC S500 §5</div>
+          </div>
+
+          <div class="sample-section-label">Section 2 — Extraction</div>
+          <div class="sample-row">
+            <div class="sample-cb done"></div>
+            <div class="sample-item-text done">Standing water extracted, method and volume logged</div>
+          </div>
+          <div class="sample-row">
+            <div class="sample-cb"></div>
+            <div class="sample-item-text">Contaminated materials identified and flagged for removal</div>
+          </div>
+
+          <div class="sample-section-label">Section 3 — Drying Setup</div>
+          <div class="sample-row">
+            <div class="sample-cb"></div>
+            <div class="sample-item-text">Air movers placed per S500 drying ratios (1 per 50 sq ft)</div>
+          </div>
+          <div class="sample-row">
+            <div class="sample-cb"></div>
+            <div class="sample-item-text">Dehumidifiers placed, brand and serial numbers logged</div>
+          </div>
+          <div class="sample-row">
+            <div class="sample-cb"></div>
+            <div class="sample-item-text">Psychrometric log — temperature, relative humidity, GPP</div>
+          </div>
+
+          <div class="sample-section-label">Section 4 — Scope of Work</div>
+          <div class="sample-row">
+            <div class="sample-cb"></div>
+            <div class="sample-item-text">Xactimate scope narrative generated and attached to file</div>
+          </div>
+
+          <div class="sample-doc-footer">
+            <div class="sample-action primary">Download PDF</div>
+            <div class="sample-action">Copy Scope</div>
+            <div class="sample-action">Share Link</div>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- TESTIMONIALS -->
-  <section class="testimonials-section" id="testimonials">
-    <div class="container">
-      <div class="eyebrow">Testimonials</div>
-      <h2 class="section-head" style="margin-bottom: 0;">Trusted by restoration professionals</h2>
-      <div class="testimonials-grid">
-        <div class="testimonial">
-          <p class="testimonial-quote">"We stopped getting documentation pushback from adjusters after week one. The checklists cover everything they ask for."</p>
-          <div class="testimonial-name">Marcus T.</div>
-          <div class="testimonial-role">Owner, Precision Restoration</div>
-        </div>
-        <div class="testimonial">
-          <p class="testimonial-quote">"My techs actually use it because it takes 10 seconds. Claims go through faster and I have a paper trail for everything."</p>
-          <div class="testimonial-name">Diane R.</div>
-          <div class="testimonial-role">Operations Manager, Atlas Restoration Group</div>
-        </div>
+
+<!-- ═══════════════════════════════════
+     TESTIMONIALS
+═══════════════════════════════════ -->
+<section class="section" id="testimonials">
+  <div class="wrap">
+    <div class="eyebrow">Testimonials</div>
+    <h2 class="section-headline">Trusted by restoration professionals</h2>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <p class="testimonial-quote">"We stopped getting documentation pushback from adjusters after week one. The checklists cover everything they ask for."</p>
+        <div class="testimonial-name">Marcus T.</div>
+        <div class="testimonial-role">Owner, Precision Restoration</div>
+      </div>
+      <div class="testimonial-card">
+        <p class="testimonial-quote">"My techs actually use it because it takes 10 seconds. Claims go through faster and I have a paper trail for everything."</p>
+        <div class="testimonial-name">Diane R.</div>
+        <div class="testimonial-role">Operations Manager, Atlas Restoration Group</div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- PRICING PREVIEW -->
-  <section class="pricing-section" id="pricing">
-    <div class="container">
-      <div class="eyebrow">Pricing</div>
-      <h2 class="section-head" style="margin-bottom: 0;">Simple pricing. Serious results.</h2>
-      <div class="plans-row">
-        <div class="plan-card">
-          <div class="plan-name">Individual</div>
-          <div class="plan-price">$47<span class="plan-per">/mo</span></div>
-          <div class="plan-desc">Solo techs and independent estimators</div>
-        </div>
-        <div class="plan-card">
-          <div class="plan-name">Starter</div>
-          <div class="plan-price">$147<span class="plan-per">/mo</span></div>
-          <div class="plan-desc">Small crews, up to 3 team members</div>
-        </div>
-        <div class="plan-card">
-          <div class="plan-name">Growth</div>
-          <div class="plan-price">$297<span class="plan-per">/mo</span></div>
-          <div class="plan-desc">Growing operations with analytics and branding</div>
-        </div>
-        <div class="plan-card">
-          <div class="plan-name">Pro</div>
-          <div class="plan-price">$597<span class="plan-per">/mo</span></div>
-          <div class="plan-desc">Large companies with API and custom exports</div>
-        </div>
-        <div class="plan-card">
-          <div class="plan-name">Enterprise</div>
-          <div class="plan-price">$1,200<span class="plan-per">/mo</span></div>
-          <div class="plan-desc">Multi-location franchises and enterprise teams</div>
-        </div>
+
+<!-- ═══════════════════════════════════
+     PRICING PREVIEW
+═══════════════════════════════════ -->
+<section class="section section-alt section-alt-bottom" id="pricing">
+  <div class="wrap">
+    <div class="eyebrow">Pricing</div>
+    <h2 class="section-headline">Simple pricing. Serious results.</h2>
+    <div class="pricing-preview-grid">
+      <div class="pricing-preview-card">
+        <div class="pp-name">Individual</div>
+        <div class="pp-price">$47<span class="pp-per">/mo</span></div>
+        <div class="pp-desc">Solo techs and independent estimators</div>
       </div>
-      <div class="plans-cta">
-        <a href="pricing.html">See full comparison &rarr;</a>
+      <div class="pricing-preview-card">
+        <div class="pp-name">Starter</div>
+        <div class="pp-price">$147<span class="pp-per">/mo</span></div>
+        <div class="pp-desc">Small crews up to 3 team members</div>
+      </div>
+      <div class="pricing-preview-card">
+        <div class="pp-name">Growth</div>
+        <div class="pp-price">$297<span class="pp-per">/mo</span></div>
+        <div class="pp-desc">Growing operations with analytics and branding</div>
+      </div>
+      <div class="pricing-preview-card">
+        <div class="pp-name">Pro</div>
+        <div class="pp-price">$597<span class="pp-per">/mo</span></div>
+        <div class="pp-desc">Large companies with API and custom exports</div>
+      </div>
+      <div class="pricing-preview-card">
+        <div class="pp-name">Enterprise</div>
+        <div class="pp-price">$1,200<span class="pp-per">/mo</span></div>
+        <div class="pp-desc">Multi-location franchises and enterprise teams</div>
       </div>
     </div>
-  </section>
+    <div class="pricing-preview-cta">
+      <a href="pricing.html">See full comparison &rarr;</a>
+    </div>
+  </div>
+</section>
 
-  <!-- CTA -->
-  <section class="cta-section" id="demo">
-    <div class="container">
-      <h2 class="cta-headline">Stop losing claims to incomplete documentation</h2>
-      <p class="cta-sub">Join restoration companies already using RestoreDocAI</p>
-      <div class="cta-actions">
-        <a href="signup.html" class="btn btn-primary btn-lg">Start Free Trial</a>
-        <a href="#contact" class="btn btn-outline btn-lg">Book a Demo</a>
+
+<!-- ═══════════════════════════════════
+     FINAL CTA
+═══════════════════════════════════ -->
+<section class="final-cta" id="demo">
+  <div class="wrap">
+    <h2 class="final-cta-headline">Stop losing claims to incomplete documentation</h2>
+    <p class="final-cta-sub">Join restoration companies already using RestoreDocAI</p>
+    <div class="final-cta-actions">
+      <a href="signup.html" class="btn btn-solid btn-lg">Start Free Trial</a>
+      <a href="#demo" class="btn btn-ghost btn-lg">Book a Demo</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════
+     FOOTER
+═══════════════════════════════════ -->
+<footer class="footer" id="contact">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-col-head">Product</div>
+        <ul class="footer-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="#demo">Demo</a></li>
+          <li><a href="#">API</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-head">Company</div>
+        <ul class="footer-links">
+          <li><a href="#">About</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-head">Legal</div>
+        <ul class="footer-links">
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Security</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-head">Contact</div>
+        <ul class="footer-links">
+          <li><a href="mailto:support@restoredocai.com">support@restoredocai.com</a></li>
+        </ul>
       </div>
     </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer class="footer" id="contact">
-    <div class="container">
-      <div class="footer-grid">
-        <div>
-          <div class="footer-head">Product</div>
-          <ul class="footer-links">
-            <li><a href="#features">Features</a></li>
-            <li><a href="pricing.html">Pricing</a></li>
-            <li><a href="#demo">Demo</a></li>
-            <li><a href="#">API</a></li>
-          </ul>
-        </div>
-        <div>
-          <div class="footer-head">Company</div>
-          <ul class="footer-links">
-            <li><a href="#">About</a></li>
-            <li><a href="#">Blog</a></li>
-            <li><a href="#">Careers</a></li>
-          </ul>
-        </div>
-        <div>
-          <div class="footer-head">Legal</div>
-          <ul class="footer-links">
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms of Service</a></li>
-            <li><a href="#">Security</a></li>
-          </ul>
-        </div>
-        <div>
-          <div class="footer-head">Contact</div>
-          <ul class="footer-links">
-            <li><a href="mailto:support@restoredocai.com">support@restoredocai.com</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <span class="footer-copy">Copyright 2025 RestoreDocAI. All rights reserved.</span>
-      </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">Copyright 2025 RestoreDocAI. All rights reserved.</span>
     </div>
-  </footer>
+  </div>
+</footer>
 
-  <script>
-    const hamburger = document.getElementById('hamburger');
-    const navLinks = document.getElementById('navLinks');
-    hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
-    document.addEventListener('click', (e) => {
-      if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
-        navLinks.classList.remove('open');
-      }
-    });
-  </script>
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const navCenter = document.getElementById('navCenter');
+  hamburger.addEventListener('click', () => navCenter.classList.toggle('open'));
+  document.addEventListener('click', (e) => {
+    if (!hamburger.contains(e.target) && !navCenter.contains(e.target)) {
+      navCenter.classList.remove('open');
+    }
+  });
+</script>
 </body>
 </html>
